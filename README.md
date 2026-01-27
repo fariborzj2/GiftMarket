@@ -2,6 +2,10 @@
 
 A multilingual gift card sales platform designed for both wholesale and retail workflows, built with a lightweight PHP backend and a plugin-based architecture for extensibility and long-term maintainability.
 
+## Project Status
+**Current Phase:** Frontend Design & Landing Page.
+The repository currently contains the static frontend assets and the main landing page. The PHP backend, admin panel, and plugin-based architecture described below are planned for future development phases.
+
 ## Core Features
 - Wholesale and retail gift card management
 - Customer management system (profiles, order history, status tracking)
@@ -57,4 +61,4 @@ Installation is performed through a step-by-step web-based installer, allowing t
 - Provide a clean and scalable foundation for real-world usage
 
 ## License
-Specify your license here.
+This project is licensed under the MIT License - see a LICENSE file for details (or specify your license).
