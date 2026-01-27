@@ -4,7 +4,7 @@ A multilingual gift card sales platform designed for both wholesale and retail w
 
 ## Project Status
 **Current Phase:** MVP (Minimum Viable Product) with Admin Panel & SSR.
-The system now features a lightweight PHP backend with Server-Side Rendering (SSR), a secure Admin Panel for product management, and an SQLite database for data persistence.
+The system now features a lightweight PHP backend with Server-Side Rendering (SSR), a secure Admin Panel for product management, and a MySQL database for data persistence.
 
 ## Core Features
 - Wholesale and retail gift card management
@@ -46,6 +46,12 @@ The system now features a lightweight PHP backend with Server-Side Rendering (SS
 The system includes a built-in installer that guides users through the setup process, including database configuration and initial system settings.
 
 Installation is performed through a step-by-step web-based installer, allowing the system to be deployed and ready for use in a few simple steps.
+
+### MySQL Setup (cPanel)
+1. Create a MySQL database in cPanel.
+2. Create a MySQL user and assign it to the database with all privileges.
+3. Import the `database.sql` file into your database via **phpMyAdmin**.
+4. Update `includes/config.php` with your database credentials (`DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`).
 
 ## Use Cases
 - Gift card wholesalers

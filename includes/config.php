@@ -1,6 +1,9 @@
 <?php
 // Database Configuration
-define('DB_PATH', __DIR__ . '/../core/database.sqlite');
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'uaegift_db');
+define('DB_USER', 'root');
+define('DB_PASS', '');
 
 // System Configuration
 define('SITE_NAME', 'UAE.GIFT Admin');
