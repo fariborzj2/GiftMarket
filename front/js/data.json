@@ -1,0 +1,113 @@
+{
+    "pricingData": {
+        "apple": {
+            "name": "Apple iTunes",
+            "logo": "images/brand/apple-logo.png",
+            "options": {
+                "uae": [
+                    { "denomination": "50 AED", "price": 51, "currency": "AED" },
+                    { "denomination": "100 AED", "price": 102, "currency": "AED" },
+                    { "denomination": "200 AED", "price": 204, "currency": "AED" },
+                    { "denomination": "500 AED", "price": 510, "currency": "AED" }
+                ],
+                "usa": [
+                    { "denomination": "$5", "price": 4.8, "currency": "USD" },
+                    { "denomination": "$10", "price": 9.6, "currency": "USD" },
+                    { "denomination": "$25", "price": 24, "currency": "USD" },
+                    { "denomination": "$50", "price": 48, "currency": "USD" }
+                ],
+                "uk": [
+                    { "denomination": "£5", "price": 4.9, "currency": "GBP" },
+                    { "denomination": "£10", "price": 9.8, "currency": "GBP" }
+                ],
+                "turkey": [
+                    { "denomination": "50 TL", "price": 55, "currency": "TRY" },
+                    { "denomination": "100 TL", "price": 110, "currency": "TRY" }
+                ]
+            }
+        },
+        "psn": {
+            "name": "PlayStation Network",
+            "logo": "images/brand/ps-logo.png",
+            "options": {
+                "uae": [
+                    { "denomination": "$10", "price": 37, "currency": "AED" },
+                    { "denomination": "$20", "price": 74, "currency": "AED" }
+                ],
+                "usa": [
+                    { "denomination": "$10", "price": 9.9, "currency": "USD" },
+                    { "denomination": "$20", "price": 19.8, "currency": "USD" }
+                ]
+            }
+        },
+        "xbox": {
+            "name": "Xbox",
+            "logo": "images/brand/xbox-logo.png",
+            "options": {
+                "usa": [
+                    { "denomination": "$10", "price": 10, "currency": "USD" },
+                    { "denomination": "$25", "price": 25, "currency": "USD" }
+                ]
+            }
+        },
+        "googleplay": {
+            "name": "GooglePlay",
+            "logo": "images/brand/googleplay-logo.png",
+            "options": {
+                "usa": [
+                    { "denomination": "$10", "price": 9.8, "currency": "USD" },
+                    { "denomination": "$25", "price": 24.5, "currency": "USD" }
+                ]
+            }
+        }
+    },
+    "countryNames": {
+        "uae": "United Arab Emirates",
+        "usa": "United States",
+        "uk": "United Kingdom",
+        "turkey": "Turkey"
+    },
+    "exchangeRates": {
+        "USD": 3.67,
+        "GBP": 4.65,
+        "TRY": 0.11,
+        "AED": 1
+    },
+    "faqs": [
+        {
+            "id": "01",
+            "question": "Are the gift cards authentic?",
+            "answer": "Yes, we provide gift cards for a wide range of popular brands including Apple iTunes, Google Play, PlayStation Network, Steam, Xbox, and many others. If you have a specific brand in mind, please contact us to check availability."
+        },
+        {
+            "id": "02",
+            "question": "How is delivery handled?",
+            "answer": "All gift cards are delivered digitally via email or direct message. This ensures instant access to the codes without any shipping delays."
+        },
+        {
+            "id": "03",
+            "question": "What payment methods are accepted?",
+            "answer": "We accept various payment methods including bank transfers, credit/debit cards, and popular digital wallets. Please contact us for specific payment options."
+        }
+    ],
+    "testimonials": [
+        {
+            "name": "Khalid Hassan",
+            "date": "March 5, 2025",
+            "image": "images/users/user-1.jpg",
+            "text": "Our business required bulk gift cards for different regions, and the process was handled professionally. The team was responsive, pricing was fair, and everything was delivered as expected without delays."
+        },
+        {
+            "name": "Daniel Moore",
+            "date": "February 21, 2025",
+            "image": "images/users/user-2.jpg",
+            "text": "The variety of brands and supported countries made it easy to find exactly what we needed. Prices were reasonable, and the support team answered our questions clearly before placing the order."
+        },
+        {
+            "name": "Min-Jae Kim",
+            "date": "February 3, 2025",
+            "image": "images/users/user-3.jpg",
+            "text": "Overall, a reliable service for both small and larger purchases. The information provided was accurate, and the gift cards worked exactly as described. Would consider ordering again."
+        }
+    ]
+}

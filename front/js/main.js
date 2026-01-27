@@ -1,3 +1,38 @@
+let appData = null;
+
+async function fetchData() {
+    try {
+        // In a real scenario, this would be an API endpoint like /api/landing-page-data
+        const response = await fetch('js/data.json');
+        appData = await response.json();
+
+        renderDynamicContent();
+    } catch (error) {
+        console.error('Error loading page data:', error);
+        showErrorState();
+    }
+}
+
+function renderDynamicContent() {
+    if (!appData) return;
+
+    updatePricingTable();
+    renderFAQs();
+    renderTestimonials();
+
+    // Initialize Swiper after content is rendered
+    if (typeof initSwiper === 'function') {
+        initSwiper();
+    }
+}
+
+function showErrorState() {
+    const tableBody = document.getElementById('priceTableBody');
+    if (tableBody) {
+        tableBody.innerHTML = '<tr><td colspan="7" class="text-center">Error loading data. Please try again later.</td></tr>';
+    }
+}
+
 document.addEventListener('click', (e) => {
 
     /* =======================
@@ -18,6 +53,7 @@ document.addEventListener('click', (e) => {
             .forEach(b => b.classList.remove('active'));
 
         modeBtn.classList.add('active');
+        updatePricingTable();
         return;
     }
 
@@ -107,84 +143,11 @@ document.addEventListener('click', (e) => {
 /* =======================
    PRICING TABLE LOGIC
 ======================== */
-const pricingData = {
-    apple: {
-        name: 'Apple iTunes',
-        logo: 'images/brand/apple-logo.png',
-        options: {
-            uae: [
-                { denomination: '50 AED', price: 51, currency: 'AED' },
-                { denomination: '100 AED', price: 102, currency: 'AED' },
-                { denomination: '200 AED', price: 204, currency: 'AED' },
-                { denomination: '500 AED', price: 510, currency: 'AED' }
-            ],
-            usa: [
-                { denomination: '$5', price: 4.8, currency: 'USD' },
-                { denomination: '$10', price: 9.6, currency: 'USD' },
-                { denomination: '$25', price: 24, currency: 'USD' },
-                { denomination: '$50', price: 48, currency: 'USD' }
-            ],
-            uk: [
-                { denomination: '£5', price: 4.9, currency: 'GBP' },
-                { denomination: '£10', price: 9.8, currency: 'GBP' }
-            ],
-            turkey: [
-                { denomination: '50 TL', price: 55, currency: 'TRY' },
-                { denomination: '100 TL', price: 110, currency: 'TRY' }
-            ]
-        }
-    },
-    psn: {
-        name: 'PlayStation Network',
-        logo: 'images/brand/ps-logo.png',
-        options: {
-            uae: [
-                { denomination: '$10', price: 37, currency: 'AED' },
-                { denomination: '$20', price: 74, currency: 'AED' }
-            ],
-            usa: [
-                { denomination: '$10', price: 9.9, currency: 'USD' },
-                { denomination: '$20', price: 19.8, currency: 'USD' }
-            ]
-        }
-    },
-    xbox: {
-        name: 'Xbox',
-        logo: 'images/brand/xbox-logo.png',
-        options: {
-            usa: [
-                { denomination: '$10', price: 10, currency: 'USD' },
-                { denomination: '$25', price: 25, currency: 'USD' }
-            ]
-        }
-    },
-    googleplay: {
-        name: 'GooglePlay',
-        logo: 'images/brand/googleplay-logo.png',
-        options: {
-            usa: [
-                { denomination: '$10', price: 9.8, currency: 'USD' },
-                { denomination: '$25', price: 24.5, currency: 'USD' }
-            ]
-        }
-    }
-};
-
-const countryNames = {
-    uae: 'United Arab Emirates',
-    usa: 'United States',
-    uk: 'United Kingdom',
-    turkey: 'Turkey'
-};
-
-const exchangeRates = {
-    USD: 3.67,
-    GBP: 4.65,
-    TRY: 0.11,
-    AED: 1
-};
-
 function updatePricingTable() {
+    if (!appData) return;
+
+    const { pricingData, countryNames, exchangeRates } = appData;
+
     const brand = document.querySelector('input[name="brand"]')?.value;
     const country = document.querySelector('input[name="country"]')?.value;
     const packSize = parseInt(document.querySelector('input[name="pack_size"]')?.value || '100');
@@ -245,6 +208,57 @@ function updatePricingTable() {
     });
 }
 
+/* =======================
+   FAQ RENDERING
+======================== */
+function renderFAQs() {
+    const container = document.getElementById('faqContainer');
+    if (!container || !appData.faqs) return;
+
+    container.innerHTML = appData.faqs.map((faq, index) => `
+        <div class="faq-item ${index === appData.faqs.length - 1 ? '' : 'border-b'}">
+            <div class="faq-head d-flex align-center gap-10 pd-20 pointer">
+                <span class="color-primary">${faq.id}</span>
+                <h3 class="color-title">${faq.question}</h3>
+                <span class="icon icon-add icon-size-22 lt-auto"></span>
+            </div>
+            <div class="faq-content border-t pd-20">
+                <p>${faq.answer}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+/* =======================
+   TESTIMONIALS RENDERING
+======================== */
+function renderTestimonials() {
+    const container = document.getElementById('testimonialsContainer');
+    if (!container || !appData.testimonials) return;
+
+    container.innerHTML = appData.testimonials.map(t => `
+        <div class="swiper-slide">
+            <div class="slide-comment">
+                <div class="d-flex align-center just-between gap-20 mb-10">
+                    <div class="d-flex align-center ">
+                        <div class="user-img"><img src="${t.image}" alt=""></div>
+                        <div class="line20">
+                            <div class="color-title font-size-0-9">${t.name}</div>
+                            <div class="color-bright font-size-0-8">${t.date}</div>
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <div class="stars"><img src="images/stars.svg" alt=""></div>
+                        <div class="font-size-0-8 color-green"><span class="icon icon-size-16 icon-color-green"></span> Verified</div>
+                    </div>
+                </div>
+                <p class="font-size-0-9">${t.text}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
 function getCurrencySymbol(curr) {
     switch(curr) {
         case 'USD': return '$';
@@ -255,12 +269,5 @@ function getCurrencySymbol(curr) {
     }
 }
 
-// Initial update
-document.addEventListener('DOMContentLoaded', updatePricingTable);
-
-// Handle mode toggle clicks specifically to update table
-document.addEventListener('click', (e) => {
-    if (e.target.closest('.mode-btn')) {
-        updatePricingTable();
-    }
-});
+// Initial data fetch
+document.addEventListener('DOMContentLoaded', fetchData);
