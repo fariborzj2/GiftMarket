@@ -401,7 +401,7 @@ $defaultPackSize = 100;
                         <div class="swiper-slide">
                             <div class="slide-comment">
                                 <div class="d-flex align-center just-between gap-20 mb-10">
-                                    <div class="d-flex align-center ">
+                                    <div class="d-flex align-center gap-10">
                                         <div class="user-img"><img src="<?php echo e($t['image']); ?>" alt=""></div>
                                         <div class="line20">
                                             <div class="color-title font-size-0-9"><?php echo e($t['name']); ?></div>
@@ -420,8 +420,8 @@ $defaultPackSize = 100;
                         <?php endforeach; ?>
                     </div>
 
-                    <div class="d-flex">
-                                <div class="btn-sm com-slide-prev pointer mr-10"><span class="icon icon-arrow-left icon-size-18"></span></div>
+                    <div class="d-flex gap-10">
+                                <div class="btn-sm com-slide-prev pointer"><span class="icon icon-arrow-left icon-size-18"></span></div>
                                 <div class="btn-sm com-slide-next pointer"><span class="icon icon-arrow-right icon-size-18"></span></div>
                             </div>
                         </div>
