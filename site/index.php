@@ -10,7 +10,7 @@ foreach ($groupedProducts as $brand => $countries) {
     $dbPricingData[$brand] = [
         'name' => $appData['pricingData'][$brand]['name'] ?? ucfirst($brand),
         'logo' => $appData['pricingData'][$brand]['logo'] ?? 'assets/images/brand/default.png',
-        'options' => []xf
+        'options' => []
     ];
     foreach ($countries as $country => $items) {
         foreach ($items as $p) {
