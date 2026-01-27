@@ -1,9 +1,41 @@
+<?php
+$dataJson = file_get_contents('js/data.json');
+$appData = json_decode($dataJson, true);
+
+$pricingData = $appData['pricingData'];
+$countryNames = $appData['countryNames'];
+$exchangeRates = $appData['exchangeRates'];
+$faqs = $appData['faqs'];
+$testimonials = $appData['testimonials'];
+
+// Default view for SSR
+$defaultBrand = 'apple';
+$defaultCountry = 'uae';
+$defaultPackSize = 100;
+?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💎 UAE.GIFT</title>
+    <title>UAE.GIFT | Official Gift Card Distributor in Dubai</title>
+    <meta name="description" content="Official Gift Card Distributor in Dubai. Buy authentic digital gift cards for Apple, PlayStation, Xbox, Google Play and more. Wholesale and retail with instant delivery in UAE.">
+    <meta name="keywords" content="gift card Dubai, buy gift cards UAE, iTunes gift card Dubai, PlayStation gift card UAE, wholesale gift cards Dubai, digital gift cards instant delivery">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://uae.gift/">
+    <meta property="og:title" content="UAE.GIFT | Official Gift Card Distributor in Dubai">
+    <meta property="og:description" content="Authentic digital gift cards for Apple, PSN, Xbox, Google Play and more. Wholesale & retail with instant delivery.">
+    <meta property="og:image" content="images/hero.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://uae.gift/">
+    <meta property="twitter:title" content="UAE.GIFT | Official Gift Card Distributor in Dubai">
+    <meta property="twitter:description" content="Authentic digital gift cards for Apple, PSN, Xbox, Google Play and more. Wholesale & retail with instant delivery.">
+    <meta property="twitter:image" content="images/hero.png">
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/grid.css">
     <link rel="stylesheet" href="css/swiper-bundle.min.css"/>
@@ -119,26 +151,26 @@
                             <span class="icon icon-arrow-down icon-size-16  lt-auto"></span>
                         </div>
 
-                        <input type="text" class="selected-option" name="lang" value="english" id="" hidden>
+                        <input type="text" class="selected-option" name="brand" value="apple" id="" hidden>
 
                         <div class="drop-down-list">
                             <div class="drop-option d-flex gap-10 align-center active">
-                                <div class="drop-option-img" data-option="english"><img src="images/brand/apple-logo.png" alt=""></div>
+                                <div class="drop-option-img" data-option="apple"><img src="images/brand/apple-logo.png" alt=""></div>
                                 <span>Apple iTunes</span>
                             </div>
 
                             <div class="drop-option d-flex gap-10 align-center">
-                                <div class="drop-option-img" data-option="english"><img src="images/brand/ps-logo.png" alt=""></div>
+                                <div class="drop-option-img" data-option="psn"><img src="images/brand/ps-logo.png" alt=""></div>
                                 <span>PlayStation Network</span>
                             </div>
 
                             <div class="drop-option d-flex gap-10 align-center">
-                                <div class="drop-option-img" data-option="arabic"><img src="images/brand/xbox-logo.png" alt=""></div>
+                                <div class="drop-option-img" data-option="xbox"><img src="images/brand/xbox-logo.png" alt=""></div>
                                 <span>Xbox</span>
                             </div>
 
                             <div class="drop-option d-flex gap-10 align-center">
-                                <div class="drop-option-img" data-option="arabic"><img src="images/brand/googleplay-logo.png" alt=""></div>
+                                <div class="drop-option-img" data-option="googleplay"><img src="images/brand/googleplay-logo.png" alt=""></div>
                                 <span>GooglePlay</span>
                             </div>
                         </div>
@@ -153,27 +185,27 @@
                             <span class="icon icon-arrow-down icon-size-16  lt-auto"></span>
                         </div>
 
-                        <input type="text" class="selected-option" name="lang" value="english" id="" hidden>
+                        <input type="text" class="selected-option" name="country" value="uae" id="" hidden>
 
                         <div class="drop-down-list">
 
                             <div class="drop-option d-flex gap-10 align-center active">
-                                <div class="drop-option-img" data-option="english"><img src="images/flag/emirates.svg" alt=""></div>
+                                <div class="drop-option-img" data-option="uae"><img src="images/flag/emirates.svg" alt=""></div>
                                 <span>United Arab Emirates (AED)</span>
                             </div>
 
                             <div class="drop-option d-flex gap-10 align-center">
-                                <div class="drop-option-img" data-option="english"><img src="images/flag/united-states.svg" alt=""></div>
+                                <div class="drop-option-img" data-option="usa"><img src="images/flag/united-states.svg" alt=""></div>
                                 <span>United States (USD)</span>
                             </div>
 
                             <div class="drop-option d-flex gap-10 align-center">
-                                <div class="drop-option-img" data-option="arabic"><img src="images/flag/uk.svg" alt=""></div>
+                                <div class="drop-option-img" data-option="uk"><img src="images/flag/uk.svg" alt=""></div>
                                 <span>United Kingdom (GBP)</span>
                             </div>
 
                             <div class="drop-option d-flex gap-10 align-center">
-                                <div class="drop-option-img" data-option="arabic"><img src="images/flag/turkey.svg" alt=""></div>
+                                <div class="drop-option-img" data-option="turkey"><img src="images/flag/turkey.svg" alt=""></div>
                                 <span>Turkey (TRY)</span>
                             </div>
                         </div>
@@ -186,22 +218,22 @@
                             <span class="icon icon-arrow-down icon-size-16 lt-auto"></span>
                         </div>
 
-                        <input type="text" class="selected-option" name="lang" value="english" id="" hidden>
+                        <input type="text" class="selected-option" name="pack_size" value="100" id="" hidden>
 
                         <div class="drop-down-list">
-                            <div class="drop-option d-flex gap-10 align-center active">
+                            <div class="drop-option d-flex gap-10 align-center" data-option="10">
                                 <span>Pack Of 10</span>
                             </div>
 
-                            <div class="drop-option d-flex gap-10 align-center">
+                            <div class="drop-option d-flex gap-10 align-center" data-option="25">
                                 <span>Pack Of 25</span>
                             </div>
 
-                            <div class="drop-option d-flex gap-10 align-center">
+                            <div class="drop-option d-flex gap-10 align-center" data-option="50">
                                 <span>Pack Of 50</span>
                             </div>
 
-                            <div class="drop-option d-flex gap-10 align-center">
+                            <div class="drop-option d-flex gap-10 align-center active" data-option="100">
                                 <span>Pack Of 100</span>
                             </div>
                         </div>
@@ -229,32 +261,40 @@
                         </thead>
 
                         <tbody id="priceTableBody">
+                            <?php
+                            $options = $pricingData[$defaultBrand]['options'][$defaultCountry];
+                            foreach ($options as $opt):
+                                $pricePerCard = $opt['price'];
+                                $totalPrice = number_format($pricePerCard * $defaultPackSize, 2, '.', '');
+                                $rate = $exchangeRates[$opt['currency']] ?? 1;
+                                $priceInAED = number_format($pricePerCard * $rate, 2, '.', '');
+                                $totalInAED = number_format($totalPrice * $rate, 2, '.', '');
+                                $symbol = ($opt['currency'] === 'USD' ? '$' : ($opt['currency'] === 'GBP' ? '£' : ($opt['currency'] === 'TRY' ? 'TL' : '')));
+                            ?>
                             <tr>
                                 <td data-label="Brand" class="text-center">
                                     <div class="brand-logo m-auto">
-                                        <img src="images/brand/apple-logo.png" alt="">
+                                        <img src="<?php echo $pricingData[$defaultBrand]['logo']; ?>" alt="">
                                     </div>
                                 </td>
-
                                 <td data-label="Denomination">
-                                    <span>$5</span><br>
-                                    <span class="color-bright font-size-0-9">Digital · USD</span>
+                                    <span><?php echo $opt['denomination']; ?></span><br>
+                                    <span class="color-bright font-size-0-9">Digital · <?php echo $opt['currency']; ?></span>
                                 </td>
-
-                                <td data-label="Country">United States</td>
-
-                                <td data-label="Qty">100</td>
-
+                                <td data-label="Country"><?php echo $countryNames[$defaultCountry]; ?></td>
+                                <td data-label="Qty"><?php echo $defaultPackSize; ?></td>
                                 <td data-label="Price / Card">
-                                    <span>$4.8</span><br>
-                                    <span class="color-bright font-size-0-9">~ 3.47 AED</span>
+                                    <span><?php echo $symbol . $pricePerCard; ?></span><br>
+                                    <?php if ($opt['currency'] !== 'AED'): ?>
+                                    <span class="color-bright font-size-0-9">~ <?php echo $priceInAED; ?> AED</span>
+                                    <?php endif; ?>
                                 </td>
-
                                 <td data-label="Total Price">
-                                    <span>$480</span><br>
-                                    <span class="color-bright font-size-0-9">~ 347 AED</span>
+                                    <span><?php echo $symbol . $totalPrice; ?></span><br>
+                                    <?php if ($opt['currency'] !== 'AED'): ?>
+                                    <span class="color-bright font-size-0-9">~ <?php echo $totalInAED; ?> AED</span>
+                                    <?php endif; ?>
                                 </td>
-
                                 <td class="text-center" data-label="Buy">
                                     <a href="tel:+9710506565129" class="btn">
                                         <span class="icon icon-calling icon-size-18"></span>
@@ -262,40 +302,7 @@
                                     </a>
                                 </td>
                             </tr>
-
-                            <tr>
-                                <td data-label="Brand" class="text-center">
-                                    <div class="brand-logo m-auto">
-                                        <img src="images/brand/apple-logo.png" alt="">
-                                    </div>
-                                </td>
-
-                                <td data-label="Denomination">
-                                    <span>$10</span><br>
-                                    <span class="color-bright font-size-0-9">Digital · USD</span>
-                                </td>
-
-                                <td data-label="Country">United States</td>
-
-                                <td data-label="Qty">100</td>
-
-                                <td data-label="Price / Card">
-                                    <span>$9.5</span><br>
-                                    <span class="color-bright font-size-0-9">~ 3.47 AED</span>
-                                </td>
-
-                                <td data-label="Total Price">
-                                    <span>$950</span><br>
-                                    <span class="color-bright font-size-0-9">~ 747 AED</span>
-                                </td>
-
-                                <td class="text-center" data-label="Buy">
-                                    <a href="tel:+9710506565129" class="btn">
-                                        <span class="icon icon-calling icon-size-18"></span>
-                                        Call To Order
-                                    </a>
-                                </td>
-                            </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
@@ -362,77 +369,32 @@
                             <h2 class="line60 font-size-3 color-title">What Our <br><span class="color-primary">Customers Say</span></h2>
                             <span>Real feedback from clients who buy gift cards from us in Dubai and the UAE</span>
                         </div>
-                        <div id="comments-slider">
-                            <div class="swiper-wrapper mb-20">
-
-                                <div class="swiper-slide">
-                                    <div class="slide-comment">
-                                        <div class="d-flex align-center just-between gap-20 mb-10">
-                                            <div class="d-flex align-center ">
-                                                <div class="user-img"><img src="images/users/user-1.jpg" alt=""></div>
-                                                <div class="line20">
-                                                    <div class="color-title font-size-0-9">Khalid Hassan</div>
-                                                    <div class="color-bright font-size-0-8">March 5, 2025</div>
-                                                </div>
-                                            </div>
-
-                                            <div class="">
-                                                <div class="stars"><img src="images/stars.svg" alt=""></div>
-                                                <div class="font-size-0-8 color-green"><span class="icon icon-size-16 icon-color-green"></span> Verified</div>
-                                            </div>
+                        <div id="comments-slider" class="swiper">
+                            <div class="swiper-wrapper mb-20" id="testimonialsContainer">
+                        <?php foreach ($testimonials as $t): ?>
+                        <div class="swiper-slide">
+                            <div class="slide-comment">
+                                <div class="d-flex align-center just-between gap-20 mb-10">
+                                    <div class="d-flex align-center ">
+                                        <div class="user-img"><img src="<?php echo $t['image']; ?>" alt=""></div>
+                                        <div class="line20">
+                                            <div class="color-title font-size-0-9"><?php echo $t['name']; ?></div>
+                                            <div class="color-bright font-size-0-8"><?php echo $t['date']; ?></div>
                                         </div>
-                                        <p class="font-size-0-9">
-                                            Our business required bulk gift cards for different regions, and the process was handled professionally. The team was responsive, pricing was fair, and everything was delivered as expected without delays.
-                                        </p>
+                                    </div>
+
+                                    <div class="">
+                                        <div class="stars"><img src="images/stars.svg" alt=""></div>
+                                        <div class="font-size-0-8 color-green"><span class="icon icon-size-16 icon-color-green"></span> Verified</div>
                                     </div>
                                 </div>
-
-                                <div class="swiper-slide">
-                                    <div class="slide-comment">
-                                        <div class="d-flex align-center just-between gap-20 mb-10">
-                                            <div class="d-flex align-center ">
-                                                <div class="user-img"><img src="images/users/user-2.jpg" alt=""></div>
-                                                <div class="line20">
-                                                    <div class="color-title font-size-0-9">Daniel Moore</div>
-                                                    <div class="color-bright font-size-0-8">February 21, 2025</div>
-                                                </div>
-                                            </div>
-
-                                            <div class="">
-                                                <div class="stars"><img src="images/stars.svg" alt=""></div>
-                                                <div class="font-size-0-8 color-green"><span class="icon icon-size-16 icon-color-green"></span> Verified</div>
-                                            </div>
-                                        </div>
-                                        <p class="font-size-0-9">
-                                            The variety of brands and supported countries made it easy to find exactly what we needed. Prices were reasonable, and the support team answered our questions clearly before placing the order.                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="swiper-slide">
-                                    <div class="slide-comment">
-                                        <div class="d-flex align-center just-between gap-20 mb-10">
-                                            <div class="d-flex align-center ">
-                                                <div class="user-img"><img src="images/users/user-3.jpg" alt=""></div>
-                                                <div class="line20">
-                                                    <div class="color-title font-size-0-9">Min-Jae Kim</div>
-                                                    <div class="color-bright font-size-0-8">February 3, 2025</div>
-                                                </div>
-                                            </div>
-
-                                            <div class="">
-                                                <div class="stars"><img src="images/stars.svg" alt=""></div>
-                                                <div class="font-size-0-8 color-green"><span class="icon icon-size-16 icon-color-green"></span> Verified</div>
-                                            </div>
-                                        </div>
-                                        <p class="font-size-0-9">
-                                            Overall, a reliable service for both small and larger purchases. The information provided was accurate, and the gift cards worked exactly as described. Would consider ordering again.
-                                        </p>
-                                    </div>
-                                </div>
-
+                                <p class="font-size-0-9"><?php echo $t['text']; ?></p>
                             </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
 
-                            <div class="d-flex">
+                    <div class="d-flex">
                                 <div class="btn-sm com-slide-prev pointer mr-10"><span class="icon icon-arrow-left icon-size-18"></span></div>
                                 <div class="btn-sm com-slide-next pointer"><span class="icon icon-arrow-right icon-size-18"></span></div>
                             </div>
@@ -486,41 +448,19 @@
                     <span>Clear answers about pricing, availability, supported countries, and wholesale orders</span>
                 </div>
 
-                <div class="faq-list border radius-20">
-
-                    <div class="faq-item border-b">
-                        <div class="faq-head d-flex align-center gap-10 pd-20">
-                            <span class="color-primary">01</span>
-                            <h3 class="color-title">Are the gift cards authentic?</h3>
+                <div class="faq-list border radius-20" id="faqContainer">
+                    <?php foreach ($faqs as $index => $faq): ?>
+                    <div class="faq-item <?php echo ($index === count($faqs) - 1 ? '' : 'border-b'); ?>">
+                        <div class="faq-head d-flex align-center gap-10 pd-20 pointer">
+                            <span class="color-primary"><?php echo $faq['id']; ?></span>
+                            <h3 class="color-title"><?php echo $faq['question']; ?></h3>
                             <span class="icon icon-add icon-size-22 lt-auto"></span>
                         </div>
                         <div class="faq-content border-t pd-20">
-                            <p>Yes, we provide gift cards for a wide range of popular brands including Apple iTunes, Google Play, PlayStation Network, Steam, Xbox, and many others. If you have a specific brand in mind, please contact us to check availability.</p>
+                            <p><?php echo $faq['answer']; ?></p>
                         </div>
                     </div>
-
-                    <div class="faq-item border-b">
-                        <div class="faq-head d-flex align-center gap-10 pd-20">
-                            <span class="color-primary">02</span>
-                            <h3 class="color-title">How is delivery handled?</h3>
-                            <span class="icon icon-add icon-size-22 lt-auto"></span>
-                        </div>
-                        <div class="faq-content border-t pd-20">
-                            <p>All gift cards are delivered digitally via email or direct message. This ensures instant access to the codes without any shipping delays.</p>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <div class="faq-head d-flex align-center gap-10 pd-20">
-                            <span class="color-primary">03</span>
-                            <h3 class="color-title">What payment methods are accepted?</h3>
-                            <span class="icon icon-add icon-size-22 lt-auto"></span>
-                        </div>
-                        <div class="faq-content border-t pd-20">
-                            <p>We accept various payment methods including bank transfers, credit/debit cards, and popular digital wallets. Please contact us for specific payment options.</p>
-                        </div>
-                    </div>
-
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>
@@ -539,12 +479,12 @@
                     <div class="d-flex-wrap align-center gap-40 relative">
 
                         <div class="contact-form basis300 grow-1 border radius-20 pd-20">
-                            <form action="">
+                            <form action="#" method="POST">
                                 <div class="d-flex-wrap gap-20">
                                     <div class="input-item basis200 grow-1">
                                         <div class="input-label">Name</div>
                                         <div class="input">
-                                            <input type="text" placeholder="Your Name">
+                                            <input type="text" name="name" placeholder="Your Name" required>
                                             <div class="input-icon"><span class="icon icon-size-22"></span></div>
                                         </div>
                                     </div>
@@ -552,7 +492,7 @@
                                     <div class="input-item basis200 grow-1">
                                         <div class="input-label">Mobile</div>
                                         <div class="input">
-                                            <input type="text" placeholder="Your Mobile Number">
+                                            <input type="tel" name="mobile" placeholder="Your Mobile Number" required>
                                             <div class="input-icon"><span class="icon icon-size-22"></span></div>
                                         </div>
                                     </div>
@@ -561,7 +501,7 @@
                                 <div class="input-item">
                                     <div class="input-label">Email</div>
                                     <div class="input">
-                                        <input type="text" placeholder="Your Email Address">
+                                        <input type="email" name="email" placeholder="Your Email Address" required>
                                         <div class="input-icon"><span class="icon icon-size-22"></span></div>
                                     </div>
                                 </div>
@@ -569,17 +509,17 @@
                                 <div class="input-item">
                                     <div class="input-label">Message Subject</div>
                                     <div class="input">
-                                        <input type="text" placeholder="Your Message Subject">
+                                        <input type="text" name="subject" placeholder="Your Message Subject">
                                         <div class="input-icon"><span class="icon icon-size-22"></span></div>
                                     </div>
                                 </div>
 
                                 <div class="input-item">
                                     <div class="input-label">Message text</div>
-                                    <textarea name="" id="" placeholder="Your message text" rows="3"></textarea>
+                                    <textarea name="message" id="message" placeholder="Your message text" rows="3" required></textarea>
                                 </div>
                                 <div class="d-flex">
-                                    <button class="btn-primary radius-100">Send message <span class="icon icon-send icon-size-22 icon-color-white"></span></button>
+                                    <button type="submit" class="btn-primary radius-100">Send message <span class="icon icon-send icon-size-22 icon-color-white"></span></button>
                                 </div>
                             </form>
                         </div>
@@ -631,9 +571,9 @@
                     <div class="logo"><img src="images/logo.svg" alt=""></div>
                     <div class="menu">
                         <a href="#">Home</a>
-                        <a href="#">About</a>
-                        <a href="#">Pricing</a>
-                        <a href="#">Contact</a>
+                        <a href="#whyus">About</a>
+                        <a href="#pricing">Pricing</a>
+                        <a href="#contact">Contact</a>
                     </div>
                 </div>
                 <div class="text-center pd-td-20">
@@ -648,25 +588,22 @@
     <script src="js/swiper-bundle.min.js"></script>
 
     <script>
-        const commentsSlider = new Swiper('#comments-slider', {
-            loop: true,
-            spaceBetween: 20,
-
-            navigation: {
-                nextEl: '.com-slide-next',
-                prevEl: '.com-slide-prev'
-            },
-            breakpointsBase: 'container',
-            breakpoints: {
-                0: {
-                    slidesPerView: 1
+        let commentsSlider;
+        function initSwiper() {
+            commentsSlider = new Swiper('#comments-slider', {
+                loop: true,
+                spaceBetween: 20,
+                navigation: {
+                    nextEl: '.com-slide-next',
+                    prevEl: '.com-slide-prev'
                 },
-                500: {
-                    slidesPerView: 2
+                breakpointsBase: 'container',
+                breakpoints: {
+                    0: { slidesPerView: 1 },
+                    500: { slidesPerView: 2 }
                 }
-            }
-        });
-
+            });
+        }
     </script>
 
 </body>
