@@ -59,11 +59,22 @@ document.addEventListener('click', (e) => {
 
         const optionText = option.querySelector('span')?.textContent;
         const optionImg = option.querySelector('img')?.src;
-        const optionValue = option.querySelector('.drop-option-img')?.dataset.option;
+        const optionValue = option.querySelector('.drop-option-img')?.dataset.option || option.dataset.option;
 
         if (selectedText && optionText) selectedText.textContent = optionText;
         if (selectedImg && optionImg) selectedImg.src = optionImg;
         if (hiddenInput && optionValue) hiddenInput.value = optionValue;
+
+        // Special case: Language toggle RTL/LTR
+        if (hiddenInput?.name === 'lang') {
+            if (optionValue === 'arabic') {
+                document.documentElement.setAttribute('dir', 'rtl');
+                document.documentElement.setAttribute('lang', 'ar');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+                document.documentElement.setAttribute('lang', 'en');
+            }
+        }
 
         drop?.querySelector('.drop-down-list')
             ?.classList.remove('active');
