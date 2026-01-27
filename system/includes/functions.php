@@ -31,3 +31,12 @@ function clean($data) {
 function e($data) {
     return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
 }
+
+function getGroupedProducts() {
+    $products = db()->query("SELECT * FROM products ORDER BY brand, country")->fetchAll();
+    $groupedProducts = [];
+    foreach ($products as $p) {
+        $groupedProducts[$p['brand']][$p['country']][] = $p;
+    }
+    return $groupedProducts;
+}

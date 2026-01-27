@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div>
         <?php if ($msg): ?>
             <div style="background: #dcfce7; color: #166534; padding: 10px 20px; border-radius: 10px; margin-bottom: 20px;">
-                <?php echo $msg; ?>
+                <?php echo e($msg); ?>
             </div>
         <?php endif; ?>
     </div>
@@ -66,13 +66,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <tbody>
                     <?php foreach ($products as $p): ?>
                     <tr>
-                        <td><?php echo strtoupper($p['brand']); ?></td>
-                        <td><?php echo $p['denomination']; ?></td>
-                        <td><?php echo strtoupper($p['country']); ?></td>
-                        <td><?php echo $p['price'] . ' ' . $p['currency']; ?></td>
+                        <td><?php echo strtoupper(e($p['brand'])); ?></td>
+                        <td><?php echo e($p['denomination']); ?></td>
+                        <td><?php echo strtoupper(e($p['country'])); ?></td>
+                        <td><?php echo e($p['price']) . ' ' . e($p['currency']); ?></td>
                         <td class="d-flex gap-10">
-                            <a href="products.php?action=edit&id=<?php echo $p['id']; ?>" class="btn-sm" style="color: var(--color-primary);">Edit</a>
-                            <a href="products.php?action=delete&id=<?php echo $p['id']; ?>" class="btn-sm" style="color: #ef4444;" onclick="return confirm('Are you sure?')">Delete</a>
+                            <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: var(--color-primary);">Edit</a>
+                            <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: #ef4444;" onclick="return confirm('Are you sure?')">Delete</a>
                         </td>
                     </tr>
                     <?php endforeach; ?>
@@ -92,26 +92,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="admin-card max-w600">
         <h3 class="color-title mb-30"><?php echo $action === 'add' ? 'Add New Product' : 'Edit Product'; ?></h3>
         <form method="POST" class="contact-form" style="box-shadow: none; padding: 0;">
-            <input type="hidden" name="id" value="<?php echo $editData['id']; ?>">
+            <input type="hidden" name="id" value="<?php echo e($editData['id']); ?>">
 
             <div class="input-item mb-20">
                 <div class="input-label">Brand</div>
                 <div class="input">
-                    <input type="text" name="brand" value="<?php echo $editData['brand']; ?>" required placeholder="e.g. apple, psn, xbox">
+                    <input type="text" name="brand" value="<?php echo e($editData['brand']); ?>" required placeholder="e.g. apple, psn, xbox">
                 </div>
             </div>
 
             <div class="input-item mb-20">
                 <div class="input-label">Denomination</div>
                 <div class="input">
-                    <input type="text" name="denomination" value="<?php echo $editData['denomination']; ?>" required placeholder="e.g. 100 AED, $50">
+                    <input type="text" name="denomination" value="<?php echo e($editData['denomination']); ?>" required placeholder="e.g. 100 AED, $50">
                 </div>
             </div>
 
             <div class="input-item mb-20">
                 <div class="input-label">Country</div>
                 <div class="input">
-                    <input type="text" name="country" value="<?php echo $editData['country']; ?>" required placeholder="e.g. uae, usa, uk">
+                    <input type="text" name="country" value="<?php echo e($editData['country']); ?>" required placeholder="e.g. uae, usa, uk">
                 </div>
             </div>
 
@@ -119,13 +119,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="input-item grow-1">
                     <div class="input-label">Price</div>
                     <div class="input">
-                        <input type="number" step="0.01" name="price" value="<?php echo $editData['price']; ?>" required>
+                        <input type="number" step="0.01" name="price" value="<?php echo e($editData['price']); ?>" required>
                     </div>
                 </div>
                 <div class="input-item grow-1">
                     <div class="input-label">Currency</div>
                     <div class="input">
-                        <input type="text" name="currency" value="<?php echo $editData['currency']; ?>" required placeholder="e.g. AED, USD">
+                        <input type="text" name="currency" value="<?php echo e($editData['currency']); ?>" required placeholder="e.g. AED, USD">
                     </div>
                 </div>
             </div>

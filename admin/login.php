@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <?php if ($error): ?>
-                <div class="error-msg"><?php echo $error; ?></div>
+                <div class="error-msg"><?php echo e($error); ?></div>
             <?php endif; ?>
 
             <form method="POST" class="contact-form" style="box-shadow: none; padding: 0;">
