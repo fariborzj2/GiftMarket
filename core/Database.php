@@ -6,11 +6,13 @@ class Database {
 
     private function __construct() {
         try {
-            $this->pdo = new PDO("sqlite:" . DB_PATH);
+            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+            $this->pdo = new PDO($dsn, DB_USER, DB_PASS);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             $this->initialize();
         } catch (PDOException $e) {
+            // In production, you might want to log this instead of dying
             die("Database connection failed: " . $e->getMessage());
         }
     }
@@ -30,33 +32,43 @@ class Database {
         // Create initial tables if they don't exist
         $sql = "
             CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT UNIQUE NOT NULL,
-                password TEXT NOT NULL,
-                role TEXT DEFAULT 'admin',
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            );
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                username VARCHAR(50) UNIQUE NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                role VARCHAR(20) DEFAULT 'admin',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
             CREATE TABLE IF NOT EXISTS products (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                brand TEXT NOT NULL,
-                denomination TEXT NOT NULL,
-                country TEXT NOT NULL,
-                price REAL NOT NULL,
-                currency TEXT NOT NULL,
-                stock INTEGER DEFAULT 0,
-                type TEXT DEFAULT 'digital',
-                status INTEGER DEFAULT 1
-            );
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                brand VARCHAR(100) NOT NULL,
+                denomination VARCHAR(100) NOT NULL,
+                country VARCHAR(50) NOT NULL,
+                price DECIMAL(10, 2) NOT NULL,
+                currency VARCHAR(10) NOT NULL,
+                stock INT DEFAULT 0,
+                type VARCHAR(20) DEFAULT 'digital',
+                status INT DEFAULT 1
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ";
-        $this->pdo->exec($sql);
+
+        // Multi-query handling for initialization
+        try {
+            $this->pdo->exec($sql);
+        } catch (PDOException $e) {
+            // Tables might already exist or user might not have CREATE permissions
+        }
 
         // Add default admin if not exists (password: admin123)
-        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM users WHERE username = 'admin'");
-        $stmt->execute();
-        if ($stmt->fetchColumn() == 0) {
-            $password = password_hash('admin123', PASSWORD_DEFAULT);
-            $this->pdo->exec("INSERT INTO users (username, password) VALUES ('admin', '$password')");
+        try {
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM users WHERE username = 'admin'");
+            $stmt->execute();
+            if ($stmt->fetchColumn() == 0) {
+                $password = password_hash('admin123', PASSWORD_DEFAULT);
+                $this->pdo->exec("INSERT INTO users (username, password) VALUES ('admin', '$password')");
+            }
+        } catch (PDOException $e) {
+            // Ignore if insert fails
         }
     }
 }
