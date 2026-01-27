@@ -1,8 +1,32 @@
 <?php
-$dataJson = file_get_contents('js/data.json');
-$appData = json_decode($dataJson, true);
+require_once 'includes/functions.php';
 
-$pricingData = $appData['pricingData'];
+$appData = json_decode(file_get_contents('js/data.json'), true);
+
+// Fetch products from database
+$products = db()->query("SELECT * FROM products WHERE status = 1")->fetchAll();
+$dbPricingData = [];
+foreach ($products as $p) {
+    $brand = $p['brand'];
+    $country = $p['country'];
+    if (!isset($dbPricingData[$brand])) {
+        $dbPricingData[$brand] = [
+            'name' => $appData['pricingData'][$brand]['name'] ?? ucfirst($brand),
+            'logo' => $appData['pricingData'][$brand]['logo'] ?? 'images/brand/default.png',
+            'options' => []
+        ];
+    }
+    if (!isset($dbPricingData[$brand]['options'][$country])) {
+        $dbPricingData[$brand]['options'][$country] = [];
+    }
+    $dbPricingData[$brand]['options'][$country][] = [
+        'denomination' => $p['denomination'],
+        'price' => $p['price'],
+        'currency' => $p['currency']
+    ];
+}
+
+$pricingData = $dbPricingData;
 $countryNames = $appData['countryNames'];
 $exchangeRates = $appData['exchangeRates'];
 $faqs = $appData['faqs'];
@@ -584,6 +608,10 @@ $defaultPackSize = 100;
 
     </div>
 
+    <script>
+        // Use api.php instead of static data.json
+        const API_URL = 'api.php';
+    </script>
     <script src="js/main.js"></script>
     <script src="js/swiper-bundle.min.js"></script>
 
