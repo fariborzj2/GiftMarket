@@ -2,8 +2,9 @@ let appData = null;
 
 async function fetchData() {
     try {
-        // In a real scenario, this would be an API endpoint like /api/landing-page-data
-        const response = await fetch('js/data.json');
+        // Use global API_URL if defined, fallback to static json
+        const url = typeof API_URL !== 'undefined' ? API_URL : 'js/data.json';
+        const response = await fetch(url);
         appData = await response.json();
 
         // We don't re-render everything here because PHP already did it (SSR)
