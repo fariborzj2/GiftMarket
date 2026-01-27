@@ -158,9 +158,6 @@ body.dark-theme {
 .icon-size-48 {
   font-size: 48px;
 }
-[dir="rtl"] .icon-send {
-  transform: scaleX(-1)
-}
 :focus {
   outline: 0;
 }
@@ -768,10 +765,16 @@ body.dark-theme .table-wrap tbody tr:hover {
 
 /* faq */
 .faq-item .faq-content {
-  display: none
+  display: none;
 }
 .faq-item.active .faq-content {
   display: block;
+}
+.faq-item .icon-add {
+  transition: all 0.3s ease-in-out
+}
+.faq-item.active .icon-add {
+  transform: rotate(45deg)
 }
 /* contact-form */
 .contact-box {
@@ -912,7 +915,12 @@ body.dark-theme .table-wrap tbody tr:hover {
 [dir="rtl"] .table-wrap td.text-left {
     text-align: right;
 }
-
+[dir="rtl"] .icon-send {
+  transform: scaleX(-1)
+}
+[dir="rtl"] .com-slide-next {
+  order: -1;
+}
 /* mode-toggle */
 .mode-toggle {
   height: 38px;
