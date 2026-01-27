@@ -10,7 +10,7 @@ foreach ($groupedProducts as $brand => $countries) {
     $dbPricingData[$brand] = [
         'name' => $appData['pricingData'][$brand]['name'] ?? ucfirst($brand),
         'logo' => $appData['pricingData'][$brand]['logo'] ?? 'assets/images/brand/default.png',
-        'options' => []
+        'options' => []xf
     ];
     foreach ($countries as $country => $items) {
         foreach ($items as $p) {
@@ -348,7 +348,7 @@ $defaultPackSize = 100;
                     <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
                         <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="assets/images/grid-line-3.svg" alt=""></div>
                         <div class="relative">
-                            <div class="mb-10"><span class="icon icon-verify icon-size-48 icon-color-primary"></span></div>
+                            <div class="mb-10"><span class="icon icon-verify icon-size-48 icon--primary "></span></div>
                             <h3 class="mb-5 color-title">Authentic Gift Cards</h3>
                             <p class="line20">All cards are original and sourced from verified distributors</p>
                         </div>
@@ -356,7 +356,7 @@ $defaultPackSize = 100;
                     <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
                         <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="assets/images/grid-line-3.svg" alt=""></div>
                         <div class="relative">
-                            <div class="mb-10"><span class="icon icon-stopwatch icon-size-48 icon-color-primary"></span></div>
+                            <div class="mb-10"><span class="icon icon-stopwatch icon-size-48 icon--primary "></span></div>
                             <h3 class="mb-5 color-title">Instant Delivery</h3>
                             <p class="line20">Receive your codes quickly, whether buying single or bulk packs</p>
                         </div>
@@ -364,7 +364,7 @@ $defaultPackSize = 100;
                     <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
                         <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="assets/images/grid-line-3.svg" alt=""></div>
                         <div class="relative">
-                            <div class="mb-10"><span class="icon icon-tag-price icon-size-48 icon-color-primary"></span></div>
+                            <div class="mb-10"><span class="icon icon-tag-price icon-size-48 icon--primary "></span></div>
                             <h3 class="mb-5 color-title">Best Prices</h3>
                             <p class="line20">Competitive pricing for both retail and wholesale purchases</p>
                         </div>
@@ -372,7 +372,7 @@ $defaultPackSize = 100;
                     <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
                         <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="assets/images/grid-line-3.svg" alt=""></div>
                         <div class="relative">
-                            <div class="mb-10"><span class="icon icon-headphone icon-size-48 icon-color-primary"></span></div>
+                            <div class="mb-10"><span class="icon icon-headphone icon-size-48 icon--primary "></span></div>
                             <h3 class="mb-5 color-title">Customer Support</h3>
                             <p class="line20">Our support team is available to assist you before and after your purchase</p>
                         </div>
@@ -411,7 +411,7 @@ $defaultPackSize = 100;
 
                                     <div class="">
                                         <div class="stars"><img src="assets/images/stars.svg" alt=""></div>
-                                        <div class="font-size-0-8 color-green"><span class="icon icon-size-16 icon-color-green"></span> Verified</div>
+                                        <div class="font-size-0-8 color-green"><span class="icon icon-size-16 icon--success"></span> Verified</div>
                                     </div>
                                 </div>
                                 <p class="font-size-0-9"><?php echo e($t['text']); ?></p>
@@ -545,7 +545,7 @@ $defaultPackSize = 100;
                                     <textarea name="message" id="message" placeholder="Your message text" rows="3" required></textarea>
                                 </div>
                                 <div class="d-flex">
-                                    <button type="submit" class="btn-primary radius-100">Send message <span class="icon icon-send icon-size-22 icon-color-white"></span></button>
+                                    <button type="submit" class="btn-primary radius-100">Send message <span class="icon icon-send icon-size-22 icon--white"></span></button>
                                 </div>
                             </form>
                         </div>
@@ -576,10 +576,10 @@ $defaultPackSize = 100;
                                 <div>
                                     <div class="d-flex color-title font-size-1-2 mb-10"><span class="icon"></span> <span class="ml-10">Follow Us</span></div>
                                     <div class="d-flex gap-10">
-                                        <a href="" class="social-btn"><span class="icon icon-telegram icon-size-22 icon-color-primary"></span></a>
-                                        <a href="" class="social-btn"><span class="icon icon-instagram icon-size-22 icon-color-primary"></span></a>
-                                        <a href="" class="social-btn"><span class="icon icon-youtube icon-size-22 icon-color-primary"></span></a>
-                                        <a href="" class="social-btn"><span class="icon icon-x icon-size-22 icon-color-primary"></span></a>
+                                        <a href="" class="social-btn"><span class="icon icon-telegram icon-size-22 icon--primary "></span></a>
+                                        <a href="" class="social-btn"><span class="icon icon-instagram icon-size-22 icon--primary "></span></a>
+                                        <a href="" class="social-btn"><span class="icon icon-youtube icon-size-22 icon--primary "></span></a>
+                                        <a href="" class="social-btn"><span class="icon icon-x icon-size-22 icon--primary "></span></a>
                                     </div>
                                 </div>
                             </div>
