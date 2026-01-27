@@ -52,6 +52,19 @@ document.addEventListener('click', (e) => {
 
         option.classList.add('active');
 
+        // Update selected text and image
+        const selectedText = drop?.querySelector('.selected-text');
+        const selectedImg = drop?.querySelector('.selected-img');
+        const hiddenInput = drop?.querySelector('.selected-option');
+
+        const optionText = option.querySelector('span')?.textContent;
+        const optionImg = option.querySelector('img')?.src;
+        const optionValue = option.querySelector('.drop-option-img')?.dataset.option;
+
+        if (selectedText && optionText) selectedText.textContent = optionText;
+        if (selectedImg && optionImg) selectedImg.src = optionImg;
+        if (hiddenInput && optionValue) hiddenInput.value = optionValue;
+
         drop?.querySelector('.drop-down-list')
             ?.classList.remove('active');
 
