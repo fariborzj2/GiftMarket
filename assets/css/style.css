@@ -549,7 +549,9 @@ body.dark-theme .theme-light-icon {
 /* drop-down */
 .drop-down {
   position: relative;
-  font-size: 0.8em
+  flex-basis: 100px;
+  font-size: 0.8em;
+  white-space: nowrap
 }
 .drop-down-btn {
   height: 38px;
@@ -802,6 +804,10 @@ body.dark-theme .table-wrap tbody tr:hover {
   background: var(--color-surface);
   padding: 0 4px;
   z-index: 1;
+}
+[dir="rtl"] .input-item .input-label  {
+  left: unset;
+  right: 5px;
 }
 .input-item .input {
   display: flex;
