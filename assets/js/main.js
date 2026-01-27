@@ -3,7 +3,7 @@ let appData = null;
 async function fetchData() {
     try {
         // Use global API_URL if defined, fallback to static json
-        const url = typeof API_URL !== 'undefined' ? API_URL : 'js/data.json';
+        const url = typeof API_URL !== 'undefined' ? API_URL : 'assets/js/data.json';
         const response = await fetch(url);
         appData = await response.json();
 

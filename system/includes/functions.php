@@ -16,5 +16,9 @@ function redirect($url) {
 }
 
 function clean($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
+    return strip_tags(trim($data));
+}
+
+function e($data) {
+    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
 }

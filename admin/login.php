@@ -1,5 +1,5 @@
 <?php
-require_once '../includes/functions.php';
+require_once '../system/includes/functions.php';
 
 if (isLoggedIn()) {
     redirect('index.php');
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Admin Panel</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
     <style>
         .login-page {
             height: 100vh;
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="login-page">
         <div class="login-card">
             <div class="text-center mb-30">
-                <img src="../images/logo.svg" alt="Logo" class="m-auto mb-20">
+                <img src="../assets/images/logo.svg" alt="Logo" class="m-auto mb-20">
                 <h2 class="color-title">Admin Login</h2>
                 <p>Enter your credentials to continue</p>
             </div>

@@ -2,7 +2,7 @@
     "pricingData": {
         "apple": {
             "name": "Apple iTunes",
-            "logo": "images/brand/apple-logo.png",
+            "logo": "assets/images/brand/apple-logo.png",
             "options": {
                 "uae": [
                     { "denomination": "50 AED", "price": 51, "currency": "AED" },
@@ -28,7 +28,7 @@
         },
         "psn": {
             "name": "PlayStation Network",
-            "logo": "images/brand/ps-logo.png",
+            "logo": "assets/images/brand/ps-logo.png",
             "options": {
                 "uae": [
                     { "denomination": "$10", "price": 37, "currency": "AED" },
@@ -42,7 +42,7 @@
         },
         "xbox": {
             "name": "Xbox",
-            "logo": "images/brand/xbox-logo.png",
+            "logo": "assets/images/brand/xbox-logo.png",
             "options": {
                 "usa": [
                     { "denomination": "$10", "price": 10, "currency": "USD" },
@@ -52,7 +52,7 @@
         },
         "googleplay": {
             "name": "GooglePlay",
-            "logo": "images/brand/googleplay-logo.png",
+            "logo": "assets/images/brand/googleplay-logo.png",
             "options": {
                 "usa": [
                     { "denomination": "$10", "price": 9.8, "currency": "USD" },
@@ -94,19 +94,19 @@
         {
             "name": "Khalid Hassan",
             "date": "March 5, 2025",
-            "image": "images/users/user-1.jpg",
+            "image": "assets/images/users/user-1.jpg",
             "text": "Our business required bulk gift cards for different regions, and the process was handled professionally. The team was responsive, pricing was fair, and everything was delivered as expected without delays."
         },
         {
             "name": "Daniel Moore",
             "date": "February 21, 2025",
-            "image": "images/users/user-2.jpg",
+            "image": "assets/images/users/user-2.jpg",
             "text": "The variety of brands and supported countries made it easy to find exactly what we needed. Prices were reasonable, and the support team answered our questions clearly before placing the order."
         },
         {
             "name": "Min-Jae Kim",
             "date": "February 3, 2025",
-            "image": "images/users/user-3.jpg",
+            "image": "assets/images/users/user-3.jpg",
             "text": "Overall, a reliable service for both small and larger purchases. The information provided was accurate, and the gift cards worked exactly as described. Would consider ordering again."
         }
     ]

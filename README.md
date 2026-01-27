@@ -35,6 +35,14 @@ The system now features a lightweight PHP backend with Server-Side Rendering (SS
 - Plugin-based architecture allows easy future integration of payment gateways
 - Developers can create custom payment plugins without modifying the core system
 
+## Directory Structure
+- `/admin`: Admin panel management and logic.
+- `/site`: Main website logic and views.
+- `/assets`: Shared frontend assets (CSS, JS, Images, Fonts).
+- `/system`: Core backend files, database logic, and configuration.
+- `index.php`: Root entry point (bootstraps the main site).
+- `api.php`: Root API entry point.
+
 ## Architecture Overview
 - Lightweight PHP backend with minimal dependencies
 - Plugin system using hooks/events for safe extensibility
