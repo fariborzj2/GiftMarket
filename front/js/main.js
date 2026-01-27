@@ -6,30 +6,13 @@ async function fetchData() {
         const response = await fetch('js/data.json');
         appData = await response.json();
 
-        renderDynamicContent();
+        // We don't re-render everything here because PHP already did it (SSR)
+        // But we need to initialize Swiper
+        if (typeof initSwiper === 'function') {
+            initSwiper();
+        }
     } catch (error) {
         console.error('Error loading page data:', error);
-        showErrorState();
-    }
-}
-
-function renderDynamicContent() {
-    if (!appData) return;
-
-    updatePricingTable();
-    renderFAQs();
-    renderTestimonials();
-
-    // Initialize Swiper after content is rendered
-    if (typeof initSwiper === 'function') {
-        initSwiper();
-    }
-}
-
-function showErrorState() {
-    const tableBody = document.getElementById('priceTableBody');
-    if (tableBody) {
-        tableBody.innerHTML = '<tr><td colspan="7" class="text-center">Error loading data. Please try again later.</td></tr>';
     }
 }
 
@@ -206,57 +189,6 @@ function updatePricingTable() {
         `;
         tableBody.appendChild(row);
     });
-}
-
-/* =======================
-   FAQ RENDERING
-======================== */
-function renderFAQs() {
-    const container = document.getElementById('faqContainer');
-    if (!container || !appData.faqs) return;
-
-    container.innerHTML = appData.faqs.map((faq, index) => `
-        <div class="faq-item ${index === appData.faqs.length - 1 ? '' : 'border-b'}">
-            <div class="faq-head d-flex align-center gap-10 pd-20 pointer">
-                <span class="color-primary">${faq.id}</span>
-                <h3 class="color-title">${faq.question}</h3>
-                <span class="icon icon-add icon-size-22 lt-auto"></span>
-            </div>
-            <div class="faq-content border-t pd-20">
-                <p>${faq.answer}</p>
-            </div>
-        </div>
-    `).join('');
-}
-
-/* =======================
-   TESTIMONIALS RENDERING
-======================== */
-function renderTestimonials() {
-    const container = document.getElementById('testimonialsContainer');
-    if (!container || !appData.testimonials) return;
-
-    container.innerHTML = appData.testimonials.map(t => `
-        <div class="swiper-slide">
-            <div class="slide-comment">
-                <div class="d-flex align-center just-between gap-20 mb-10">
-                    <div class="d-flex align-center ">
-                        <div class="user-img"><img src="${t.image}" alt=""></div>
-                        <div class="line20">
-                            <div class="color-title font-size-0-9">${t.name}</div>
-                            <div class="color-bright font-size-0-8">${t.date}</div>
-                        </div>
-                    </div>
-
-                    <div class="">
-                        <div class="stars"><img src="images/stars.svg" alt=""></div>
-                        <div class="font-size-0-8 color-green"><span class="icon icon-size-16 icon-color-green"></span> Verified</div>
-                    </div>
-                </div>
-                <p class="font-size-0-9">${t.text}</p>
-            </div>
-        </div>
-    `).join('');
 }
 
 function getCurrencySymbol(curr) {

@@ -1,3 +1,18 @@
+<?php
+$dataJson = file_get_contents('js/data.json');
+$appData = json_decode($dataJson, true);
+
+$pricingData = $appData['pricingData'];
+$countryNames = $appData['countryNames'];
+$exchangeRates = $appData['exchangeRates'];
+$faqs = $appData['faqs'];
+$testimonials = $appData['testimonials'];
+
+// Default view for SSR
+$defaultBrand = 'apple';
+$defaultCountry = 'uae';
+$defaultPackSize = 100;
+?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
@@ -246,7 +261,48 @@
                         </thead>
 
                         <tbody id="priceTableBody">
-                            <!-- Dynamic pricing rows will be loaded here -->
+                            <?php
+                            $options = $pricingData[$defaultBrand]['options'][$defaultCountry];
+                            foreach ($options as $opt):
+                                $pricePerCard = $opt['price'];
+                                $totalPrice = number_format($pricePerCard * $defaultPackSize, 2, '.', '');
+                                $rate = $exchangeRates[$opt['currency']] ?? 1;
+                                $priceInAED = number_format($pricePerCard * $rate, 2, '.', '');
+                                $totalInAED = number_format($totalPrice * $rate, 2, '.', '');
+                                $symbol = ($opt['currency'] === 'USD' ? '$' : ($opt['currency'] === 'GBP' ? '£' : ($opt['currency'] === 'TRY' ? 'TL' : '')));
+                            ?>
+                            <tr>
+                                <td data-label="Brand" class="text-center">
+                                    <div class="brand-logo m-auto">
+                                        <img src="<?php echo $pricingData[$defaultBrand]['logo']; ?>" alt="">
+                                    </div>
+                                </td>
+                                <td data-label="Denomination">
+                                    <span><?php echo $opt['denomination']; ?></span><br>
+                                    <span class="color-bright font-size-0-9">Digital · <?php echo $opt['currency']; ?></span>
+                                </td>
+                                <td data-label="Country"><?php echo $countryNames[$defaultCountry]; ?></td>
+                                <td data-label="Qty"><?php echo $defaultPackSize; ?></td>
+                                <td data-label="Price / Card">
+                                    <span><?php echo $symbol . $pricePerCard; ?></span><br>
+                                    <?php if ($opt['currency'] !== 'AED'): ?>
+                                    <span class="color-bright font-size-0-9">~ <?php echo $priceInAED; ?> AED</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td data-label="Total Price">
+                                    <span><?php echo $symbol . $totalPrice; ?></span><br>
+                                    <?php if ($opt['currency'] !== 'AED'): ?>
+                                    <span class="color-bright font-size-0-9">~ <?php echo $totalInAED; ?> AED</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="text-center" data-label="Buy">
+                                    <a href="tel:+9710506565129" class="btn">
+                                        <span class="icon icon-calling icon-size-18"></span>
+                                        Call To Order
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
@@ -315,10 +371,30 @@
                         </div>
                         <div id="comments-slider" class="swiper">
                             <div class="swiper-wrapper mb-20" id="testimonialsContainer">
-                                <!-- Dynamic testimonials will be loaded here -->
-                            </div>
+                        <?php foreach ($testimonials as $t): ?>
+                        <div class="swiper-slide">
+                            <div class="slide-comment">
+                                <div class="d-flex align-center just-between gap-20 mb-10">
+                                    <div class="d-flex align-center ">
+                                        <div class="user-img"><img src="<?php echo $t['image']; ?>" alt=""></div>
+                                        <div class="line20">
+                                            <div class="color-title font-size-0-9"><?php echo $t['name']; ?></div>
+                                            <div class="color-bright font-size-0-8"><?php echo $t['date']; ?></div>
+                                        </div>
+                                    </div>
 
-                            <div class="d-flex">
+                                    <div class="">
+                                        <div class="stars"><img src="images/stars.svg" alt=""></div>
+                                        <div class="font-size-0-8 color-green"><span class="icon icon-size-16 icon-color-green"></span> Verified</div>
+                                    </div>
+                                </div>
+                                <p class="font-size-0-9"><?php echo $t['text']; ?></p>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <div class="d-flex">
                                 <div class="btn-sm com-slide-prev pointer mr-10"><span class="icon icon-arrow-left icon-size-18"></span></div>
                                 <div class="btn-sm com-slide-next pointer"><span class="icon icon-arrow-right icon-size-18"></span></div>
                             </div>
@@ -373,7 +449,18 @@
                 </div>
 
                 <div class="faq-list border radius-20" id="faqContainer">
-                    <!-- Dynamic FAQs will be loaded here -->
+                    <?php foreach ($faqs as $index => $faq): ?>
+                    <div class="faq-item <?php echo ($index === count($faqs) - 1 ? '' : 'border-b'); ?>">
+                        <div class="faq-head d-flex align-center gap-10 pd-20 pointer">
+                            <span class="color-primary"><?php echo $faq['id']; ?></span>
+                            <h3 class="color-title"><?php echo $faq['question']; ?></h3>
+                            <span class="icon icon-add icon-size-22 lt-auto"></span>
+                        </div>
+                        <div class="faq-content border-t pd-20">
+                            <p><?php echo $faq['answer']; ?></p>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>
