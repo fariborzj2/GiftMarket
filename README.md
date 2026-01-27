@@ -17,6 +17,7 @@ A multilingual gift card sales platform designed for both wholesale and retail w
 
 ## Admin Panel
 - Professional PHP-based admin panel
+- Modern, fully responsive, and user-friendly UI/UX
 - `.tpl` template engine for admin views
 - Role-based access control (admin / staff)
 - Product, category, pricing, and inventory management
@@ -51,6 +52,7 @@ Installation is performed through a step-by-step web-based installer, allowing t
 ## Project Goals
 - Keep the backend lightweight and maintainable
 - Allow easy extension through plugins, including future payment gateways
+- Provide a modern and user-friendly admin interface with optimal UI/UX
 - Avoid framework lock-in
 - Provide a clean and scalable foundation for real-world usage
 
