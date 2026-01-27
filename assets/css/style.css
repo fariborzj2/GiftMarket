@@ -158,6 +158,9 @@ body.dark-theme {
 .icon-size-48 {
   font-size: 48px;
 }
+[dir="rtl"] .icon-send {
+  transform: scaleX(-1)
+}
 :focus {
   outline: 0;
 }
