@@ -94,6 +94,11 @@ document.addEventListener('click', (e) => {
                 document.documentElement.setAttribute('dir', 'ltr');
                 document.documentElement.setAttribute('lang', 'en');
             }
+
+            // Re-initialize Swiper for RTL/LTR change
+            if (typeof initSwiper === 'function') {
+                initSwiper();
+            }
         }
 
         drop?.querySelector('.drop-down-list')
