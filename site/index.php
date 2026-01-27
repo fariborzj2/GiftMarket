@@ -348,7 +348,7 @@ $defaultPackSize = 100;
                 </div>
 
                 <div class="d-flex-wrap gap-30">
-                    <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
+                    <div class="basis200 bg-gr-card border pd-20 grow-1 radius-20 overhide relative">
                         <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="assets/images/grid-line-3.svg" alt=""></div>
                         <div class="relative">
                             <div class="mb-10"><span class="icon icon-verify icon-size-48 icon-color-primary"></span></div>
@@ -356,7 +356,7 @@ $defaultPackSize = 100;
                             <p class="line20">All cards are original and sourced from verified distributors</p>
                         </div>
                     </div>
-                    <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
+                    <div class="basis200 bg-gr-card border pd-20 grow-1 radius-20 overhide relative">
                         <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="assets/images/grid-line-3.svg" alt=""></div>
                         <div class="relative">
                             <div class="mb-10"><span class="icon icon-stopwatch icon-size-48 icon-color-primary"></span></div>
@@ -364,7 +364,7 @@ $defaultPackSize = 100;
                             <p class="line20">Receive your codes quickly, whether buying single or bulk packs</p>
                         </div>
                     </div>
-                    <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
+                    <div class="basis200 bg-gr-card border pd-20 grow-1 radius-20 overhide relative">
                         <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="assets/images/grid-line-3.svg" alt=""></div>
                         <div class="relative">
                             <div class="mb-10"><span class="icon icon-tag-price icon-size-48 icon-color-primary"></span></div>
@@ -372,7 +372,7 @@ $defaultPackSize = 100;
                             <p class="line20">Competitive pricing for both retail and wholesale purchases</p>
                         </div>
                     </div>
-                    <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
+                    <div class="basis200 bg-gr-card border pd-20 grow-1 radius-20 overhide relative">
                         <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="assets/images/grid-line-3.svg" alt=""></div>
                         <div class="relative">
                             <div class="mb-10"><span class="icon icon-headphone icon-size-48 icon-color-primary"></span></div>
@@ -496,7 +496,7 @@ $defaultPackSize = 100;
 
         <div id="contact" class="section">
             <div class="center">
-                <div class="contact-box border bg-gr-light radius-20 overhide relative">
+                <div class="contact-box border bg-gr-card radius-20 overhide relative">
                     <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 300px;"><img src="assets/images/grid-line-3.svg" alt=""></div>
                     <div class="text-left mb-20 relative">
                         <h2 class="line60 color-primary font-size-3">Get in touch</h2>
