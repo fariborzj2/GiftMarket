@@ -71,12 +71,13 @@ if (!isLoggedIn()) {
             width: 50px;
             height: 50px;
             border-radius: 12px;
-            background: #eaeaff;
+            background: var(--color-body);
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--color-primary);
             font-size: 24px;
+            border: 1px solid var(--color-border);
         }
     </style>
 </head>
@@ -89,9 +90,11 @@ if (!isLoggedIn()) {
             <div class="sidebar-menu">
                 <a href="index.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">Dashboard</a>
                 <a href="products.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'products.php' ? 'active' : ''; ?>">Products</a>
+                <!-- Future modules:
                 <a href="orders.php">Orders</a>
                 <a href="customers.php">Customers</a>
                 <a href="settings.php">Settings</a>
+                -->
                 <a href="logout.php" style="margin-top: 50px; color: #ef4444;">Logout</a>
             </div>
         </div>
