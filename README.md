@@ -55,11 +55,18 @@ The system includes a built-in installer that guides users through the setup pro
 
 Installation is performed through a step-by-step web-based installer, allowing the system to be deployed and ready for use in a few simple steps.
 
-### MySQL Setup (cPanel)
-1. Create a MySQL database in cPanel.
-2. Create a MySQL user and assign it to the database with all privileges.
-3. Import the `database.sql` file into your database via **phpMyAdmin**.
-4. Update `includes/config.php` with your database credentials (`DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`).
+### Installation via Wizard (Recommended)
+1. Upload the project files to your server.
+2. Create an empty MySQL database in cPanel.
+3. Access your domain in a browser (e.g., `https://yourdomain.com`).
+4. The **Installation Wizard** will automatically start.
+5. Follow the steps to configure your database and admin account.
+6. After installation, **delete the `/install` directory** for security.
+
+### Manual Setup (Alternative)
+1. Create a MySQL database and user.
+2. Import `database.sql` via phpMyAdmin.
+3. Rename `system/includes/config.php.example` (if available) or update `system/includes/config.php` with your credentials.
 
 ## Use Cases
 - Gift card wholesalers
