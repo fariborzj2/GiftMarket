@@ -1,4 +1,4 @@
 <?php
-require_once '../includes/functions.php';
+require_once '../system/includes/functions.php';
 session_destroy();
 redirect('login.php');

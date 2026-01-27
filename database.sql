@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`username`, `password`, `role`) VALUES
-('admin', '$2y$10$S9T7i7.kY0N2H7.yK0N2H.yK0N2H.yK0N2H.yK0N2H.yK0N2H.', 'admin');
+('admin', '$2y$10$NflJIWzI3Cb17kJbbb6x2Ogy0wkzqjv1cqjenhK4srg7xK3uDQLma', 'admin');
 
 -- --------------------------------------------------------
 

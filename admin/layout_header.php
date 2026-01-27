@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../system/includes/functions.php';
 
 if (!isLoggedIn()) {
     redirect('login.php');
@@ -11,8 +11,8 @@ if (!isLoggedIn()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo SITE_NAME; ?></title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/grid.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/grid.css">
     <style>
         :root {
             --sidebar-width: 260px;
@@ -84,7 +84,7 @@ if (!isLoggedIn()) {
     <div class="admin-main">
         <div class="sidebar">
             <div class="logo">
-                <img src="../images/logo.svg" alt="Logo">
+                <img src="../assets/images/logo.svg" alt="Logo">
             </div>
             <div class="sidebar-menu">
                 <a href="index.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">Dashboard</a>
