@@ -7,7 +7,6 @@
   -webkit-writing-mode: horizontal-tb;
   -ms-writing-mode: rl-tb;
   writing-mode: horizontal-tb;
-  direction: ltr;
   text-orientation: mixed;
 
   --sidemenu-size: 250px;
@@ -23,6 +22,7 @@
     --color-green: #179364;
     --color-white: #ffffff;
     --color-surface: #ffffff;
+    --color-bright: #f5f5f5
 
 }
 body.dark-theme {
@@ -30,8 +30,8 @@ body.dark-theme {
     --color-text: #a0aec0;
     --color-title: #ffffff;
     --color-border: #2d3748;
-    --color-white: #1a202c;
     --color-surface: #1a202c;
+    --color-bright: #0b0f1a;
 }
 .color-primary {
     color: var(--color-primary);
@@ -77,29 +77,69 @@ body.dark-theme {
     
 }
 
+/* ==============================
+   Font palette definitions
+================================ */
+
+@font-palette-values --icon-light {
+    font-family: "icon";
+    override-colors: 0 #1C274C;
+}
+
+@font-palette-values --icon-dark {
+    font-family: "icon";
+    override-colors: 0 #ffffff;
+}
+
+@font-palette-values --icon-primary {
+    font-family: "icon";
+    override-colors: 0 #007aff;
+}
+
+@font-palette-values --icon-success {
+    font-family: "icon";
+    override-colors: 0 #179364;
+}
+
+/* ==============================
+   Base icon
+================================ */
+
 .icon {
-    /* Use !important to prevent extensions from overriding this font. */
-    font-family: "icon" !important;
+    font-family: "icon";
     font-style: normal;
     font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
     line-height: 1;
     vertical-align: middle;
-
-    /* Better Font Rendering =========== */
+    font-palette: --icon-light;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-.icon-color-primary {
-    color: var(--color-primary);
+
+/* ==============================
+   Theme handling
+================================ */
+
+.dark-theme .icon {
+    font-palette: --icon-dark;
 }
-.icon-color-green {
-    color: var(--color-green);
+
+/* ==============================
+   Color modifiers (overrides theme)
+================================ */
+
+.icon--primary {
+    font-palette: --icon-primary;
 }
-.icon-color-white {
-    color: #ffffff;
+
+.icon--success {
+    font-palette: --icon-success;
 }
+
+.icon--white {
+    font-palette: --icon-dark;
+}
+
 .icon-size-16 {
   font-size: 16px;
 }
@@ -207,6 +247,7 @@ input,
 button,
 textarea {
   font-family: Poppins, Tahoma;
+  background: transparent; 
 }
 button {
   border: none;
@@ -427,6 +468,9 @@ body {
   right: 0;
   margin: 0 auto;
 }
+.dark-theme .grid-line-bg {
+  opacity: 0.15
+}
 .grid-line-bg img {
   width: 100%;
   object-position: center;
@@ -569,7 +613,7 @@ body.dark-theme .drop-option.active {
   z-index: 0;
 }
 body.dark-theme .hero-img:before {
-  background: linear-gradient(90deg, var(--color-surface) , var(--color-body));
+  background: linear-gradient(90deg, var(--color-surface) , var(--color-surface));
 }
 .hero-img .img {
   position: relative;
@@ -598,7 +642,6 @@ body.dark-theme .bg-gr-light {
 .table-wrap table {
     width: 100%;
     border-collapse: collapse;
-    color: #1f2937;
     font-size: 14px;
 }
 
@@ -611,9 +654,8 @@ body.dark-theme .bg-gr-light {
     padding: 14px 12px;
     font-weight: 600;
     white-space: nowrap;
-    color: #334155;
-    border-bottom: 1px solid #e5e7eb;
-    border-right: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border);
 }
 
 .table-wrap th.center {
@@ -624,8 +666,8 @@ body.dark-theme .bg-gr-light {
 .table-wrap td {
     padding: 14px 12px;
     vertical-align: middle;
-    border-right: 1px solid #e5e7eb;
-    border-bottom: 1px solid #e5e7eb;
+    border-right: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
   white-space: nowrap;
 }
 .table-wrap th:first-child , .table-wrap td:first-child {
@@ -852,7 +894,6 @@ body.dark-theme .table-wrap tbody tr:hover {
 [dir="rtl"] .table-wrap td {
     border-right: none;
     border-left: 1px solid var(--color-border);
-    text-align: right;
 }
 [dir="rtl"] .table-wrap th:last-child,
 [dir="rtl"] .table-wrap td:last-child {
@@ -866,7 +907,7 @@ body.dark-theme .table-wrap tbody tr:hover {
 /* mode-toggle */
 .mode-toggle {
   height: 38px;
-  background: var(--color-body);
+  background: var(--color-bright);
   border-radius: 10px;
   padding: 3px;
   border: 1px solid var(--color-border);
@@ -877,13 +918,15 @@ body.dark-theme .table-wrap tbody tr:hover {
   height: 100%;
   border-radius: 8px;
   padding: 0 10px;
-  flex-grow: 1
-    
+  flex-grow: 1;
+  color: var(--color-text);
 }
 .mode-toggle .mode-btn.active {
-  background: var(--color-white);
+  color: var(--color-title);
+  background: var(--color-surface);
   box-shadow: 0 0 4px rgba(0,0,0,0.1)
-}h1, h2, h3, h4, h5, h6 {
+}
+h1, h2, h3, h4, h5, h6 {
     color: var(--color-title);
 }
 .bg-surface {
