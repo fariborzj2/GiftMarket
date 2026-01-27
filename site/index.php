@@ -620,8 +620,15 @@ $defaultPackSize = 100;
     <script>
         let commentsSlider;
         function initSwiper() {
+            if (commentsSlider) {
+                commentsSlider.destroy(true, true);
+            }
+
+            const isRtl = document.documentElement.getAttribute('dir') === 'rtl';
+
             commentsSlider = new Swiper('#comments-slider', {
                 loop: true,
+                rtl: isRtl,
                 spaceBetween: 20,
                 navigation: {
                     nextEl: '.com-slide-next',
