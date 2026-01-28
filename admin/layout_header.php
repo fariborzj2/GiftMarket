@@ -13,12 +13,17 @@ if (!isLoggedIn()) {
     <title><?php echo SITE_NAME; ?></title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/grid.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
     <style>
         :root {
             --sidebar-width: 260px;
         }
         body {
             background: var(--color-body);
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        input, button, textarea, select {
+            font-family: 'Vazirmatn', sans-serif !important;
         }
         .admin-main {
             display: flex;
