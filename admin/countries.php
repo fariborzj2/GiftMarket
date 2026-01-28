@@ -178,8 +178,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="input-item mb-20">
                 <div class="input-label">واحد پول</div>
-                <div class="input">
-                    <input type="text" name="currency" value="<?php echo e($editData['currency']); ?>" required placeholder="مثلاً AED, USD, EUR">
+                <div class="drop-down w-full">
+                    <div class="drop-down-btn d-flex align-center gap-10 pointer" style="border: 1px solid var(--color-border); padding: 10px 15px; border-radius: 12px; background: var(--color-body);">
+                        <div class="selected-text"><?php echo e(!empty($editData['currency']) ? $editData['currency'] : 'انتخاب واحد پول'); ?></div>
+                        <span class="icon icon-arrow-down icon-size-16 lt-auto"></span>
+                    </div>
+
+                    <input type="hidden" class="selected-option" name="currency" value="<?php echo e($editData['currency']); ?>" required>
+
+                    <div class="drop-down-list" style="width: 100%; top: 100%;">
+                        <?php foreach (['AED', 'USD', 'EUR', 'GBP', 'TRY', 'SAR', 'QAR', 'KWD', 'BHD', 'OMR'] as $curr): ?>
+                            <div class="drop-option d-flex gap-10 align-center <?php echo $editData['currency'] == $curr ? 'active' : ''; ?>" data-option="<?php echo e($curr); ?>">
+                                <span><?php echo e($curr); ?></span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
             </div>
 

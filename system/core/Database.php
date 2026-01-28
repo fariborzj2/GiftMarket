@@ -58,6 +58,13 @@ class Database {
                 flag VARCHAR(255) DEFAULT NULL,
                 currency VARCHAR(10) DEFAULT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+            CREATE TABLE IF NOT EXISTS brands (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(100) NOT NULL,
+                code VARCHAR(20) UNIQUE NOT NULL,
+                logo VARCHAR(255) DEFAULT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ";
 
         // Multi-query handling for initialization

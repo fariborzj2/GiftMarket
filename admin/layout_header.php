@@ -150,6 +150,7 @@ if (!isLoggedIn()) {
             </div>
             <div class="sidebar-menu">
                 <a href="index.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">داشبورد</a>
+                <a href="brands.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'brands.php' ? 'active' : ''; ?>">برندها</a>
                 <a href="countries.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'countries.php' ? 'active' : ''; ?>">کشورها</a>
                 <a href="products.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'products.php' ? 'active' : ''; ?>">محصولات</a>
                 <!-- Future modules:

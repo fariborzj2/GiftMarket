@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <?php if ($action === 'list'):
-    $products = db()->query("SELECT products.*, countries.name as country_name FROM products LEFT JOIN countries ON products.country = countries.code ORDER BY products.id DESC")->fetchAll();
+    $products = db()->query("SELECT products.*, countries.name as country_name, brands.name as brand_name FROM products LEFT JOIN countries ON products.country = countries.code LEFT JOIN brands ON products.brand = brands.code ORDER BY products.id DESC")->fetchAll();
 ?>
     <div class="admin-card">
         <div class="table-wrap">
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
                     <?php foreach ($products as $p): ?>
                     <tr>
-                        <td><?php echo strtoupper(e($p['brand'])); ?></td>
+                        <td><?php echo e($p['brand_name'] ?? strtoupper($p['brand'])); ?></td>
                         <td><?php echo e($p['denomination']); ?></td>
                         <td><?php echo e($p['country_name'] ?? strtoupper($p['country'])); ?></td>
                         <td><?php echo e($p['price']) . ' ' . e($p['currency']); ?></td>
@@ -86,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php elseif ($action === 'add' || $action === 'edit'):
     $countries = db()->query("SELECT * FROM countries ORDER BY name ASC")->fetchAll();
+    $brands = db()->query("SELECT * FROM brands ORDER BY name ASC")->fetchAll();
     $editData = ['id' => '', 'brand' => 'apple', 'denomination' => '', 'country' => '', 'price' => '', 'currency' => 'AED'];
     if ($action === 'edit' && isset($_GET['id'])) {
         $stmt = db()->prepare("SELECT * FROM products WHERE id = ?");
@@ -103,8 +104,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="input-item mb-20">
                 <div class="input-label">برند</div>
-                <div class="input">
-                    <input type="text" name="brand" value="<?php echo e($editData['brand']); ?>" required placeholder="مثلاً apple, psn, xbox">
+                <div class="drop-down w-full">
+                    <?php
+                    $selectedBrand = null;
+                    foreach ($brands as $b) {
+                        if ($b['code'] == $editData['brand']) {
+                            $selectedBrand = $b;
+                            break;
+                        }
+                    }
+                    ?>
+                    <div class="drop-down-btn d-flex align-center gap-10 pointer" style="border: 1px solid var(--color-border); padding: 10px 15px; border-radius: 12px; background: var(--color-body);">
+                        <div class="drop-down-img">
+                            <img class="selected-img" src="../<?php echo e($selectedBrand['logo'] ?? ''); ?>" alt="" style="width: 24px; <?php echo !$selectedBrand['logo'] ? 'display:none;' : ''; ?>">
+                        </div>
+                        <div class="selected-text"><?php echo e($selectedBrand['name'] ?? 'انتخاب برند'); ?></div>
+                        <span class="icon icon-arrow-down icon-size-16 lt-auto"></span>
+                    </div>
+
+                    <input type="hidden" class="selected-option" name="brand" value="<?php echo e($editData['brand']); ?>" required>
+
+                    <div class="drop-down-list" style="width: 100%; top: 100%;">
+                        <?php foreach ($brands as $b): ?>
+                            <div class="drop-option d-flex gap-10 align-center <?php echo $editData['brand'] == $b['code'] ? 'active' : ''; ?>" data-option="<?php echo e($b['code']); ?>">
+                                <div class="drop-option-img"><img src="../<?php echo e($b['logo']); ?>" alt="" style="width: 24px;"></div>
+                                <span><?php echo e($b['name']); ?></span>
+                            </div>
+                        <?php endforeach; ?>
+                        <?php if (empty($brands)): ?>
+                            <div class="pd-10 text-center color-bright font-size-0-9">ابتدا <a href="brands.php?action=add">یک برند اضافه کنید</a></div>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
 
@@ -117,20 +147,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="input-item mb-20">
                 <div class="input-label">کشور</div>
-                <div class="input">
-                    <?php if (empty($countries)): ?>
-                        <div style="padding: 10px; color: #ef4444; font-size: 14px;">
-                            لطفاً ابتدا <a href="countries.php?action=add" style="text-decoration: underline;">یک کشور اضافه کنید</a>.
+                <div class="drop-down w-full">
+                    <?php
+                    $selectedCountry = null;
+                    foreach ($countries as $c) {
+                        if ($c['code'] == $editData['country']) {
+                            $selectedCountry = $c;
+                            break;
+                        }
+                    }
+                    ?>
+                    <div class="drop-down-btn d-flex align-center gap-10 pointer" style="border: 1px solid var(--color-border); padding: 10px 15px; border-radius: 12px; background: var(--color-body);">
+                        <div class="drop-down-img">
+                            <img class="selected-img" src="../<?php echo e($selectedCountry['flag'] ?? ''); ?>" alt="" style="width: 24px; <?php echo !$selectedCountry['flag'] ? 'display:none;' : ''; ?>">
                         </div>
-                    <?php else: ?>
-                        <select name="country" required style="width: 100%; border: none; background: transparent; color: var(--color-text); height: 100%; padding: 0 5px;">
-                            <?php foreach ($countries as $c): ?>
-                                <option value="<?php echo e($c['code']); ?>" <?php echo $editData['country'] == $c['code'] ? 'selected' : ''; ?>>
-                                    <?php echo e($c['name']); ?> (<?php echo strtoupper(e($c['code'])); ?>)
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    <?php endif; ?>
+                        <div class="selected-text"><?php echo e($selectedCountry['name'] ?? 'انتخاب کشور'); ?></div>
+                        <span class="icon icon-arrow-down icon-size-16 lt-auto"></span>
+                    </div>
+
+                    <input type="hidden" class="selected-option" name="country" value="<?php echo e($editData['country']); ?>" required>
+
+                    <div class="drop-down-list" style="width: 100%; top: 100%;">
+                        <?php foreach ($countries as $c): ?>
+                            <div class="drop-option d-flex gap-10 align-center <?php echo $editData['country'] == $c['code'] ? 'active' : ''; ?>" data-option="<?php echo e($c['code']); ?>">
+                                <div class="drop-option-img"><img src="../<?php echo e($c['flag']); ?>" alt="" style="width: 24px;"></div>
+                                <span><?php echo e($c['name']); ?></span>
+                            </div>
+                        <?php endforeach; ?>
+                        <?php if (empty($countries)): ?>
+                            <div class="pd-10 text-center color-bright font-size-0-9">ابتدا <a href="countries.php?action=add">یک کشور اضافه کنید</a></div>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
 
@@ -143,8 +190,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="input-item grow-1">
                     <div class="input-label">واحد پول</div>
-                    <div class="input">
-                        <input type="text" name="currency" value="<?php echo e($editData['currency']); ?>" required placeholder="مثلاً AED, USD">
+                    <div class="drop-down w-full">
+                        <div class="drop-down-btn d-flex align-center gap-10 pointer" style="border: 1px solid var(--color-border); padding: 10px 15px; border-radius: 12px; background: var(--color-body);">
+                            <div class="selected-text"><?php echo e(!empty($editData['currency']) ? $editData['currency'] : 'AED'); ?></div>
+                            <span class="icon icon-arrow-down icon-size-16 lt-auto"></span>
+                        </div>
+
+                        <input type="hidden" class="selected-option" name="currency" value="<?php echo e($editData['currency'] ?: 'AED'); ?>" required>
+
+                        <div class="drop-down-list" style="width: 100%; top: 100%;">
+                            <?php foreach (['AED', 'USD', 'EUR', 'GBP', 'TRY', 'SAR', 'QAR', 'KWD', 'BHD', 'OMR'] as $curr): ?>
+                                <div class="drop-option d-flex gap-10 align-center <?php echo $editData['currency'] == $curr ? 'active' : ''; ?>" data-option="<?php echo e($curr); ?>">
+                                    <span><?php echo e($curr); ?></span>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
                 </div>
             </div>
