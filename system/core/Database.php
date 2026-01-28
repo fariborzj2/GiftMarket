@@ -48,6 +48,7 @@ class Database {
                 price_digital DECIMAL(10, 2) NOT NULL DEFAULT 0,
                 price_physical DECIMAL(10, 2) NOT NULL DEFAULT 0,
                 currency VARCHAR(10) NOT NULL,
+                pack_size INT DEFAULT 1,
                 stock INT DEFAULT 0,
                 type VARCHAR(20) DEFAULT 'digital',
                 status INT DEFAULT 1
@@ -89,6 +90,10 @@ class Database {
 
         try {
             $this->pdo->exec("ALTER TABLE products ADD COLUMN price_physical DECIMAL(10, 2) NOT NULL DEFAULT 0");
+        } catch (PDOException $e) {}
+
+        try {
+            $this->pdo->exec("ALTER TABLE products ADD COLUMN pack_size INT DEFAULT 1");
         } catch (PDOException $e) {}
 
         // Add default admin if not exists (password: admin123)
