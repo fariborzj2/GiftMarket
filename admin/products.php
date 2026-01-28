@@ -17,6 +17,7 @@ if ($action === 'delete' && isset($_GET['id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $brand = clean($_POST['brand']);
     $denomination = clean($_POST['denomination']);
+    $pack_size = (int)($_POST['pack_size'] ?? 1);
     $country = clean($_POST['country']);
     $price_digital = (float)$_POST['price_digital'];
     $price_physical = (float)$_POST['price_physical'];
@@ -29,13 +30,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['id']) && !empty($_POST['id'])) {
         // Update
-        $stmt = db()->prepare("UPDATE products SET brand=?, denomination=?, country=?, price=?, price_digital=?, price_physical=?, currency=? WHERE id=?");
-        $stmt->execute([$brand, $denomination, $country, $price, $price_digital, $price_physical, $currency, $_POST['id']]);
+        $stmt = db()->prepare("UPDATE products SET brand=?, denomination=?, pack_size=?, country=?, price=?, price_digital=?, price_physical=?, currency=? WHERE id=?");
+        $stmt->execute([$brand, $denomination, $pack_size, $country, $price, $price_digital, $price_physical, $currency, $_POST['id']]);
         $msg = 'محصول با موفقیت بروزرسانی شد!';
     } else {
         // Insert
-        $stmt = db()->prepare("INSERT INTO products (brand, denomination, country, price, price_digital, price_physical, currency) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$brand, $denomination, $country, $price, $price_digital, $price_physical, $currency]);
+        $stmt = db()->prepare("INSERT INTO products (brand, denomination, pack_size, country, price, price_digital, price_physical, currency) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$brand, $denomination, $pack_size, $country, $price, $price_digital, $price_physical, $currency]);
         $msg = 'محصول با موفقیت اضافه شد!';
     }
     $action = 'list';
@@ -63,7 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <thead>
                     <tr>
                         <th>برند</th>
-                        <th>مقدار</th>
+                        <th>مبلغ اعتبار</th>
+                        <th>Pack Size</th>
                         <th>کشور</th>
                         <th>قیمت دیجیتال</th>
                         <th>قیمت فیزیکی</th>
@@ -72,12 +74,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </thead>
                 <tbody>
                     <?php if (empty($products)): ?>
-                        <tr><td colspan="6" class="text-center">هیچ محصولی یافت نشد.</td></tr>
+                        <tr><td colspan="7" class="text-center">هیچ محصولی یافت نشد.</td></tr>
                     <?php endif; ?>
                     <?php foreach ($products as $p): ?>
                     <tr>
                         <td><?php echo e($p['brand_name'] ?? strtoupper($p['brand'])); ?></td>
                         <td><?php echo e($p['denomination']); ?></td>
+                        <td><?php echo e($p['pack_size']); ?></td>
                         <td><?php echo e($p['country_name'] ?? strtoupper($p['country'])); ?></td>
                         <td><?php echo e($p['price_digital']) . ' ' . e($p['currency']); ?></td>
                         <td><?php echo e($p['price_physical']) . ' ' . e($p['currency']); ?></td>
@@ -95,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php elseif ($action === 'add' || $action === 'edit'):
     $countries = db()->query("SELECT * FROM countries ORDER BY name ASC")->fetchAll();
     $brands = db()->query("SELECT * FROM brands ORDER BY name ASC")->fetchAll();
-    $editData = ['id' => '', 'brand' => 'apple', 'denomination' => '', 'country' => '', 'price_digital' => '', 'price_physical' => '', 'currency' => 'AED'];
+    $editData = ['id' => '', 'brand' => 'apple', 'denomination' => '', 'pack_size' => '1', 'country' => '', 'price_digital' => '', 'price_physical' => '', 'currency' => 'AED'];
     if ($action === 'edit' && isset($_GET['id'])) {
         $stmt = db()->prepare("SELECT * FROM products WHERE id = ?");
         $stmt->execute([$_GET['id']]);
@@ -147,9 +150,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="input-item mb-20">
-                <div class="input-label">مقدار</div>
+                <div class="input-label">مبلغ اعتبار</div>
                 <div class="input">
                     <input type="text" name="denomination" value="<?php echo e($editData['denomination']); ?>" required placeholder="مثلاً 100 AED, $50">
+                </div>
+            </div>
+
+            <div class="input-item mb-20">
+                <div class="input-label">Pack Size</div>
+                <div class="input">
+                    <input type="number" name="pack_size" value="<?php echo e($editData['pack_size']); ?>" required min="1">
                 </div>
             </div>
 
