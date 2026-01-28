@@ -20,16 +20,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['username'] = $user['username'];
         redirect('index.php');
     } else {
-        $error = 'Invalid username or password';
+        $error = 'نام کاربری یا رمز عبور اشتباه است';
     }
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Admin Panel</title>
+    <title>ورود | پنل مدیریت</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <style>
         .login-page {
@@ -59,13 +59,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </style>
 </head>
-<body class="dark-theme">
+<body>
     <div class="login-page">
         <div class="login-card">
             <div class="text-center mb-30">
                 <img src="../assets/images/logo.svg" alt="Logo" class="m-auto mb-20">
-                <h2 class="color-title">Admin Login</h2>
-                <p>Enter your credentials to continue</p>
+                <h2 class="color-title">ورود به مدیریت</h2>
+                <p>برای ادامه اطلاعات خود را وارد کنید</p>
             </div>
 
             <?php if ($error): ?>
@@ -74,20 +74,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <form method="POST" class="contact-form" style="box-shadow: none; padding: 0;">
                 <div class="input-item mb-20">
-                    <div class="input-label">Username</div>
+                    <div class="input-label">نام کاربری</div>
                     <div class="input">
-                        <input type="text" name="username" placeholder="Username" required>
+                        <input type="text" name="username" placeholder="نام کاربری" required>
                     </div>
                 </div>
 
                 <div class="input-item mb-30">
-                    <div class="input-label">Password</div>
+                    <div class="input-label">رمز عبور</div>
                     <div class="input">
-                        <input type="password" name="password" placeholder="Password" required>
+                        <input type="password" name="password" placeholder="رمز عبور" required>
                     </div>
                 </div>
 
-                <button type="submit" class="btn-primary radius-100 full-width">Login</button>
+                <button type="submit" class="btn-primary radius-100 full-width">ورود</button>
             </form>
         </div>
     </div>
