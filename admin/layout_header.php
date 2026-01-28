@@ -6,7 +6,7 @@ if (!isLoggedIn()) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,10 +34,20 @@ if (!isLoggedIn()) {
             left: 0;
             top: 0;
         }
+        [dir="rtl"] .sidebar {
+            left: auto;
+            right: 0;
+            border-right: none;
+            border-left: 1px solid var(--color-border);
+        }
         .content-area {
             flex: 1;
             margin-left: var(--sidebar-width);
             padding: 40px;
+        }
+        [dir="rtl"] .content-area {
+            margin-left: 0;
+            margin-right: var(--sidebar-width);
         }
         .sidebar-menu {
             margin-top: 40px;
@@ -77,12 +87,18 @@ if (!isLoggedIn()) {
                 transition: all 0.3s ease;
                 z-index: 1001;
             }
+            [dir="rtl"] .sidebar {
+                transform: translateX(100%);
+            }
             .sidebar.active {
                 transform: translateX(0);
             }
             .content-area {
                 margin-left: 0;
                 padding: 20px;
+            }
+            [dir="rtl"] .content-area {
+                margin-right: 0;
             }
             .hamburger {
                 display: block;
@@ -128,15 +144,15 @@ if (!isLoggedIn()) {
                 <img src="../assets/images/logo.svg" alt="Logo">
             </div>
             <div class="sidebar-menu">
-                <a href="index.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">Dashboard</a>
-                <a href="countries.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'countries.php' ? 'active' : ''; ?>">Countries</a>
-                <a href="products.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'products.php' ? 'active' : ''; ?>">Products</a>
+                <a href="index.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">داشبورد</a>
+                <a href="countries.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'countries.php' ? 'active' : ''; ?>">کشورها</a>
+                <a href="products.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'products.php' ? 'active' : ''; ?>">محصولات</a>
                 <!-- Future modules:
-                <a href="orders.php">Orders</a>
-                <a href="customers.php">Customers</a>
-                <a href="settings.php">Settings</a>
+                <a href="orders.php">سفارشات</a>
+                <a href="customers.php">مشتریان</a>
+                <a href="settings.php">تنظیمات</a>
                 -->
-                <a href="logout.php" style="margin-top: 50px; color: #ef4444;">Logout</a>
+                <a href="logout.php" style="margin-top: 50px; color: #ef4444;">خروج</a>
             </div>
         </div>
         <div class="content-area">
@@ -146,6 +162,6 @@ if (!isLoggedIn()) {
                     <h1 class="color-title font-size-2"><?php echo $pageTitle ?? 'Dashboard'; ?></h1>
                 </div>
                 <div class="user-info d-flex align-center gap-10">
-                    <span class="color-text">Hello, <b><?php echo $_SESSION['username']; ?></b></span>
+                    <span class="color-text">سلام، <b><?php echo $_SESSION['username']; ?></b></span>
                 </div>
             </header>

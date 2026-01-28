@@ -1,5 +1,5 @@
 <?php
-$pageTitle = 'Manage Products';
+$pageTitle = 'مدیریت محصولات';
 require_once 'layout_header.php';
 
 $action = $_GET['action'] ?? 'list';
@@ -9,7 +9,7 @@ $msg = '';
 if ($action === 'delete' && isset($_GET['id'])) {
     $stmt = db()->prepare("DELETE FROM products WHERE id = ?");
     $stmt->execute([$_GET['id']]);
-    $msg = 'Product deleted successfully!';
+    $msg = 'محصول با موفقیت حذف شد!';
     $action = 'list';
 }
 
@@ -25,12 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Update
         $stmt = db()->prepare("UPDATE products SET brand=?, denomination=?, country=?, price=?, currency=? WHERE id=?");
         $stmt->execute([$brand, $denomination, $country, $price, $currency, $_POST['id']]);
-        $msg = 'Product updated successfully!';
+        $msg = 'محصول با موفقیت بروزرسانی شد!';
     } else {
         // Insert
         $stmt = db()->prepare("INSERT INTO products (brand, denomination, country, price, currency) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$brand, $denomination, $country, $price, $currency]);
-        $msg = 'Product added successfully!';
+        $msg = 'محصول با موفقیت اضافه شد!';
     }
     $action = 'list';
 }
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
     </div>
-    <a href="products.php?action=add" class="btn-primary radius-100">Add New Product</a>
+    <a href="products.php?action=add" class="btn-primary radius-100">افزودن محصول جدید</a>
 </div>
 
 <?php if ($action === 'list'):
@@ -56,16 +56,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <table>
                 <thead>
                     <tr>
-                        <th>Brand</th>
-                        <th>Denomination</th>
-                        <th>Country</th>
-                        <th>Price</th>
-                        <th>Actions</th>
+                        <th>برند</th>
+                        <th>مقدار</th>
+                        <th>کشور</th>
+                        <th>قیمت</th>
+                        <th>عملیات</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($products)): ?>
-                        <tr><td colspan="5" class="text-center">No products found.</td></tr>
+                        <tr><td colspan="5" class="text-center">هیچ محصولی یافت نشد.</td></tr>
                     <?php endif; ?>
                     <?php foreach ($products as $p): ?>
                     <tr>
@@ -74,8 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <td><?php echo e($p['country_name'] ?? strtoupper($p['country'])); ?></td>
                         <td><?php echo e($p['price']) . ' ' . e($p['currency']); ?></td>
                         <td class="d-flex gap-10">
-                            <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: var(--color-primary);">Edit</a>
-                            <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: #ef4444;" onclick="return confirm('Are you sure?')">Delete</a>
+                            <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: var(--color-primary);">ویرایش</a>
+                            <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: #ef4444;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
                         </td>
                     </tr>
                     <?php endforeach; ?>
@@ -94,30 +94,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 ?>
     <div class="admin-card max-w600">
-        <h3 class="color-title mb-30"><?php echo $action === 'add' ? 'Add New Product' : 'Edit Product'; ?></h3>
+        <h3 class="color-title mb-30"><?php echo $action === 'add' ? 'افزودن محصول جدید' : 'ویرایش محصول'; ?></h3>
         <form method="POST" class="contact-form" style="box-shadow: none; padding: 0;">
             <input type="hidden" name="id" value="<?php echo e($editData['id']); ?>">
 
             <div class="input-item mb-20">
-                <div class="input-label">Brand</div>
+                <div class="input-label">برند</div>
                 <div class="input">
-                    <input type="text" name="brand" value="<?php echo e($editData['brand']); ?>" required placeholder="e.g. apple, psn, xbox">
+                    <input type="text" name="brand" value="<?php echo e($editData['brand']); ?>" required placeholder="مثلاً apple, psn, xbox">
                 </div>
             </div>
 
             <div class="input-item mb-20">
-                <div class="input-label">Denomination</div>
+                <div class="input-label">مقدار</div>
                 <div class="input">
-                    <input type="text" name="denomination" value="<?php echo e($editData['denomination']); ?>" required placeholder="e.g. 100 AED, $50">
+                    <input type="text" name="denomination" value="<?php echo e($editData['denomination']); ?>" required placeholder="مثلاً 100 AED, $50">
                 </div>
             </div>
 
             <div class="input-item mb-20">
-                <div class="input-label">Country</div>
+                <div class="input-label">کشور</div>
                 <div class="input">
                     <?php if (empty($countries)): ?>
                         <div style="padding: 10px; color: #ef4444; font-size: 14px;">
-                            Please <a href="countries.php?action=add" style="text-decoration: underline;">add a country</a> first.
+                            لطفاً ابتدا <a href="countries.php?action=add" style="text-decoration: underline;">یک کشور اضافه کنید</a>.
                         </div>
                     <?php else: ?>
                         <select name="country" required style="width: 100%; border: none; background: transparent; color: var(--color-text); height: 100%; padding: 0 5px;">
@@ -133,22 +133,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="d-flex-wrap gap-20 mb-30">
                 <div class="input-item grow-1">
-                    <div class="input-label">Price</div>
+                    <div class="input-label">قیمت</div>
                     <div class="input">
                         <input type="number" step="0.01" name="price" value="<?php echo e($editData['price']); ?>" required>
                     </div>
                 </div>
                 <div class="input-item grow-1">
-                    <div class="input-label">Currency</div>
+                    <div class="input-label">واحد پول</div>
                     <div class="input">
-                        <input type="text" name="currency" value="<?php echo e($editData['currency']); ?>" required placeholder="e.g. AED, USD">
+                        <input type="text" name="currency" value="<?php echo e($editData['currency']); ?>" required placeholder="مثلاً AED, USD">
                     </div>
                 </div>
             </div>
 
             <div class="d-flex gap-10">
-                <button type="submit" class="btn-primary radius-100">Save Product</button>
-                <a href="products.php" class="btn radius-100" style="height: 48px;">Cancel</a>
+                <button type="submit" class="btn-primary radius-100">ذخیره محصول</button>
+                <a href="products.php" class="btn radius-100" style="height: 48px;">انصراف</a>
             </div>
         </form>
     </div>
