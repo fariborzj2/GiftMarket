@@ -19,7 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $denomination = clean($_POST['denomination']);
     $country = clean($_POST['country']);
     $price = (float)$_POST['price'];
-    $currency = clean($_POST['currency']);
+
+    // Fetch currency from country
+    $stmt = db()->prepare("SELECT currency FROM countries WHERE code = ?");
+    $stmt->execute([$country]);
+    $currency = $stmt->fetchColumn() ?: 'AED';
 
     if (isset($_POST['id']) && !empty($_POST['id'])) {
         // Update
@@ -186,25 +190,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="input-label">قیمت</div>
                     <div class="input">
                         <input type="number" step="0.01" name="price" value="<?php echo e($editData['price']); ?>" required>
-                    </div>
-                </div>
-                <div class="input-item grow-1">
-                    <div class="input-label">واحد پول</div>
-                    <div class="drop-down w-full">
-                        <div class="drop-down-btn d-flex align-center gap-10 pointer" style="border: 1px solid var(--color-border); padding: 10px 15px; border-radius: 12px; background: var(--color-body);">
-                            <div class="selected-text"><?php echo e(!empty($editData['currency']) ? $editData['currency'] : 'AED'); ?></div>
-                            <span class="icon icon-arrow-down icon-size-16 lt-auto"></span>
-                        </div>
-
-                        <input type="hidden" class="selected-option" name="currency" value="<?php echo e($editData['currency'] ?: 'AED'); ?>" required>
-
-                        <div class="drop-down-list" style="width: 100%; top: 100%;">
-                            <?php foreach (['AED', 'USD', 'EUR', 'GBP', 'TRY', 'SAR', 'QAR', 'KWD', 'BHD', 'OMR'] as $curr): ?>
-                                <div class="drop-option d-flex gap-10 align-center <?php echo $editData['currency'] == $curr ? 'active' : ''; ?>" data-option="<?php echo e($curr); ?>">
-                                    <span><?php echo e($curr); ?></span>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
                     </div>
                 </div>
             </div>
