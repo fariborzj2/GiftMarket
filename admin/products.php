@@ -18,7 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $brand = clean($_POST['brand']);
     $denomination = clean($_POST['denomination']);
     $country = clean($_POST['country']);
-    $price = (float)$_POST['price'];
+    $price_digital = (float)$_POST['price_digital'];
+    $price_physical = (float)$_POST['price_physical'];
+    $price = $price_digital; // Backward compatibility
 
     // Fetch currency from country
     $stmt = db()->prepare("SELECT currency FROM countries WHERE code = ?");
@@ -27,13 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['id']) && !empty($_POST['id'])) {
         // Update
-        $stmt = db()->prepare("UPDATE products SET brand=?, denomination=?, country=?, price=?, currency=? WHERE id=?");
-        $stmt->execute([$brand, $denomination, $country, $price, $currency, $_POST['id']]);
+        $stmt = db()->prepare("UPDATE products SET brand=?, denomination=?, country=?, price=?, price_digital=?, price_physical=?, currency=? WHERE id=?");
+        $stmt->execute([$brand, $denomination, $country, $price, $price_digital, $price_physical, $currency, $_POST['id']]);
         $msg = 'محصول با موفقیت بروزرسانی شد!';
     } else {
         // Insert
-        $stmt = db()->prepare("INSERT INTO products (brand, denomination, country, price, currency) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$brand, $denomination, $country, $price, $currency]);
+        $stmt = db()->prepare("INSERT INTO products (brand, denomination, country, price, price_digital, price_physical, currency) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$brand, $denomination, $country, $price, $price_digital, $price_physical, $currency]);
         $msg = 'محصول با موفقیت اضافه شد!';
     }
     $action = 'list';
@@ -63,20 +65,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <th>برند</th>
                         <th>مقدار</th>
                         <th>کشور</th>
-                        <th>قیمت</th>
+                        <th>قیمت دیجیتال</th>
+                        <th>قیمت فیزیکی</th>
                         <th>عملیات</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($products)): ?>
-                        <tr><td colspan="5" class="text-center">هیچ محصولی یافت نشد.</td></tr>
+                        <tr><td colspan="6" class="text-center">هیچ محصولی یافت نشد.</td></tr>
                     <?php endif; ?>
                     <?php foreach ($products as $p): ?>
                     <tr>
                         <td><?php echo e($p['brand_name'] ?? strtoupper($p['brand'])); ?></td>
                         <td><?php echo e($p['denomination']); ?></td>
                         <td><?php echo e($p['country_name'] ?? strtoupper($p['country'])); ?></td>
-                        <td><?php echo e($p['price']) . ' ' . e($p['currency']); ?></td>
+                        <td><?php echo e($p['price_digital']) . ' ' . e($p['currency']); ?></td>
+                        <td><?php echo e($p['price_physical']) . ' ' . e($p['currency']); ?></td>
                         <td class="d-flex gap-10">
                             <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: var(--color-primary);">ویرایش</a>
                             <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: #ef4444;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
@@ -91,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php elseif ($action === 'add' || $action === 'edit'):
     $countries = db()->query("SELECT * FROM countries ORDER BY name ASC")->fetchAll();
     $brands = db()->query("SELECT * FROM brands ORDER BY name ASC")->fetchAll();
-    $editData = ['id' => '', 'brand' => 'apple', 'denomination' => '', 'country' => '', 'price' => '', 'currency' => 'AED'];
+    $editData = ['id' => '', 'brand' => 'apple', 'denomination' => '', 'country' => '', 'price_digital' => '', 'price_physical' => '', 'currency' => 'AED'];
     if ($action === 'edit' && isset($_GET['id'])) {
         $stmt = db()->prepare("SELECT * FROM products WHERE id = ?");
         $stmt->execute([$_GET['id']]);
@@ -187,9 +191,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="d-flex-wrap gap-20 mb-30">
                 <div class="input-item grow-1">
-                    <div class="input-label">قیمت</div>
+                    <div class="input-label">قیمت نسخه دیجیتال</div>
                     <div class="input">
-                        <input type="number" step="0.01" name="price" value="<?php echo e($editData['price']); ?>" required>
+                        <input type="number" step="0.01" name="price_digital" value="<?php echo e($editData['price_digital']); ?>" required>
+                    </div>
+                </div>
+                <div class="input-item grow-1">
+                    <div class="input-label">قیمت نسخه فیزیکی</div>
+                    <div class="input">
+                        <input type="number" step="0.01" name="price_physical" value="<?php echo e($editData['price_physical']); ?>" required>
                     </div>
                 </div>
             </div>

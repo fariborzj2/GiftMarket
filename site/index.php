@@ -17,6 +17,8 @@ foreach ($groupedProducts as $brand => $countries) {
             $dbPricingData[$brand]['options'][$country][] = [
                 'denomination' => $p['denomination'],
                 'price' => $p['price'],
+                'price_digital' => $p['price_digital'],
+                'price_physical' => $p['price_physical'],
                 'currency' => $p['currency']
             ];
         }
@@ -290,7 +292,8 @@ $defaultPackSize = 100;
                             <?php
                             else:
                             foreach ($options as $opt):
-                                $pricePerCard = $opt['price'];
+                                // Default SSR view is Digital
+                                $pricePerCard = $opt['price_digital'];
                                 $totalPrice = number_format($pricePerCard * $defaultPackSize, 2, '.', '');
                                 $rate = $exchangeRates[$opt['currency']] ?? 1;
                                 $priceInAED = number_format($pricePerCard * $rate, 2, '.', '');

@@ -19,6 +19,8 @@ foreach ($groupedProducts as $brand => $countries) {
             $pricingData[$brand]['options'][$country][] = [
                 'denomination' => $p['denomination'],
                 'price' => $p['price'],
+                'price_digital' => $p['price_digital'],
+                'price_physical' => $p['price_physical'],
                 'currency' => $p['currency']
             ];
         }
