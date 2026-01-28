@@ -54,7 +54,9 @@ class Database {
             CREATE TABLE IF NOT EXISTS countries (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 name VARCHAR(100) NOT NULL,
-                code VARCHAR(10) UNIQUE NOT NULL
+                code VARCHAR(10) UNIQUE NOT NULL,
+                flag VARCHAR(255) DEFAULT NULL,
+                currency VARCHAR(10) DEFAULT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ";
 

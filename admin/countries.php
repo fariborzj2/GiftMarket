@@ -8,6 +8,14 @@ $msg = '';
 // Handle Delete
 if ($action === 'delete' && isset($_GET['id'])) {
     try {
+        // Get flag path to delete file
+        $stmt = db()->prepare("SELECT flag FROM countries WHERE id = ?");
+        $stmt->execute([$_GET['id']]);
+        $flag = $stmt->fetchColumn();
+        if ($flag && file_exists(__DIR__ . '/../' . $flag)) {
+            unlink(__DIR__ . '/../' . $flag);
+        }
+
         $stmt = db()->prepare("DELETE FROM countries WHERE id = ?");
         $stmt->execute([$_GET['id']]);
         $msg = 'کشور با موفقیت حذف شد!';
@@ -21,17 +29,46 @@ if ($action === 'delete' && isset($_GET['id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = clean($_POST['name']);
     $code = strtolower(clean($_POST['code']));
+    $currency = strtoupper(clean($_POST['currency']));
+    $id = $_POST['id'] ?? '';
 
-    if (isset($_POST['id']) && !empty($_POST['id'])) {
+    $flag_path = $_POST['old_flag'] ?? '';
+
+    if (isset($_FILES['flag']) && $_FILES['flag']['error'] === UPLOAD_ERR_OK) {
+        $allowed_exts = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
+        $upload_dir = '../assets/images/flag/';
+
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0755, true);
+        }
+
+        $file_ext = strtolower(pathinfo($_FILES['flag']['name'], PATHINFO_EXTENSION));
+
+        if (in_array($file_ext, $allowed_exts)) {
+            $file_name = $code . '_' . time() . '.' . $file_ext;
+
+            if (move_uploaded_file($_FILES['flag']['tmp_name'], $upload_dir . $file_name)) {
+                // Delete old flag if exists
+                if ($flag_path && file_exists(__DIR__ . '/../' . $flag_path)) {
+                    unlink(__DIR__ . '/../' . $flag_path);
+                }
+                $flag_path = 'assets/images/flag/' . $file_name;
+            }
+        } else {
+            $msg = 'خطا: پسوند فایل مجاز نیست. (فقط تصاویر مجاز هستند)';
+        }
+    }
+
+    if (!empty($id)) {
         // Update
-        $stmt = db()->prepare("UPDATE countries SET name=?, code=? WHERE id=?");
-        $stmt->execute([$name, $code, $_POST['id']]);
+        $stmt = db()->prepare("UPDATE countries SET name=?, code=?, flag=?, currency=? WHERE id=?");
+        $stmt->execute([$name, $code, $flag_path, $currency, $id]);
         $msg = 'کشور با موفقیت بروزرسانی شد!';
     } else {
         // Insert
         try {
-            $stmt = db()->prepare("INSERT INTO countries (name, code) VALUES (?, ?)");
-            $stmt->execute([$name, $code]);
+            $stmt = db()->prepare("INSERT INTO countries (name, code, flag, currency) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$name, $code, $flag_path, $currency]);
             $msg = 'کشور با موفقیت اضافه شد!';
         } catch (PDOException $e) {
             $msg = 'خطا: کد کشور باید یکتا باشد.';
@@ -61,19 +98,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <table>
                 <thead>
                     <tr>
+                        <th>پرچم</th>
                         <th>نام</th>
                         <th>کد</th>
+                        <th>واحد پول</th>
                         <th>عملیات</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($countries)): ?>
-                        <tr><td colspan="3" class="text-center">هیچ کشوری یافت نشد.</td></tr>
+                        <tr><td colspan="5" class="text-center">هیچ کشوری یافت نشد.</td></tr>
                     <?php endif; ?>
                     <?php foreach ($countries as $c): ?>
                     <tr>
+                        <td>
+                            <?php if ($c['flag']): ?>
+                                <img src="../<?php echo e($c['flag']); ?>" alt="" style="width: 32px; height: auto; border-radius: 4px;">
+                            <?php else: ?>
+                                -
+                            <?php endif; ?>
+                        </td>
                         <td><?php echo e($c['name']); ?></td>
                         <td><?php echo strtoupper(e($c['code'])); ?></td>
+                        <td><?php echo e($c['currency']); ?></td>
                         <td class="d-flex gap-10">
                             <a href="countries.php?action=edit&id=<?php echo e($c['id']); ?>" class="btn-sm" style="color: var(--color-primary);">ویرایش</a>
                             <a href="countries.php?action=delete&id=<?php echo e($c['id']); ?>" class="btn-sm" style="color: #ef4444;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
@@ -86,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
 <?php elseif ($action === 'add' || $action === 'edit'):
-    $editData = ['id' => '', 'name' => '', 'code' => ''];
+    $editData = ['id' => '', 'name' => '', 'code' => '', 'flag' => '', 'currency' => ''];
     if ($action === 'edit' && isset($_GET['id'])) {
         $stmt = db()->prepare("SELECT * FROM countries WHERE id = ?");
         $stmt->execute([$_GET['id']]);
@@ -95,8 +142,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
     <div class="admin-card max-w600">
         <h3 class="color-title mb-30"><?php echo $action === 'add' ? 'افزودن کشور جدید' : 'ویرایش کشور'; ?></h3>
-        <form method="POST" class="contact-form" style="box-shadow: none; padding: 0;">
+        <form method="POST" enctype="multipart/form-data" class="contact-form" style="box-shadow: none; padding: 0;">
             <input type="hidden" name="id" value="<?php echo e($editData['id']); ?>">
+            <input type="hidden" name="old_flag" value="<?php echo e($editData['flag']); ?>">
 
             <div class="input-item mb-20">
                 <div class="input-label">نام کشور</div>
@@ -110,6 +158,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="input">
                     <input type="text" name="code" value="<?php echo e($editData['code']); ?>" required placeholder="مثلاً uae, usa, uk">
                 </div>
+            </div>
+
+            <div class="input-item mb-20">
+                <div class="input-label">واحد پول</div>
+                <div class="input">
+                    <input type="text" name="currency" value="<?php echo e($editData['currency']); ?>" required placeholder="مثلاً AED, USD, EUR">
+                </div>
+            </div>
+
+            <div class="input-item mb-30">
+                <div class="input-label">تصویر پرچم</div>
+                <div class="input" style="height: auto; padding: 10px;">
+                    <input type="file" name="flag" accept="image/*" <?php echo $action === 'add' ? 'required' : ''; ?>>
+                </div>
+                <?php if ($editData['flag']): ?>
+                    <div class="mt-10">
+                        <img src="../<?php echo e($editData['flag']); ?>" alt="" style="width: 64px; border-radius: 4px;">
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="d-flex gap-10">
