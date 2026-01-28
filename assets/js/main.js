@@ -159,7 +159,7 @@ function updatePricingTable() {
 
     tableBody.innerHTML = '';
     options.forEach(opt => {
-        const pricePerCard = opt.price;
+        const pricePerCard = isDigital ? opt.price_digital : opt.price_physical;
         const totalPrice = (pricePerCard * packSize).toFixed(2);
         const rate = exchangeRates[opt.currency] || 1;
         const priceInAED = (pricePerCard * rate).toFixed(2);

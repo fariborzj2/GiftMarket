@@ -44,7 +44,9 @@ class Database {
                 brand VARCHAR(100) NOT NULL,
                 denomination VARCHAR(100) NOT NULL,
                 country VARCHAR(50) NOT NULL,
-                price DECIMAL(10, 2) NOT NULL,
+                price DECIMAL(10, 2) NOT NULL DEFAULT 0,
+                price_digital DECIMAL(10, 2) NOT NULL DEFAULT 0,
+                price_physical DECIMAL(10, 2) NOT NULL DEFAULT 0,
                 currency VARCHAR(10) NOT NULL,
                 stock INT DEFAULT 0,
                 type VARCHAR(20) DEFAULT 'digital',
@@ -79,6 +81,14 @@ class Database {
 
         try {
             $this->pdo->exec("ALTER TABLE countries ADD COLUMN currency VARCHAR(10) DEFAULT NULL");
+        } catch (PDOException $e) {}
+
+        try {
+            $this->pdo->exec("ALTER TABLE products ADD COLUMN price_digital DECIMAL(10, 2) NOT NULL DEFAULT 0");
+        } catch (PDOException $e) {}
+
+        try {
+            $this->pdo->exec("ALTER TABLE products ADD COLUMN price_physical DECIMAL(10, 2) NOT NULL DEFAULT 0");
         } catch (PDOException $e) {}
 
         // Add default admin if not exists (password: admin123)

@@ -139,6 +139,9 @@ if (!isLoggedIn()) {
             font-size: 24px;
             border: 1px solid var(--color-border);
         }
+        .drop-down-btn {
+            height: 54px !important;
+        }
     </style>
 </head>
 <body>
