@@ -59,22 +59,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if (!empty($id)) {
-        // Update
-        $stmt = db()->prepare("UPDATE countries SET name=?, code=?, flag=?, currency=? WHERE id=?");
-        $stmt->execute([$name, $code, $flag_path, $currency, $id]);
-        $msg = 'کشور با موفقیت بروزرسانی شد!';
-    } else {
-        // Insert
-        try {
+    try {
+        if (!empty($id)) {
+            // Update
+            $stmt = db()->prepare("UPDATE countries SET name=?, code=?, flag=?, currency=? WHERE id=?");
+            $stmt->execute([$name, $code, $flag_path, $currency, $id]);
+            $msg = 'کشور با موفقیت بروزرسانی شد!';
+        } else {
+            // Insert
             $stmt = db()->prepare("INSERT INTO countries (name, code, flag, currency) VALUES (?, ?, ?, ?)");
             $stmt->execute([$name, $code, $flag_path, $currency]);
             $msg = 'کشور با موفقیت اضافه شد!';
-        } catch (PDOException $e) {
-            $msg = 'خطا: کد کشور باید یکتا باشد.';
         }
+        $action = 'list';
+    } catch (PDOException $e) {
+        if ($e->getCode() == 23000) {
+            $msg = 'خطا: کد کشور باید یکتا باشد (این کد قبلاً ثبت شده است).';
+        } else {
+            $msg = 'خطا در پایگاه داده: ' . $e->getMessage();
+        }
+        // Keep the action as add/edit if there's an error
+        $action = (!empty($id)) ? 'edit' : 'add';
     }
-    $action = 'list';
 }
 
 ?>
@@ -133,13 +139,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
 <?php elseif ($action === 'add' || $action === 'edit'):
-    $editData = ['id' => '', 'name' => '', 'code' => '', 'flag' => '', 'currency' => ''];
-    if ($action === 'edit' && isset($_GET['id'])) {
+    $defaultData = ['id' => '', 'name' => '', 'code' => '', 'flag' => '', 'currency' => ''];
+    $editData = $defaultData;
+
+    // If we're coming from a failed POST, try to preserve inputs
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($msg) && strpos($msg, 'خطا') !== false) {
+        $editData = array_merge($defaultData, $_POST);
+        // Special case for flag, we use the flag_path we already processed
+        $editData['flag'] = $flag_path ?? ($_POST['old_flag'] ?? '');
+    } elseif ($action === 'edit' && isset($_GET['id'])) {
         $stmt = db()->prepare("SELECT * FROM countries WHERE id = ?");
         $stmt->execute([$_GET['id']]);
         $fetched = $stmt->fetch();
         if ($fetched) {
-            $editData = $fetched;
+            $editData = array_merge($defaultData, $fetched);
         }
     }
 ?>

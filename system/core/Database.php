@@ -63,9 +63,16 @@ class Database {
         // Multi-query handling for initialization
         try {
             $this->pdo->exec($sql);
-        } catch (PDOException $e) {
-            // Tables might already exist or user might not have CREATE permissions
-        }
+        } catch (PDOException $e) {}
+
+        // Ensure countries table has all required columns (migration for old installations)
+        try {
+            $this->pdo->exec("ALTER TABLE countries ADD COLUMN flag VARCHAR(255) DEFAULT NULL");
+        } catch (PDOException $e) {}
+
+        try {
+            $this->pdo->exec("ALTER TABLE countries ADD COLUMN currency VARCHAR(10) DEFAULT NULL");
+        } catch (PDOException $e) {}
 
         // Add default admin if not exists (password: admin123)
         try {
