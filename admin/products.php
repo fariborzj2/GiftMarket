@@ -90,7 +90,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'edit' && isset($_GET['id'])) {
         $stmt = db()->prepare("SELECT * FROM products WHERE id = ?");
         $stmt->execute([$_GET['id']]);
-        $editData = $stmt->fetch();
+        $fetched = $stmt->fetch();
+        if ($fetched) {
+            $editData = $fetched;
+        }
     }
 ?>
     <div class="admin-card max-w600">
