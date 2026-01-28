@@ -29,7 +29,7 @@ function clean($data) {
 }
 
 function e($data) {
-    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars((string)($data ?? ''), ENT_QUOTES, 'UTF-8');
 }
 
 function getGroupedProducts() {
