@@ -50,6 +50,12 @@ class Database {
                 type VARCHAR(20) DEFAULT 'digital',
                 status INT DEFAULT 1
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+            CREATE TABLE IF NOT EXISTS countries (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(100) NOT NULL,
+                code VARCHAR(10) UNIQUE NOT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ";
 
         // Multi-query handling for initialization

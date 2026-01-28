@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <?php if ($action === 'list'):
-    $products = db()->query("SELECT * FROM products ORDER BY id DESC")->fetchAll();
+    $products = db()->query("SELECT products.*, countries.name as country_name FROM products LEFT JOIN countries ON products.country = countries.code ORDER BY products.id DESC")->fetchAll();
 ?>
     <div class="admin-card">
         <div class="table-wrap">
@@ -64,11 +64,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </tr>
                 </thead>
                 <tbody>
+                    <?php if (empty($products)): ?>
+                        <tr><td colspan="5" class="text-center">No products found.</td></tr>
+                    <?php endif; ?>
                     <?php foreach ($products as $p): ?>
                     <tr>
                         <td><?php echo strtoupper(e($p['brand'])); ?></td>
                         <td><?php echo e($p['denomination']); ?></td>
-                        <td><?php echo strtoupper(e($p['country'])); ?></td>
+                        <td><?php echo e($p['country_name'] ?? strtoupper($p['country'])); ?></td>
                         <td><?php echo e($p['price']) . ' ' . e($p['currency']); ?></td>
                         <td class="d-flex gap-10">
                             <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: var(--color-primary);">Edit</a>
@@ -82,7 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
 <?php elseif ($action === 'add' || $action === 'edit'):
-    $editData = ['id' => '', 'brand' => 'apple', 'denomination' => '', 'country' => 'uae', 'price' => '', 'currency' => 'AED'];
+    $countries = db()->query("SELECT * FROM countries ORDER BY name ASC")->fetchAll();
+    $editData = ['id' => '', 'brand' => 'apple', 'denomination' => '', 'country' => '', 'price' => '', 'currency' => 'AED'];
     if ($action === 'edit' && isset($_GET['id'])) {
         $stmt = db()->prepare("SELECT * FROM products WHERE id = ?");
         $stmt->execute([$_GET['id']]);
@@ -111,7 +115,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="input-item mb-20">
                 <div class="input-label">Country</div>
                 <div class="input">
-                    <input type="text" name="country" value="<?php echo e($editData['country']); ?>" required placeholder="e.g. uae, usa, uk">
+                    <?php if (empty($countries)): ?>
+                        <div style="padding: 10px; color: #ef4444; font-size: 14px;">
+                            Please <a href="countries.php?action=add" style="text-decoration: underline;">add a country</a> first.
+                        </div>
+                    <?php else: ?>
+                        <select name="country" required style="width: 100%; border: none; background: transparent; color: var(--color-text); height: 100%; padding: 0 5px;">
+                            <?php foreach ($countries as $c): ?>
+                                <option value="<?php echo e($c['code']); ?>" <?php echo $editData['country'] == $c['code'] ? 'selected' : ''; ?>>
+                                    <?php echo e($c['name']); ?> (<?php echo strtoupper(e($c['code'])); ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    <?php endif; ?>
                 </div>
             </div>
 
