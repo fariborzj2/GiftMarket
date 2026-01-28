@@ -7,7 +7,9 @@ async function fetchData() {
         const response = await fetch(url);
         appData = await response.json();
 
-        // We don't re-render everything here because PHP already did it (SSR)
+        // Initial render to sync table with current filter state (handles case where user clicked before data loaded)
+        updatePricingTable();
+
         // But we need to initialize Swiper
         if (typeof initSwiper === 'function') {
             initSwiper();
@@ -157,8 +159,15 @@ function updatePricingTable() {
         return;
     }
 
+    const filteredOptions = options.filter(opt => parseInt(opt.pack_size) === packSize);
+
+    if (filteredOptions.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7" class="text-center">No products found for this pack size</td></tr>';
+        return;
+    }
+
     tableBody.innerHTML = '';
-    options.forEach(opt => {
+    filteredOptions.forEach(opt => {
         const pricePerCard = isDigital ? opt.price_digital : opt.price_physical;
         const totalPrice = (pricePerCard * packSize).toFixed(2);
         const rate = exchangeRates[opt.currency] || 1;

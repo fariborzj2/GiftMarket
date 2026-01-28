@@ -96,6 +96,11 @@ class Database {
             $this->pdo->exec("ALTER TABLE products ADD COLUMN pack_size INT DEFAULT 1");
         } catch (PDOException $e) {}
 
+        // Migrate existing price to price_digital and price_physical if they are 0
+        try {
+            $this->pdo->exec("UPDATE products SET price_digital = price, price_physical = price WHERE price_digital = 0 AND price_physical = 0 AND price > 0");
+        } catch (PDOException $e) {}
+
         // Add default admin if not exists (password: admin123)
         try {
             $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM users WHERE username = 'admin'");

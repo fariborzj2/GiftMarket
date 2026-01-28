@@ -273,12 +273,16 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                         <tbody id="priceTableBody">
                             <?php
                             $options = $pricingData[$defaultBrand]['options'][$defaultCountry] ?? [];
-                            if (empty($options)):
+                            $filteredOptions = array_filter($options, function($opt) use ($defaultPackSize) {
+                                return $opt['pack_size'] == $defaultPackSize;
+                            });
+
+                            if (empty($filteredOptions)):
                             ?>
                             <tr><td colspan="7" class="text-center">No products found</td></tr>
                             <?php
                             else:
-                            foreach ($options as $opt):
+                            foreach ($filteredOptions as $opt):
                                 // Default SSR view is Digital
                                 $pricePerCard = $opt['price_digital'];
                                 $totalPrice = number_format($pricePerCard * $defaultPackSize, 2, '.', '');
