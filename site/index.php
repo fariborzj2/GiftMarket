@@ -3,18 +3,32 @@ require_once __DIR__ . '/../system/includes/functions.php';
 
 $appData = json_decode(file_get_contents(__DIR__ . '/../assets/js/data.json'), true);
 
+// Fetch all necessary data from database
+$allBrands = db()->query("SELECT * FROM brands ORDER BY name ASC")->fetchAll();
+$allCountries = db()->query("SELECT * FROM countries ORDER BY name ASC")->fetchAll();
+$allPackSizes = db()->query("SELECT DISTINCT pack_size FROM products ORDER BY pack_size ASC")->fetchAll(PDO::FETCH_COLUMN);
+if (empty($allPackSizes)) $allPackSizes = [1, 10, 25, 50, 100];
+
 // Fetch products from database
 $groupedProducts = getGroupedProducts();
 $dbPricingData = [];
-foreach ($groupedProducts as $brand => $countries) {
-    $dbPricingData[$brand] = [
-        'name' => $appData['pricingData'][$brand]['name'] ?? ucfirst($brand),
-        'logo' => $appData['pricingData'][$brand]['logo'] ?? 'assets/images/brand/default.png',
+
+// Helper maps
+$brandMap = [];
+foreach ($allBrands as $b) $brandMap[$b['code']] = $b;
+$countryMap = [];
+foreach ($allCountries as $c) $countryMap[$c['code']] = $c;
+
+foreach ($groupedProducts as $brandCode => $countries) {
+    $brandInfo = $brandMap[$brandCode] ?? null;
+    $dbPricingData[$brandCode] = [
+        'name' => $brandInfo['name'] ?? ($appData['pricingData'][$brandCode]['name'] ?? ucfirst($brandCode)),
+        'logo' => $brandInfo['logo'] ?? ($appData['pricingData'][$brandCode]['logo'] ?? 'assets/images/brand/default.png'),
         'options' => []
     ];
-    foreach ($countries as $country => $items) {
+    foreach ($countries as $countryCode => $items) {
         foreach ($items as $p) {
-            $dbPricingData[$brand]['options'][$country][] = [
+            $dbPricingData[$brandCode]['options'][$countryCode][] = [
                 'denomination' => $p['denomination'],
                 'pack_size' => $p['pack_size'],
                 'price' => $p['price'],
@@ -27,15 +41,24 @@ foreach ($groupedProducts as $brand => $countries) {
 }
 
 $pricingData = $dbPricingData;
-$countryNames = $appData['countryNames'];
+
+// Re-map country names for the UI logic
+$countryNames = [];
+foreach ($allCountries as $c) {
+    $countryNames[$c['code']] = $c['name'] . ' (' . $c['currency'] . ')';
+}
+
 $exchangeRates = $appData['exchangeRates'];
 $faqs = $appData['faqs'];
 $testimonials = $appData['testimonials'];
 
 // Default view for SSR
-$defaultBrand = 'apple';
-$defaultCountry = 'uae';
-$defaultPackSize = 100;
+$defaultBrand = !empty($allBrands) ? $allBrands[0]['code'] : 'apple';
+$defaultCountry = !empty($allCountries) ? $allCountries[0]['code'] : 'uae';
+$defaultPackSize = !empty($allPackSizes) ? $allPackSizes[0] : 100;
+
+$selectedBrandInfo = $brandMap[$defaultBrand] ?? null;
+$selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -169,97 +192,60 @@ $defaultPackSize = 100;
                     <div class="drop-down grow-1">
                         <div class="drop-down-btn d-flex align-center gap-10 pointer">
                             <div class="drop-down-img">
-                                <img class="selected-img" src="assets/images/brand/apple-logo.png" alt="">
+                                <img class="selected-img" src="<?php echo e($selectedBrandInfo['logo'] ?? 'assets/images/brand/default.png'); ?>" alt="" style="width:24px;">
                             </div>
-                            <div class="selected-text">Apple iTunes</div>
+                            <div class="selected-text"><?php echo e($selectedBrandInfo['name'] ?? 'Select Brand'); ?></div>
                             <span class="icon icon-arrow-down icon-size-16  lt-auto"></span>
                         </div>
 
-                        <input type="text" class="selected-option" name="brand" value="apple" id="" hidden>
+                        <input type="text" class="selected-option" name="brand" value="<?php echo e($defaultBrand); ?>" id="" hidden>
 
                         <div class="drop-down-list">
-                            <div class="drop-option d-flex gap-10 align-center active">
-                                <div class="drop-option-img" data-option="apple"><img src="assets/images/brand/apple-logo.png" alt=""></div>
-                                <span>Apple iTunes</span>
+                            <?php foreach ($allBrands as $b): ?>
+                            <div class="drop-option d-flex gap-10 align-center <?php echo $b['code'] === $defaultBrand ? 'active' : ''; ?>">
+                                <div class="drop-option-img" data-option="<?php echo e($b['code']); ?>"><img src="<?php echo e($b['logo']); ?>" alt="" style="width:24px;"></div>
+                                <span><?php echo e($b['name']); ?></span>
                             </div>
-
-                            <div class="drop-option d-flex gap-10 align-center">
-                                <div class="drop-option-img" data-option="psn"><img src="assets/images/brand/ps-logo.png" alt=""></div>
-                                <span>PlayStation Network</span>
-                            </div>
-
-                            <div class="drop-option d-flex gap-10 align-center">
-                                <div class="drop-option-img" data-option="xbox"><img src="assets/images/brand/xbox-logo.png" alt=""></div>
-                                <span>Xbox</span>
-                            </div>
-
-                            <div class="drop-option d-flex gap-10 align-center">
-                                <div class="drop-option-img" data-option="googleplay"><img src="assets/images/brand/googleplay-logo.png" alt=""></div>
-                                <span>GooglePlay</span>
-                            </div>
+                            <?php endforeach; ?>
                         </div>
                     </div>
 
                     <div class="drop-down grow-1">
                         <div class="drop-down-btn d-flex align-center gap-10 pointer">
                             <div class="drop-down-img">
-                                <img class="selected-img" src="assets/images/flag/emirates.svg" alt="">
+                                <img class="selected-img" src="<?php echo e($selectedCountryInfo['flag'] ?? 'assets/images/flag/default.png'); ?>" alt="" style="width:24px;">
                             </div>
-                            <div class="selected-text">United Arab Emirates (AED)</div>
+                            <div class="selected-text"><?php echo e($countryNames[$defaultCountry] ?? 'Select Country'); ?></div>
                             <span class="icon icon-arrow-down icon-size-16  lt-auto"></span>
                         </div>
 
-                        <input type="text" class="selected-option" name="country" value="uae" id="" hidden>
+                        <input type="text" class="selected-option" name="country" value="<?php echo e($defaultCountry); ?>" id="" hidden>
 
                         <div class="drop-down-list">
-
-                            <div class="drop-option d-flex gap-10 align-center active">
-                                <div class="drop-option-img" data-option="uae"><img src="assets/images/flag/emirates.svg" alt=""></div>
-                                <span>United Arab Emirates (AED)</span>
+                            <?php foreach ($allCountries as $c): ?>
+                            <div class="drop-option d-flex gap-10 align-center <?php echo $c['code'] === $defaultCountry ? 'active' : ''; ?>">
+                                <div class="drop-option-img" data-option="<?php echo e($c['code']); ?>"><img src="<?php echo e($c['flag']); ?>" alt="" style="width:24px;"></div>
+                                <span><?php echo e($c['name']); ?> (<?php echo e($c['currency']); ?>)</span>
                             </div>
-
-                            <div class="drop-option d-flex gap-10 align-center">
-                                <div class="drop-option-img" data-option="usa"><img src="assets/images/flag/united-states.svg" alt=""></div>
-                                <span>United States (USD)</span>
-                            </div>
-
-                            <div class="drop-option d-flex gap-10 align-center">
-                                <div class="drop-option-img" data-option="uk"><img src="assets/images/flag/uk.svg" alt=""></div>
-                                <span>United Kingdom (GBP)</span>
-                            </div>
-
-                            <div class="drop-option d-flex gap-10 align-center">
-                                <div class="drop-option-img" data-option="turkey"><img src="assets/images/flag/turkey.svg" alt=""></div>
-                                <span>Turkey (TRY)</span>
-                            </div>
+                            <?php endforeach; ?>
                         </div>
                     </div>
 
                     <div class="drop-down grow-1">
                         <div class="drop-down-btn d-flex align-center gap-10 pointer">
                             <span class="color-bright">Pack Size:</span>
-                            <div class="selected-text">Pack Of 100</div>
+                            <div class="selected-text">Pack Of <?php echo e($defaultPackSize); ?></div>
                             <span class="icon icon-arrow-down icon-size-16 lt-auto"></span>
                         </div>
 
-                        <input type="text" class="selected-option" name="pack_size" value="100" id="" hidden>
+                        <input type="text" class="selected-option" name="pack_size" value="<?php echo e($defaultPackSize); ?>" id="" hidden>
 
                         <div class="drop-down-list">
-                            <div class="drop-option d-flex gap-10 align-center" data-option="10">
-                                <span>Pack Of 10</span>
+                            <?php foreach ($allPackSizes as $size): ?>
+                            <div class="drop-option d-flex gap-10 align-center <?php echo $size == $defaultPackSize ? 'active' : ''; ?>" data-option="<?php echo e($size); ?>">
+                                <span>Pack Of <?php echo e($size); ?></span>
                             </div>
-
-                            <div class="drop-option d-flex gap-10 align-center" data-option="25">
-                                <span>Pack Of 25</span>
-                            </div>
-
-                            <div class="drop-option d-flex gap-10 align-center" data-option="50">
-                                <span>Pack Of 50</span>
-                            </div>
-
-                            <div class="drop-option d-flex gap-10 align-center active" data-option="100">
-                                <span>Pack Of 100</span>
-                            </div>
+                            <?php endforeach; ?>
                         </div>
                     </div>
 
