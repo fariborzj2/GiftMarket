@@ -56,44 +56,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <?php if ($action === 'list'):
-    $products = db()->query("SELECT products.*, countries.name as country_name, brands.name as brand_name FROM products LEFT JOIN countries ON products.country = countries.code LEFT JOIN brands ON products.brand = brands.code ORDER BY products.id DESC")->fetchAll();
+    $products = db()->query("SELECT products.*, countries.name as country_name, brands.name as brand_name FROM products LEFT JOIN countries ON products.country = countries.code LEFT JOIN brands ON products.brand = brands.code ORDER BY brand_name ASC, country_name ASC, pack_size ASC, denomination ASC")->fetchAll();
+
+    $grouped = [];
+    foreach ($products as $p) {
+        $brand = $p['brand_name'] ?? strtoupper($p['brand']);
+        $country = $p['country_name'] ?? strtoupper($p['country']);
+        $packSize = "Pack Of " . $p['pack_size'];
+        $grouped[$brand][$country][$packSize][] = $p;
+    }
 ?>
+    <?php if (empty($products)): ?>
     <div class="admin-card">
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>برند</th>
-                        <th>مبلغ اعتبار</th>
-                        <th>Pack Size</th>
-                        <th>کشور</th>
-                        <th>قیمت دیجیتال</th>
-                        <th>قیمت فیزیکی</th>
-                        <th>عملیات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (empty($products)): ?>
-                        <tr><td colspan="7" class="text-center">هیچ محصولی یافت نشد.</td></tr>
-                    <?php endif; ?>
-                    <?php foreach ($products as $p): ?>
-                    <tr>
-                        <td><?php echo e($p['brand_name'] ?? strtoupper($p['brand'])); ?></td>
-                        <td><?php echo e($p['denomination']); ?></td>
-                        <td><?php echo e($p['pack_size']); ?></td>
-                        <td><?php echo e($p['country_name'] ?? strtoupper($p['country'])); ?></td>
-                        <td><?php echo e($p['price_digital']) . ' ' . e($p['currency']); ?></td>
-                        <td><?php echo e($p['price_physical']) . ' ' . e($p['currency']); ?></td>
-                        <td class="d-flex gap-10">
-                            <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="btn" style="color: var(--color-primary);">ویرایش</a>
-                            <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="btn" style="color: #ef4444;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+        <div class="text-center">هیچ محصولی یافت نشد.</div>
     </div>
+    <?php endif; ?>
+
+    <?php foreach ($grouped as $brandName => $countries): ?>
+    <h2 class="color-title mb-20 mt-30"><?php echo e($brandName); ?></h2>
+    <?php foreach ($countries as $countryName => $packSizes): ?>
+    <div class="mb-20" style="margin-right: 20px;">
+        <h3 class="color-text mb-15 d-flex align-center gap-10">
+            <span class="icon">🌍</span> <?php echo e($countryName); ?>
+        </h3>
+        <?php foreach ($packSizes as $packSizeName => $items): ?>
+        <div class="admin-card" style="margin-right: 20px;">
+            <h4 class="color-primary mb-15"><?php echo e($packSizeName); ?></h4>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>مبلغ اعتبار</th>
+                            <th>قیمت دیجیتال</th>
+                            <th>قیمت فیزیکی</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($items as $p): ?>
+                        <tr>
+                            <td><?php echo e($p['denomination']); ?></td>
+                            <td><?php echo e($p['price_digital']) . ' ' . e($p['currency']); ?></td>
+                            <td><?php echo e($p['price_physical']) . ' ' . e($p['currency']); ?></td>
+                            <td class="d-flex gap-10">
+                                <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="btn" style="color: var(--color-primary);">ویرایش</a>
+                                <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="btn" style="color: #ef4444;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+    <?php endforeach; ?>
+    <?php endforeach; ?>
 
 <?php elseif ($action === 'add' || $action === 'edit'):
     $countries = db()->query("SELECT * FROM countries ORDER BY name ASC")->fetchAll();
