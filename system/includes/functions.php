@@ -34,9 +34,32 @@ function e($data) {
 }
 
 function getGroupedProducts() {
-    $products = db()->query("SELECT * FROM products ORDER BY brand, country")->fetchAll();
+    $query = "SELECT p.*, pk.id as pack_id, pk.pack_size, pk.price_digital, pk.price_physical
+              FROM products p
+              LEFT JOIN product_packs pk ON p.id = pk.product_id
+              ORDER BY p.brand, p.country, p.denomination, pk.pack_size";
+    $results = db()->query($query)->fetchAll();
+
+    $tempProducts = [];
+    foreach ($results as $row) {
+        $productId = $row['id'];
+        if (!isset($tempProducts[$productId])) {
+            $tempProducts[$productId] = $row;
+            unset($tempProducts[$productId]['pack_id'], $tempProducts[$productId]['pack_size'], $tempProducts[$productId]['price_digital'], $tempProducts[$productId]['price_physical']);
+            $tempProducts[$productId]['packs'] = [];
+        }
+        if ($row['pack_id']) {
+            $tempProducts[$productId]['packs'][] = [
+                'id' => $row['pack_id'],
+                'pack_size' => $row['pack_size'],
+                'price_digital' => $row['price_digital'],
+                'price_physical' => $row['price_physical']
+            ];
+        }
+    }
+
     $groupedProducts = [];
-    foreach ($products as $p) {
+    foreach ($tempProducts as $p) {
         $groupedProducts[$p['brand']][$p['country']][] = $p;
     }
     return $groupedProducts;
