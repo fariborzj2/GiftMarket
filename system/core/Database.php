@@ -79,6 +79,13 @@ class Database {
                 price_physical DECIMAL(10, 2) NOT NULL DEFAULT 0,
                 FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+            CREATE TABLE IF NOT EXISTS settings (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                key_name VARCHAR(100) UNIQUE NOT NULL,
+                key_value TEXT,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ";
 
         // Multi-query handling for initialization
@@ -176,6 +183,17 @@ class Database {
             if ($stmt->fetchColumn() == 0) {
                 $password = password_hash('admin123', PASSWORD_DEFAULT);
                 $this->pdo->exec("INSERT INTO users (username, password) VALUES ('admin', '$password')");
+            }
+        } catch (PDOException $e) {
+            // Ignore if insert fails
+        }
+
+        // Add default settings
+        try {
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM settings WHERE key_name = 'usd_to_aed'");
+            $stmt->execute();
+            if ($stmt->fetchColumn() == 0) {
+                $this->pdo->exec("INSERT INTO settings (key_name, key_value) VALUES ('usd_to_aed', '3.673')");
             }
         } catch (PDOException $e) {
             // Ignore if insert fails

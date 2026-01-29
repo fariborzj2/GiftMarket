@@ -44,6 +44,7 @@ foreach ($groupedProducts as $brandCode => $countries) {
 
 $appData['pricingData'] = $pricingData;
 $appData['countryNames'] = $countryNames;
+$appData['exchangeRates']['USD'] = (float)getSetting('usd_to_aed', $appData['exchangeRates']['USD'] ?? 3.673);
 
 header('Content-Type: application/json');
 echo json_encode($appData);

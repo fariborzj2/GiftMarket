@@ -35,6 +35,22 @@ function e($data) {
     return htmlspecialchars((string)($data ?? ''), ENT_QUOTES, 'UTF-8');
 }
 
+function getSetting($key, $default = null) {
+    try {
+        $stmt = db()->prepare("SELECT key_value FROM settings WHERE key_name = ?");
+        $stmt->execute([$key]);
+        $val = $stmt->fetchColumn();
+        return $val !== false ? $val : $default;
+    } catch (Exception $e) {
+        return $default;
+    }
+}
+
+function updateSetting($key, $value) {
+    $stmt = db()->prepare("INSERT INTO settings (key_name, key_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE key_value = VALUES(key_value)");
+    return $stmt->execute([$key, $value]);
+}
+
 function getGroupedProducts() {
     $query = "SELECT p.*, pk.id as pack_id, pk.pack_size, pk.price_digital, pk.price_physical
               FROM products p

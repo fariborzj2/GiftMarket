@@ -51,6 +51,7 @@ foreach ($allCountries as $c) {
 }
 
 $exchangeRates = $appData['exchangeRates'];
+$exchangeRates['USD'] = (float)getSetting('usd_to_aed', $exchangeRates['USD'] ?? 3.673);
 $faqs = $appData['faqs'];
 $testimonials = $appData['testimonials'];
 
