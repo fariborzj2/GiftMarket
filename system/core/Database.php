@@ -86,6 +86,29 @@ class Database {
                 key_value TEXT,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+            CREATE TABLE IF NOT EXISTS telegram_channels (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                channel_id VARCHAR(100) NOT NULL UNIQUE,
+                name VARCHAR(100) DEFAULT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+            CREATE TABLE IF NOT EXISTS telegram_config (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                brand_code VARCHAR(50) NOT NULL,
+                country_code VARCHAR(50) NOT NULL,
+                enabled TINYINT(1) DEFAULT 1,
+                UNIQUE KEY brand_country (brand_code, country_code)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+            CREATE TABLE IF NOT EXISTS telegram_logs (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                status VARCHAR(20) NOT NULL,
+                message TEXT,
+                response TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ";
 
         // Multi-query handling for initialization
@@ -199,6 +222,24 @@ class Database {
 
             $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM settings WHERE key_name = ?");
             $insertStmt = $this->pdo->prepare("INSERT INTO settings (key_name, key_value) VALUES (?, ?)");
+
+            $telegramSettings = [
+                'telegram_bot_enabled' => '0',
+                'telegram_bot_token' => '',
+                'telegram_bot_username' => '',
+                'telegram_publish_time' => '09:00',
+                'telegram_last_publish_date' => '',
+                'telegram_message_template' => "*{brand}* {country} ({denomination})\n{type}: {price}{currency} → {converted_price} {target_currency}\nLast update: {last_update}",
+                'telegram_use_emojis' => '1',
+                'telegram_price_type' => 'both'
+            ];
+
+            foreach ($telegramSettings as $key => $value) {
+                $stmt->execute([$key]);
+                if ($stmt->fetchColumn() == 0) {
+                    $insertStmt->execute([$key, $value]);
+                }
+            }
 
             foreach ($defaultSettings as $key => $value) {
                 $stmt->execute([$key]);
