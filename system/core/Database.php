@@ -190,10 +190,21 @@ class Database {
 
         // Add default settings
         try {
-            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM settings WHERE key_name = 'usd_to_aed'");
-            $stmt->execute();
-            if ($stmt->fetchColumn() == 0) {
-                $this->pdo->exec("INSERT INTO settings (key_name, key_value) VALUES ('usd_to_aed', '3.673')");
+            $defaultSettings = [
+                'usd_to_aed' => '3.673',
+                'auto_update_rate' => '0',
+                'update_interval_hours' => '12',
+                'last_rate_update' => '0'
+            ];
+
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM settings WHERE key_name = ?");
+            $insertStmt = $this->pdo->prepare("INSERT INTO settings (key_name, key_value) VALUES (?, ?)");
+
+            foreach ($defaultSettings as $key => $value) {
+                $stmt->execute([$key]);
+                if ($stmt->fetchColumn() == 0) {
+                    $insertStmt->execute([$key, $value]);
+                }
             }
         } catch (PDOException $e) {
             // Ignore if insert fails

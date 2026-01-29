@@ -13,6 +13,16 @@ if (!file_exists(__DIR__ . '/config.php')) {
 
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/../core/Database.php';
+require_once __DIR__ . '/exchange_rate_helper.php';
+
+// Check for auto-update of exchange rate
+if (!is_admin_path()) {
+    checkAndAutoUpdateRate();
+}
+
+function is_admin_path() {
+    return strpos($_SERVER['REQUEST_URI'], '/admin/') !== false;
+}
 
 function db() {
     return Database::getInstance()->getConnection();
