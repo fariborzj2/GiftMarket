@@ -169,6 +169,7 @@ if (!isLoggedIn()) {
                 <a href="countries.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'countries.php' ? 'active' : ''; ?>">کشورها</a>
                 <a href="products.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'products.php' ? 'active' : ''; ?>">محصولات</a>
                 <a href="settings.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">تنظیمات</a>
+                <a href="telegram_bot.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'telegram_bot.php' ? 'active' : ''; ?>">ربات تلگرام</a>
                 <!-- Future modules:
                 <a href="orders.php">سفارشات</a>
                 <a href="customers.php">مشتریان</a>
