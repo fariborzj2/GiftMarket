@@ -97,18 +97,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <?php if ($action === 'list'):
-    $countries = db()->query("SELECT * FROM countries ORDER BY name ASC")->fetchAll();
+    $search = clean($_GET['search'] ?? '');
+    $query = "SELECT * FROM countries WHERE 1=1";
+    $params = [];
+    if ($search) {
+        $query .= " AND (name LIKE ? OR code LIKE ? OR currency LIKE ?)";
+        $params[] = "%$search%";
+        $params[] = "%$search%";
+        $params[] = "%$search%";
+    }
+    $query .= " ORDER BY name ASC";
+    $stmt = db()->prepare($query);
+    $stmt->execute($params);
+    $countries = $stmt->fetchAll();
 ?>
-    <div class="admin-card">
-        <div class="table-wrap">
-            <table>
+    <div class="admin-card mb-30">
+        <form method="GET" class="d-flex-wrap gap-15 align-end">
+            <div class="input-item grow-1" style="min-width: 200px;">
+                <div class="input-label">جستجو (نام، کد یا واحد پول)</div>
+                <div class="input">
+                    <input type="text" name="search" value="<?php echo e($search); ?>" placeholder="مثلاً امارات، uae, AED">
+                </div>
+            </div>
+            <div class="d-flex gap-10">
+                <button type="submit" class="btn-primary radius-100" style="height: 48px;">اعمال فیلتر</button>
+                <a href="countries.php" class="btn radius-100 d-flex align-center just-center" style="height: 48px; border: 1px solid var(--color-border);">حذف فیلتر</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="admin-card" style="padding: 0; overflow: hidden; border-radius: 15px;">
+        <div style="background: var(--color-body); padding: 15px 25px; border-bottom: 1px solid var(--color-border);" class="d-flex align-center just-between">
+            <h3 class="color-text d-flex align-center gap-10 font-size-1-1 m-0">
+                <span class="icon" style="color: var(--color-primary);">🌍</span> لیست کشورها
+            </h3>
+            <span class="font-size-0-8 color-bright"><?php echo count($countries); ?> کشور</span>
+        </div>
+        <div class="table-wrap" style="border: none; border-radius: 0;">
+            <table style="margin: 0;">
                 <thead>
-                    <tr>
-                        <th>پرچم</th>
-                        <th>نام</th>
+                    <tr style="background: rgba(0,0,0,0.02);">
+                        <th style="width: 80px; text-align: center;">پرچم</th>
+                        <th>نام کشور</th>
                         <th>کد</th>
                         <th>واحد پول</th>
-                        <th>عملیات</th>
+                        <th style="width: 150px;">عملیات</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -117,19 +150,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
                     <?php foreach ($countries as $c): ?>
                     <tr>
-                        <td>
+                        <td style="text-align: center;">
                             <?php if ($c['flag']): ?>
-                                <img src="../<?php echo e($c['flag']); ?>" alt="" style="width: 32px; height: auto; border-radius: 4px;">
+                                <img src="../<?php echo e($c['flag']); ?>" alt="" style="width: 32px; height: auto; border-radius: 4px; border: 1px solid var(--color-border); margin: auto;">
                             <?php else: ?>
-                                -
+                                <div style="width: 32px; height: 24px; background: var(--color-body); border-radius: 4px; display: flex; align-items: center; justify-content: center; margin: auto; color: var(--color-border);">?</div>
                             <?php endif; ?>
                         </td>
-                        <td><?php echo e($c['name']); ?></td>
-                        <td><?php echo strtoupper(e($c['code'])); ?></td>
-                        <td><?php echo e($c['currency']); ?></td>
+                        <td class="font-bold"><?php echo e($c['name']); ?></td>
+                        <td><code><?php echo strtoupper(e($c['code'])); ?></code></td>
+                        <td><span class="color-primary font-bold"><?php echo e($c['currency']); ?></span></td>
                         <td class="d-flex gap-10">
-                            <a href="countries.php?action=edit&id=<?php echo e($c['id']); ?>" class="btn" style="color: var(--color-primary);">ویرایش</a>
-                            <a href="countries.php?action=delete&id=<?php echo e($c['id']); ?>" class="btn" style="color: #ef4444;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
+                            <a href="countries.php?action=edit&id=<?php echo e($c['id']); ?>" class="btn-sm" style="color: var(--color-primary); border-color: var(--color-primary); background: var(--color-surface); width: auto;">ویرایش</a>
+                            <a href="countries.php?action=delete&id=<?php echo e($c['id']); ?>" class="btn-sm" style="color: #ef4444; border-color: #fca5a5; background: var(--color-surface); width: auto;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
                         </td>
                     </tr>
                     <?php endforeach; ?>
