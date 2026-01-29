@@ -61,7 +61,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $f_country = clean($_GET['country'] ?? '');
     $f_pack_size = clean($_GET['pack_size'] ?? '');
 
-    $query = "SELECT products.*, countries.name as country_name, brands.name as brand_name FROM products LEFT JOIN countries ON products.country = countries.code LEFT JOIN brands ON products.brand = brands.code WHERE 1=1";
+    $query = "SELECT products.*, countries.name as country_name, countries.flag as country_flag, brands.name as brand_name, brands.logo as brand_logo
+              FROM products
+              LEFT JOIN countries ON products.country = countries.code
+              LEFT JOIN brands ON products.brand = brands.code
+              WHERE 1=1";
     $params = [];
 
     if ($search) {
@@ -140,10 +144,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php
     $grouped = [];
     foreach ($products as $p) {
-        $brand = $p['brand_name'] ?? strtoupper($p['brand']);
-        $country = $p['country_name'] ?? strtoupper($p['country']);
+        $brandName = $p['brand_name'] ?? strtoupper($p['brand']);
+        $countryName = $p['country_name'] ?? strtoupper($p['country']);
         $packSize = "Pack Of " . $p['pack_size'];
-        $grouped[$brand][$country][$packSize][] = $p;
+
+        if (!isset($grouped[$brandName])) {
+            $grouped[$brandName] = ['logo' => $p['brand_logo'], 'countries' => []];
+        }
+        if (!isset($grouped[$brandName]['countries'][$countryName])) {
+            $grouped[$brandName]['countries'][$countryName] = ['flag' => $p['country_flag'], 'pack_sizes' => []];
+        }
+        $grouped[$brandName]['countries'][$countryName]['pack_sizes'][$packSize][] = $p;
     }
 ?>
     <?php if (empty($products)): ?>
@@ -152,25 +163,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <?php endif; ?>
 
-    <?php foreach ($grouped as $brandName => $countries): ?>
+    <?php foreach ($grouped as $brandName => $brandData): ?>
     <div class="brand-section mb-50">
-        <h2 class="color-title mb-20 mt-40 d-flex align-center gap-10 font-size-1-5">
-            <span style="width: 12px; height: 12px; background: var(--color-primary); border-radius: 50%;"></span>
+        <h2 class="color-title mb-20 mt-40 d-flex align-center gap-15 font-size-1-5">
+            <?php if ($brandData['logo']): ?>
+                <img src="../<?php echo e($brandData['logo']); ?>" alt="" style="width: 38px; height: 38px; object-fit: contain; background: var(--color-surface); padding: 5px; border-radius: 8px; border: 1px solid var(--color-border);">
+            <?php else: ?>
+                <span style="width: 12px; height: 12px; background: var(--color-primary); border-radius: 50%;"></span>
+            <?php endif; ?>
             <?php echo e($brandName); ?>
         </h2>
 
-        <?php foreach ($countries as $countryName => $packSizes): ?>
+        <?php foreach ($brandData['countries'] as $countryName => $countryData): ?>
         <div class="admin-card mb-30" style="padding: 0; overflow: hidden; border-radius: 15px;">
             <div style="background: var(--color-body); padding: 15px 25px; border-bottom: 1px solid var(--color-border);" class="d-flex align-center just-between">
                 <h3 class="color-text d-flex align-center gap-10 font-size-1-1 m-0">
-                    <span class="icon" style="color: var(--color-primary);">🌍</span> <?php echo e($countryName); ?>
+                    <?php if ($countryData['flag']): ?>
+                        <img src="../<?php echo e($countryData['flag']); ?>" alt="" style="width: 24px; border-radius: 4px;">
+                    <?php else: ?>
+                        <span class="icon" style="color: var(--color-primary);">🌍</span>
+                    <?php endif; ?>
+                    <?php echo e($countryName); ?>
                 </h3>
-                <span class="font-size-0-8 color-bright"><?php echo count($packSizes); ?> سایز پکیج</span>
+                <span class="font-size-0-8 color-bright"><?php echo count($countryData['pack_sizes']); ?> سایز پکیج</span>
             </div>
 
             <div style="padding: 20px;">
-                <?php foreach ($packSizes as $packSizeName => $items): ?>
-                <div class="pack-size-group <?php echo $packSizeName !== array_key_last($packSizes) ? 'mb-30' : ''; ?>">
+                <?php foreach ($countryData['pack_sizes'] as $packSizeName => $items): ?>
+                <div class="pack-size-group <?php echo $packSizeName !== array_key_last($countryData['pack_sizes']) ? 'mb-30' : ''; ?>">
                     <h4 class="color-primary mb-15 font-size-0-9 d-flex align-center gap-5">
                         <span class="icon icon-size-14">📦</span> <?php echo e($packSizeName); ?>
                     </h4>
