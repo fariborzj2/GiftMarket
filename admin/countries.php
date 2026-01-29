@@ -97,34 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <?php if ($action === 'list'):
-    $search = clean($_GET['search'] ?? '');
-    $query = "SELECT * FROM countries WHERE 1=1";
-    $params = [];
-    if ($search) {
-        $query .= " AND (name LIKE ? OR code LIKE ? OR currency LIKE ?)";
-        $params[] = "%$search%";
-        $params[] = "%$search%";
-        $params[] = "%$search%";
-    }
-    $query .= " ORDER BY sort_order ASC, name ASC";
-    $stmt = db()->prepare($query);
-    $stmt->execute($params);
-    $countries = $stmt->fetchAll();
+    $countries = db()->query("SELECT * FROM countries ORDER BY sort_order ASC, name ASC")->fetchAll();
 ?>
-    <div class="admin-card mb-30">
-        <form method="GET" class="d-flex-wrap gap-15 align-end">
-            <div class="input-item grow-1" style="min-width: 200px;">
-                <div class="input-label">جستجو (نام، کد یا واحد پول)</div>
-                <div class="input">
-                    <input type="text" name="search" value="<?php echo e($search); ?>" placeholder="مثلاً امارات، uae, AED">
-                </div>
-            </div>
-            <div class="d-flex gap-10 d-flex-wrap">
-                <button type="submit" class="btn-primary radius-100" style="height: 48px;">اعمال فیلتر</button>
-                <a href="countries.php" class="btn radius-100 d-flex align-center just-center" style="height: 48px; border: 1px solid var(--color-border);">حذف فیلتر</a>
-            </div>
-        </form>
-    </div>
 
     <div class="admin-card" style="padding: 0; overflow: hidden; border-radius: 15px;">
         <div style="background: var(--color-body); padding: 15px 25px; border-bottom: 1px solid var(--color-border);" class="d-flex align-center just-between">
@@ -151,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
                     <?php foreach ($countries as $c): ?>
                     <tr data-id="<?php echo $c['id']; ?>">
-                        <td style="cursor: move;" class="drag-handle">☰</td>
+                        <td data-label="جابجایی" style="cursor: move;" class="drag-handle">☰</td>
                         <td data-label="پرچم" style="text-align: center;">
                             <?php if ($c['flag']): ?>
                                 <img src="../<?php echo e($c['flag']); ?>" alt="" style="width: 32px; height: auto; border-radius: 4px; border: 1px solid var(--color-border); margin: auto;">
