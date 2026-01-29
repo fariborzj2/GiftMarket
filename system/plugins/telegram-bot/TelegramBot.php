@@ -98,48 +98,62 @@ class TelegramBot {
     }
 
     /**
-     * Format product data into messages using the template
+     * Format product data into messages grouped by Brand and Country
      */
     private function formatMessages($products, $template, $useEmojis, $priceType, $usdToAed) {
         $messages = [];
         $lastUpdate = date('H:i');
 
+        // Step 1: Group by Brand and Country
+        $grouped = [];
         foreach ($products as $p) {
-            $countryName = $p['country_name'];
+            $key = $p['brand'] . '_' . $p['country'];
+            $grouped[$key][] = $p;
+        }
+
+        foreach ($grouped as $key => $rows) {
+            $brandName = $rows[0]['brand_name'];
+            $countryName = $rows[0]['country_name'];
+            $countryCode = $rows[0]['country_code'];
+
             if ($useEmojis) {
-                $countryName = $this->getCountryEmoji($p['country_code']) . ' ' . $countryName;
+                $countryName = $this->getCountryEmoji($countryCode) . ' ' . $countryName;
             }
 
-            $baseData = [
-                '{brand}' => $p['brand_name'],
-                '{country}' => $countryName,
-                '{denomination}' => $p['denomination'],
-                '{currency}' => $p['currency'],
-                '{last_update}' => $lastUpdate
-            ];
-
-            // Digital Price
-            if (($priceType === 'digital' || $priceType === 'both') && $p['price_digital'] > 0) {
-                $aed = number_format($p['price_digital'] * $usdToAed, 2);
-                $msg = $template;
-                $msg = str_replace(array_keys($baseData), array_values($baseData), $msg);
-                $msg = str_replace('{type}', 'Digital' . ($p['pack_size'] > 1 ? " ({$p['pack_size']} Pack)" : ""), $msg);
-                $msg = str_replace('{price}', $p['price_digital'], $msg);
-                $msg = str_replace('{converted_price}', $aed, $msg);
-                $msg = str_replace('{target_currency}', 'AED', $msg);
-                $messages[] = trim($msg);
+            // Step 2: Group by Product (Denomination) within the brand/country group
+            $productGroups = [];
+            foreach ($rows as $r) {
+                $productGroups[$r['id']][] = $r;
             }
 
-            // Physical Price
-            if (($priceType === 'physical' || $priceType === 'both') && $p['price_physical'] > 0) {
-                $aed = number_format($p['price_physical'] * $usdToAed, 2);
-                $msg = $template;
-                $msg = str_replace(array_keys($baseData), array_values($baseData), $msg);
-                $msg = str_replace('{type}', 'Physical' . ($p['pack_size'] > 1 ? " ({$p['pack_size']} Pack)" : ""), $msg);
-                $msg = str_replace('{price}', $p['price_physical'], $msg);
-                $msg = str_replace('{converted_price}', $aed, $msg);
-                $msg = str_replace('{target_currency}', 'AED', $msg);
-                $messages[] = trim($msg);
+            $currentMessage = "";
+            foreach ($productGroups as $pid => $packs) {
+                $firstPack = $packs[0];
+                // Block Header: $100 USA Apple iTunes Gift Card
+                $itemBlock = "{$firstPack['denomination']} {$countryName} {$brandName} Gift Card\n";
+
+                foreach ($packs as $pk) {
+                    if (($priceType === 'digital' || $priceType === 'both') && $pk['price_digital'] > 0) {
+                        $typeStr = "Digital" . ($pk['pack_size'] > 1 ? " (Pack of {$pk['pack_size']})" : "");
+                        $itemBlock .= "{$typeStr}:  {$pk['currency']}" . number_format($pk['price_digital'], 2) . "\n";
+                    }
+                    if (($priceType === 'physical' || $priceType === 'both') && $pk['price_physical'] > 0) {
+                        $typeStr = "Physical" . ($pk['pack_size'] > 1 ? " (Pack of {$pk['pack_size']})" : "");
+                        $itemBlock .= "{$typeStr}: {$pk['currency']}" . number_format($pk['price_physical'], 2) . "\n";
+                    }
+                }
+
+                // Avoid Telegram 4096 character limit
+                if (strlen($currentMessage . $itemBlock) > 3800) {
+                    $messages[] = trim($currentMessage) . "\n\n_Last update: {$lastUpdate}_";
+                    $currentMessage = $itemBlock . "\n";
+                } else {
+                    $currentMessage .= $itemBlock . "\n";
+                }
+            }
+
+            if (!empty(trim($currentMessage))) {
+                $messages[] = trim($currentMessage) . "\n\n_Last update: {$lastUpdate}_";
             }
         }
 
