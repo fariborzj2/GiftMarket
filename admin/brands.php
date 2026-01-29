@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="text" name="search" value="<?php echo e($search); ?>" placeholder="مثلاً Apple, apple">
                 </div>
             </div>
-            <div class="d-flex gap-10">
+            <div class="d-flex gap-10 d-flex-wrap">
                 <button type="submit" class="btn-primary radius-100" style="height: 48px;">اعمال فیلتر</button>
                 <a href="brands.php" class="btn radius-100 d-flex align-center just-center" style="height: 48px; border: 1px solid var(--color-border);">حذف فیلتر</a>
             </div>
@@ -146,18 +146,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
                     <?php foreach ($brands as $b): ?>
                     <tr>
-                        <td style="text-align: center;">
+                        <td data-label="لوگو" style="text-align: center;">
                             <?php if ($b['logo']): ?>
                                 <img src="../<?php echo e($b['logo']); ?>" alt="" style="width: 38px; height: 38px; object-fit: contain; background: var(--color-surface); padding: 5px; border-radius: 8px; border: 1px solid var(--color-border); margin: auto;">
                             <?php else: ?>
                                 <div style="width: 38px; height: 38px; background: var(--color-body); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: auto; color: var(--color-border);">?</div>
                             <?php endif; ?>
                         </td>
-                        <td class="font-bold"><?php echo e($b['name']); ?></td>
-                        <td><code><?php echo strtoupper(e($b['code'])); ?></code></td>
-                        <td class="d-flex gap-10">
-                            <a href="brands.php?action=edit&id=<?php echo e($b['id']); ?>" class="btn-sm" style="color: var(--color-primary); border-color: var(--color-primary); background: var(--color-surface); width: auto;">ویرایش</a>
-                            <a href="brands.php?action=delete&id=<?php echo e($b['id']); ?>" class="btn-sm" style="color: #ef4444; border-color: #fca5a5; background: var(--color-surface); width: auto;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
+                        <td data-label="نام برند" class="font-bold"><?php echo e($b['name']); ?></td>
+                        <td data-label="کد"><code><?php echo strtoupper(e($b['code'])); ?></code></td>
+                        <td data-label="عملیات">
+                            <div class="d-flex gap-10">
+                                <a href="brands.php?action=edit&id=<?php echo e($b['id']); ?>" class="btn-sm" style="color: var(--color-primary); border-color: var(--color-primary); background: var(--color-surface); width: auto;">ویرایش</a>
+                                <a href="brands.php?action=delete&id=<?php echo e($b['id']); ?>" class="btn-sm" style="color: #ef4444; border-color: #fca5a5; background: var(--color-surface); width: auto;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
+                            </div>
                         </td>
                     </tr>
                     <?php endforeach; ?>

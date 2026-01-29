@@ -709,7 +709,8 @@ body.dark-theme .table-wrap tbody tr:hover {
 ========================= */
 @media (max-width: 768px) {
     .table-wrap {
-      border: none;
+        border: none;
+        background: transparent;
     }
 
     .table-wrap table,
@@ -727,33 +728,54 @@ body.dark-theme .table-wrap tbody tr:hover {
     }
 
     .table-wrap tbody tr {
-        background: #ffffff;
+        background: var(--color-surface);
         border-radius: 16px;
-        margin-bottom: 16px;
-        padding: 14px;
+        margin-bottom: 20px;
+        padding: 15px;
         border: 1px solid var(--color-border);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     }
 
     .table-wrap td {
         border: none;
-        padding: 2px 0;
+        padding: 10px 0;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 12px;
+        gap: 15px;
+        white-space: normal;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .table-wrap td:last-child {
+        border-bottom: none;
+        padding-bottom: 5px;
+        margin-top: 5px;
     }
 
     .table-wrap td::before {
         content: attr(data-label);
-        font-size: 12px;
+        font-size: 13px;
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: .04em;
-        color: #94a3b8;
+        color: var(--color-text);
+        opacity: 0.6;
         flex-shrink: 0;
+    }
+
+    /* Action buttons in mobile table */
+    .table-wrap td .d-flex {
+        flex-grow: 1;
+        justify-content: flex-end;
     }
 
     .brand-logo {
         margin-left: auto;
+    }
+
+    [dir="rtl"] .brand-logo {
+        margin-left: 0;
+        margin-right: auto;
     }
 
     .btn {
