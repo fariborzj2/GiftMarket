@@ -134,10 +134,16 @@ document.addEventListener('click', (e) => {
 /* =======================
    PRICING TABLE LOGIC
 ======================== */
+let USD_TO_AED = 3.673;
+
 function updatePricingTable() {
     if (!appData) return;
 
-    const { pricingData, countryNames, exchangeRates } = appData;
+    if (appData.exchangeRates && appData.exchangeRates.USD) {
+        USD_TO_AED = appData.exchangeRates.USD;
+    }
+
+    const { pricingData, countryNames } = appData;
 
     const brand = document.querySelector('input[name="brand"]')?.value;
     const country = document.querySelector('input[name="country"]')?.value;
@@ -168,11 +174,13 @@ function updatePricingTable() {
 
     tableBody.innerHTML = '';
     filteredOptions.forEach(opt => {
-        const pricePerCard = isDigital ? opt.price_digital : opt.price_physical;
+        const pricePerCard = parseFloat(isDigital ? opt.price_digital : opt.price_physical);
         const totalPrice = (pricePerCard * packSize).toFixed(2);
-        const rate = exchangeRates[opt.currency] || 1;
-        const priceInAED = (pricePerCard * rate).toFixed(2);
-        const totalInAED = (totalPrice * rate).toFixed(2);
+
+        const priceInAED = (pricePerCard * USD_TO_AED).toFixed(2);
+        const totalInAED = (parseFloat(totalPrice) * USD_TO_AED).toFixed(2);
+
+        const cardSymbol = getCurrencySymbol(opt.currency);
 
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -182,18 +190,18 @@ function updatePricingTable() {
                 </div>
             </td>
             <td data-label="Denomination">
-                <span>${opt.denomination}</span><br>
+                <span>${opt.denomination} ${cardSymbol}</span><br>
                 <span class="color-bright font-size-0-9">${isDigital ? 'Digital' : 'Physical'} · ${opt.currency}</span>
             </td>
             <td data-label="Country">${countryNames[country]}</td>
             <td data-label="Qty">${packSize}</td>
             <td data-label="Price / Card">
-                <span>${getCurrencySymbol(opt.currency)}${pricePerCard}</span><br>
-                ${opt.currency !== 'AED' ? `<span class="color-bright font-size-0-9">~ ${priceInAED} AED</span>` : ''}
+                <span>$${pricePerCard.toFixed(2)}</span><br>
+                <span class="color-bright font-size-0-9">~ ${priceInAED} AED</span>
             </td>
             <td data-label="Total Price">
-                <span>${getCurrencySymbol(opt.currency)}${totalPrice}</span><br>
-                ${opt.currency !== 'AED' ? `<span class="color-bright font-size-0-9">~ ${totalInAED} AED</span>` : ''}
+                <span>$${totalPrice}</span><br>
+                <span class="color-bright font-size-0-9">~ ${totalInAED} AED</span>
             </td>
             <td class="text-center" data-label="Buy">
                 <a href="tel:+9710506565129" class="btn">
@@ -211,8 +219,9 @@ function getCurrencySymbol(curr) {
         case 'USD': return '$';
         case 'GBP': return '£';
         case 'TRY': return 'TL';
-        case 'AED': return '';
-        default: return '';
+        case 'AED': return 'AED';
+        case 'EUR': return '€';
+        default: return curr || '';
     }
 }
 

@@ -284,14 +284,17 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                             <tr><td colspan="7" class="text-center">No products found</td></tr>
                             <?php
                             else:
+                            $USD_TO_AED = $exchangeRates['USD'] ?? 3.673;
                             foreach ($filteredOptions as $opt):
                                 // Default SSR view is Digital
-                                $pricePerCard = $opt['price_digital'];
-                                $totalPrice = number_format($pricePerCard * $defaultPackSize, 2, '.', '');
-                                $rate = $exchangeRates[$opt['currency']] ?? 1;
-                                $priceInAED = number_format($pricePerCard * $rate, 2, '.', '');
-                                $totalInAED = number_format($totalPrice * $rate, 2, '.', '');
-                                $symbol = ($opt['currency'] === 'USD' ? '$' : ($opt['currency'] === 'GBP' ? '£' : ($opt['currency'] === 'TRY' ? 'TL' : '')));
+                                $pricePerCard = (float)$opt['price_digital'];
+                                $totalPrice = $pricePerCard * $defaultPackSize;
+
+                                $priceInAED = number_format($pricePerCard * $USD_TO_AED, 2, '.', '');
+                                $totalInAED = number_format($totalPrice * $USD_TO_AED, 2, '.', '');
+
+                                $curr = $opt['currency'];
+                                $cardSymbol = ($curr === 'USD' ? '$' : ($curr === 'GBP' ? '£' : ($curr === 'TRY' ? 'TL' : ($curr === 'AED' ? 'AED' : ($curr === 'EUR' ? '€' : $curr)))));
                             ?>
                             <tr>
                                 <td data-label="Brand" class="text-center">
@@ -300,22 +303,18 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                                     </div>
                                 </td>
                                 <td data-label="Denomination">
-                                    <span><?php echo e($opt['denomination']); ?></span><br>
+                                    <span><?php echo e($opt['denomination']); ?> <?php echo e($cardSymbol); ?></span><br>
                                     <span class="color-bright font-size-0-9">Digital · <?php echo e($opt['currency']); ?></span>
                                 </td>
                                 <td data-label="Country"><?php echo e($countryNames[$defaultCountry] ?? $defaultCountry); ?></td>
                                 <td data-label="Qty"><?php echo e($defaultPackSize); ?></td>
                                 <td data-label="Price / Card">
-                                    <span><?php echo e($symbol . $pricePerCard); ?></span><br>
-                                    <?php if ($opt['currency'] !== 'AED'): ?>
+                                    <span>$<?php echo e(number_format($pricePerCard, 2, '.', '')); ?></span><br>
                                     <span class="color-bright font-size-0-9">~ <?php echo e($priceInAED); ?> AED</span>
-                                    <?php endif; ?>
                                 </td>
                                 <td data-label="Total Price">
-                                    <span><?php echo e($symbol . $totalPrice); ?></span><br>
-                                    <?php if ($opt['currency'] !== 'AED'): ?>
+                                    <span>$<?php echo e(number_format($totalPrice, 2, '.', '')); ?></span><br>
                                     <span class="color-bright font-size-0-9">~ <?php echo e($totalInAED); ?> AED</span>
-                                    <?php endif; ?>
                                 </td>
                                 <td class="text-center" data-label="Buy">
                                     <a href="tel:+9710506565129" class="btn">

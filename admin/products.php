@@ -247,8 +247,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <?php foreach ($p['packs'] as $pk): ?>
                                             <span style="background: var(--color-body); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--color-border); font-size: 0.85rem;">
                                                 <strong><?php echo e($pk['pack_size']); ?> عددی:</strong>
-                                                <span class="color-primary"><?php echo e($pk['price_digital']); ?></span> /
-                                                <span class="color-bright"><?php echo e($pk['price_physical']); ?></span>
+                                                <span class="color-primary">$<?php echo e($pk['price_digital']); ?></span> /
+                                                <span class="color-bright">$<?php echo e($pk['price_physical']); ?></span>
                                             </span>
                                         <?php endforeach; ?>
                                         <?php if (empty($p['packs'])): ?>
@@ -450,6 +450,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <button type="button" class="btn-primary" id="add-pack-btn" style="height: 40px; border-radius: 8px; font-size: 14px;">افزودن پک جدید +</button>
                 </div>
 
+                <div style="margin-bottom: 20px; padding: 15px; background: #eff6ff; border-radius: 12px; border: 1px solid #bfdbfe; color: #1e40af; font-size: 0.9rem;">
+                    <span class="icon">ℹ️</span> تمام قیمت‌ها باید به <strong>دلار آمریکا (USD)</strong> وارد شوند. سیستم به صورت خودکار معادل درهم امارات (AED) را با نرخ ثابت <strong>3.673</strong> در سایت نمایش می‌دهد.
+                </div>
+
                 <div id="packs-container">
                     <?php if (empty($editData['packs'])): ?>
                         <div class="pack-row-grid">
@@ -458,11 +462,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="number" class="pack-input" name="pack_sizes[]" value="1" required min="1">
                             </div>
                             <div>
-                                <label class="pack-label">قیمت دیجیتال (هر واحد)</label>
+                                <label class="pack-label">قیمت دیجیتال (دلار USD)</label>
                                 <input type="number" step="0.01" class="pack-input" name="prices_digital[]" required>
                             </div>
                             <div>
-                                <label class="pack-label">قیمت فیزیکی (هر واحد)</label>
+                                <label class="pack-label">قیمت فیزیکی (دلار USD)</label>
                                 <input type="number" step="0.01" class="pack-input" name="prices_physical[]" required>
                             </div>
                             <div>
@@ -477,11 +481,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <input type="number" class="pack-input" name="pack_sizes[]" value="<?php echo e($pk['pack_size']); ?>" required min="1">
                                 </div>
                                 <div>
-                                    <label class="pack-label">قیمت دیجیتال (هر واحد)</label>
+                                    <label class="pack-label">قیمت دیجیتال (دلار USD)</label>
                                     <input type="number" step="0.01" class="pack-input" name="prices_digital[]" value="<?php echo e($pk['price_digital']); ?>" required>
                                 </div>
                                 <div>
-                                    <label class="pack-label">قیمت فیزیکی (هر واحد)</label>
+                                    <label class="pack-label">قیمت فیزیکی (دلار USD)</label>
                                     <input type="number" step="0.01" class="pack-input" name="prices_physical[]" value="<?php echo e($pk['price_physical']); ?>" required>
                                 </div>
                                 <div>
@@ -511,11 +515,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="number" class="pack-input" name="pack_sizes[]" value="1" required min="1">
             </div>
             <div>
-                <label class="pack-label">قیمت دیجیتال (هر واحد)</label>
+                <label class="pack-label">قیمت دیجیتال (دلار USD)</label>
                 <input type="number" step="0.01" class="pack-input" name="prices_digital[]" required>
             </div>
             <div>
-                <label class="pack-label">قیمت فیزیکی (هر واحد)</label>
+                <label class="pack-label">قیمت فیزیکی (دلار USD)</label>
                 <input type="number" step="0.01" class="pack-input" name="prices_physical[]" required>
             </div>
             <div>
