@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (!file_exists(__DIR__ . '/config.php')) {
     if (file_exists(__DIR__ . '/../../install/index.php')) {
         header("Location: ../install/index.php");
