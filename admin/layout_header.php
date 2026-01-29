@@ -168,10 +168,10 @@ if (!isLoggedIn()) {
                 <a href="brands.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'brands.php' ? 'active' : ''; ?>">برندها</a>
                 <a href="countries.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'countries.php' ? 'active' : ''; ?>">کشورها</a>
                 <a href="products.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'products.php' ? 'active' : ''; ?>">محصولات</a>
+                <a href="settings.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">تنظیمات</a>
                 <!-- Future modules:
                 <a href="orders.php">سفارشات</a>
                 <a href="customers.php">مشتریان</a>
-                <a href="settings.php">تنظیمات</a>
                 -->
                 <a href="logout.php" style="margin-top: 50px; color: #ef4444;">خروج</a>
             </div>
