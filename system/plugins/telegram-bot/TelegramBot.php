@@ -115,45 +115,74 @@ class TelegramBot {
             $brandName = $rows[0]['brand_name'];
             $countryName = $rows[0]['country_name'];
             $countryCode = $rows[0]['country_code'];
+            $emoji = $useEmojis ? $this->getCountryEmoji($countryCode) : "";
 
-            if ($useEmojis) {
-                $countryName = $this->getCountryEmoji($countryCode) . ' ' . $countryName;
-            }
-
-            // Step 2: Group by Product (Denomination) within the brand/country group
+            // Step 2: Group by Product (Denomination)
             $productGroups = [];
             foreach ($rows as $r) {
                 $productGroups[$r['id']][] = $r;
             }
 
             $currentMessage = "";
-            foreach ($productGroups as $pid => $packs) {
-                $firstPack = $packs[0];
-                // Block Header: $100 USA Apple iTunes Gift Card
-                $itemBlock = "{$firstPack['denomination']} {$countryName} {$brandName} Gift Card\n";
+            $count = 0;
+            $totalGroups = count($productGroups);
 
-                foreach ($packs as $pk) {
-                    if (($priceType === 'digital' || $priceType === 'both') && $pk['price_digital'] > 0) {
-                        $typeStr = "Digital" . ($pk['pack_size'] > 1 ? " (Pack of {$pk['pack_size']})" : "");
-                        $itemBlock .= "{$typeStr}:  {$pk['currency']}" . number_format($pk['price_digital'], 2) . "\n";
+            foreach ($productGroups as $pid => $packs) {
+                $count++;
+                $firstPack = $packs[0];
+                $currency = $firstPack['currency'];
+
+                // Header: 🇺🇸 Apple iTunes Gift Card – $2
+                $itemBlock = trim("{$emoji} {$brandName} Gift Card – {$firstPack['denomination']}") . "\n\n";
+
+                // Digital Section
+                $digitalPacks = [];
+                if ($priceType === 'digital' || $priceType === 'both') {
+                    foreach ($packs as $pk) {
+                        if ($pk['price_digital'] > 0) {
+                            $unitPrice = number_format($pk['price_digital'] / $pk['pack_size'], 2);
+                            $totalPrice = number_format($pk['price_digital'], 2);
+                            $digitalPacks[] = "• Pack {$pk['pack_size']} → {$currency} {$unitPrice} × {$pk['pack_size']} = {$currency} {$totalPrice}";
+                        }
                     }
-                    if (($priceType === 'physical' || $priceType === 'both') && $pk['price_physical'] > 0) {
-                        $typeStr = "Physical" . ($pk['pack_size'] > 1 ? " (Pack of {$pk['pack_size']})" : "");
-                        $itemBlock .= "{$typeStr}: {$pk['currency']}" . number_format($pk['price_physical'], 2) . "\n";
+                }
+
+                if (!empty($digitalPacks)) {
+                    $itemBlock .= "Digital\n" . implode("\n", $digitalPacks) . "\n\n";
+                }
+
+                // Physical Section
+                $physicalPacks = [];
+                if ($priceType === 'physical' || $priceType === 'both') {
+                    foreach ($packs as $pk) {
+                        if ($pk['price_physical'] > 0) {
+                            $unitPrice = number_format($pk['price_physical'] / $pk['pack_size'], 2);
+                            $totalPrice = number_format($pk['price_physical'], 2);
+                            $physicalPacks[] = "• Pack {$pk['pack_size']} → {$currency} {$unitPrice} × {$pk['pack_size']} = {$currency} {$totalPrice}";
+                        }
                     }
+                }
+
+                if (!empty($physicalPacks)) {
+                    $itemBlock .= "Physical\n" . implode("\n", $physicalPacks) . "\n\n";
+                }
+
+                // Add separator if not last
+                if ($count < $totalGroups) {
+                    $itemBlock .= "━━━━━━━━━━━━━━\n\n";
                 }
 
                 // Avoid Telegram 4096 character limit
                 if (strlen($currentMessage . $itemBlock) > 3800) {
-                    $messages[] = trim($currentMessage) . "\n\n_Last update: {$lastUpdate}_";
-                    $currentMessage = $itemBlock . "\n";
+                    $messages[] = trim($currentMessage) . "\n\n🕒 Last update: {$lastUpdate}";
+                    $currentMessage = $itemBlock;
                 } else {
-                    $currentMessage .= $itemBlock . "\n";
+                    $currentMessage .= $itemBlock;
                 }
             }
 
             if (!empty(trim($currentMessage))) {
-                $messages[] = trim($currentMessage) . "\n\n_Last update: {$lastUpdate}_";
+                $messages[] = trim($currentMessage) . "\n\n🕒 Last update: {$lastUpdate}";
             }
         }
 
