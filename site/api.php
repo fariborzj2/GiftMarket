@@ -4,11 +4,11 @@ require_once __DIR__ . '/../system/includes/functions.php';
 $appData = json_decode(file_get_contents(__DIR__ . '/../assets/js/data.json'), true);
 
 // Fetch all brands and countries from database for correct naming/logos
-$allBrands = db()->query("SELECT * FROM brands")->fetchAll();
+$allBrands = db()->query("SELECT * FROM brands ORDER BY sort_order ASC, name ASC")->fetchAll();
 $brandMap = [];
 foreach ($allBrands as $b) $brandMap[$b['code']] = $b;
 
-$allCountries = db()->query("SELECT * FROM countries")->fetchAll();
+$allCountries = db()->query("SELECT * FROM countries ORDER BY sort_order ASC, name ASC")->fetchAll();
 $countryNames = [];
 foreach ($allCountries as $c) {
     $countryNames[$c['code']] = $c['name'] . ' (' . $c['currency'] . ')';

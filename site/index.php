@@ -4,8 +4,8 @@ require_once __DIR__ . '/../system/includes/functions.php';
 $appData = json_decode(file_get_contents(__DIR__ . '/../assets/js/data.json'), true);
 
 // Fetch all necessary data from database
-$allBrands = db()->query("SELECT * FROM brands ORDER BY name ASC")->fetchAll();
-$allCountries = db()->query("SELECT * FROM countries ORDER BY name ASC")->fetchAll();
+$allBrands = db()->query("SELECT * FROM brands ORDER BY sort_order ASC, name ASC")->fetchAll();
+$allCountries = db()->query("SELECT * FROM countries ORDER BY sort_order ASC, name ASC")->fetchAll();
 $allPackSizes = db()->query("SELECT DISTINCT pack_size FROM products ORDER BY pack_size ASC")->fetchAll(PDO::FETCH_COLUMN);
 if (empty($allPackSizes)) $allPackSizes = [1, 10, 25, 50, 100];
 

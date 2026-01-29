@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $params[] = "%$search%";
         $params[] = "%$search%";
     }
-    $query .= " ORDER BY name ASC";
+    $query .= " ORDER BY sort_order ASC, name ASC";
     $stmt = db()->prepare($query);
     $stmt->execute($params);
     $countries = $stmt->fetchAll();
@@ -137,6 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <table style="margin: 0;">
                 <thead>
                     <tr style="background: rgba(0,0,0,0.02);">
+                        <th style="width: 40px;"></th>
                         <th style="width: 80px; text-align: center;">پرچم</th>
                         <th>نام کشور</th>
                         <th>کد</th>
@@ -144,12 +145,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <th style="width: 150px;">عملیات</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="sortable-countries">
                     <?php if (empty($countries)): ?>
-                        <tr><td colspan="5" class="text-center">هیچ کشوری یافت نشد.</td></tr>
+                        <tr><td colspan="6" class="text-center">هیچ کشوری یافت نشد.</td></tr>
                     <?php endif; ?>
                     <?php foreach ($countries as $c): ?>
-                    <tr>
+                    <tr data-id="<?php echo $c['id']; ?>">
+                        <td style="cursor: move;" class="drag-handle">☰</td>
                         <td data-label="پرچم" style="text-align: center;">
                             <?php if ($c['flag']): ?>
                                 <img src="../<?php echo e($c['flag']); ?>" alt="" style="width: 32px; height: auto; border-radius: 4px; border: 1px solid var(--color-border); margin: auto;">
@@ -239,5 +241,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 <?php endif; ?>
+
+<script>
+    if (document.getElementById('sortable-countries')) {
+        new Sortable(document.getElementById('sortable-countries'), {
+            handle: '.drag-handle',
+            animation: 150,
+            onEnd: function() {
+                let ids = [];
+                document.querySelectorAll('#sortable-countries tr').forEach(row => {
+                    ids.push(row.dataset.id);
+                });
+
+                let formData = new FormData();
+                formData.append('table', 'countries');
+                ids.forEach(id => formData.append('ids[]', id));
+
+                fetch('api_update_order.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        alert('Error updating order: ' + data.message);
+                    }
+                });
+            }
+        });
+    }
+</script>
 
 <?php require_once 'layout_footer.php'; ?>
