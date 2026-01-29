@@ -107,10 +107,10 @@ foreach ($configs as $c) {
     <div class="p-30">
         <?php if ($tab === 'settings'): ?>
             <form method="POST" class="contact-form" style="box-shadow: none; padding: 0;">
-                <div class="input-item mb-20">
+                <div class="mb-30">
                     <label class="d-flex align-center gap-10 pointer">
                         <input type="checkbox" name="enabled" value="1" <?php echo $st_enabled === '1' ? 'checked' : ''; ?>>
-                        <span class="font-bold">فعالسازی ربات تلگرام</span>
+                        <span class="font-bold color-title">فعالسازی ربات تلگرام</span>
                     </label>
                 </div>
 
@@ -138,7 +138,7 @@ foreach ($configs as $c) {
                     </div>
                     <div class="input-item grow-1">
                         <div class="input-label">نوع قیمت برای انتشار</div>
-                        <select name="price_type" class="input" style="height: 48px; border: 1px solid var(--color-border); border-radius: 12px; padding: 0 15px; width: 100%; background: var(--color-body); color: var(--color-text);">
+                        <select name="price_type" class="input" style="height: 54px; border: 1px solid var(--color-border); border-radius: 10px; padding: 0 15px; width: 100%; background: var(--color-body); color: var(--color-text);">
                             <option value="both" <?php echo $st_price_type === 'both' ? 'selected' : ''; ?>>هر دو (دیجیتال و فیزیکی)</option>
                             <option value="digital" <?php echo $st_price_type === 'digital' ? 'selected' : ''; ?>>فقط دیجیتال</option>
                             <option value="physical" <?php echo $st_price_type === 'physical' ? 'selected' : ''; ?>>فقط فیزیکی</option>
@@ -155,9 +155,7 @@ foreach ($configs as $c) {
 
                 <div class="input-item mb-20">
                     <div class="input-label">قالب پیام (Message Template)</div>
-                    <div class="input">
-                        <textarea name="template" rows="6" style="padding: 15px; font-family: monospace; direction: ltr;"><?php echo e($st_template); ?></textarea>
-                    </div>
+                    <textarea name="template" rows="6" style="font-family: monospace; direction: ltr;"><?php echo e($st_template); ?></textarea>
                     <div class="font-size-0-8 color-bright mt-10">
                         متغیرهای مجاز: {brand}, {country}, {denomination}, {price}, {currency}, {converted_price}, {target_currency}, {type}, {last_update}
                     </div>
@@ -167,14 +165,20 @@ foreach ($configs as $c) {
             </form>
 
         <?php elseif ($tab === 'channels'): ?>
-            <form method="POST" class="d-flex gap-10 mb-30">
-                <div class="input grow-1">
-                    <input type="text" name="channel_id" placeholder="Channel ID (e.g. -100123456789 or @mychannel)" required>
+            <form method="POST" class="d-flex-wrap gap-15 align-end mb-30">
+                <div class="input-item grow-1" style="min-width: 250px;">
+                    <div class="input-label">Channel ID</div>
+                    <div class="input">
+                        <input type="text" name="channel_id" placeholder="مثلاً 100123456789- یا @mychannel" required dir="ltr">
+                    </div>
                 </div>
-                <div class="input grow-1">
-                    <input type="text" name="channel_name" placeholder="نام کانال (اختیاری)">
+                <div class="input-item grow-1" style="min-width: 200px;">
+                    <div class="input-label">نام کانال</div>
+                    <div class="input">
+                        <input type="text" name="channel_name" placeholder="نام نمایشی برای مدیریت">
+                    </div>
                 </div>
-                <button type="submit" name="add_channel" class="btn-primary radius-100" style="white-space: nowrap;">افزودن کانال</button>
+                <button type="submit" name="add_channel" class="btn-primary radius-100" style="height: 54px; white-space: nowrap;">افزودن کانال +</button>
             </form>
 
             <div class="table-wrap">
