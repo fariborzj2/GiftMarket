@@ -95,33 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <?php if ($action === 'list'):
-    $search = clean($_GET['search'] ?? '');
-    $query = "SELECT * FROM brands WHERE 1=1";
-    $params = [];
-    if ($search) {
-        $query .= " AND (name LIKE ? OR code LIKE ?)";
-        $params[] = "%$search%";
-        $params[] = "%$search%";
-    }
-    $query .= " ORDER BY sort_order ASC, name ASC";
-    $stmt = db()->prepare($query);
-    $stmt->execute($params);
-    $brands = $stmt->fetchAll();
+    $brands = db()->query("SELECT * FROM brands ORDER BY sort_order ASC, name ASC")->fetchAll();
 ?>
-    <div class="admin-card mb-30">
-        <form method="GET" class="d-flex-wrap gap-15 align-end">
-            <div class="input-item grow-1" style="min-width: 200px;">
-                <div class="input-label">جستجو (نام یا کد برند)</div>
-                <div class="input">
-                    <input type="text" name="search" value="<?php echo e($search); ?>" placeholder="مثلاً Apple, apple">
-                </div>
-            </div>
-            <div class="d-flex gap-10 d-flex-wrap">
-                <button type="submit" class="btn-primary radius-100" style="height: 48px;">اعمال فیلتر</button>
-                <a href="brands.php" class="btn radius-100 d-flex align-center just-center" style="height: 48px; border: 1px solid var(--color-border);">حذف فیلتر</a>
-            </div>
-        </form>
-    </div>
 
     <div class="admin-card" style="padding: 0; overflow: hidden; border-radius: 15px;">
         <div style="background: var(--color-body); padding: 15px 25px; border-bottom: 1px solid var(--color-border);" class="d-flex align-center just-between">
@@ -147,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
                     <?php foreach ($brands as $b): ?>
                     <tr data-id="<?php echo $b['id']; ?>">
-                        <td style="cursor: move;" class="drag-handle">☰</td>
+                        <td data-label="جابجایی" style="cursor: move;" class="drag-handle">☰</td>
                         <td data-label="لوگو" style="text-align: center;">
                             <?php if ($b['logo']): ?>
                                 <img src="../<?php echo e($b['logo']); ?>" alt="" style="width: 38px; height: 38px; object-fit: contain; background: var(--color-surface); padding: 5px; border-radius: 8px; border: 1px solid var(--color-border); margin: auto;">
