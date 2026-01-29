@@ -273,7 +273,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <?php endforeach; ?>
 
-<?php elseif ($action === 'add' || $action === 'edit'):
+<?php elseif ($action === 'add' || $action === 'edit'): ?>
+    <style>
+        .pack-row-grid {
+            display: grid;
+            grid-template-columns: 120px 1fr 1fr auto;
+            gap: 20px;
+            align-items: flex-end;
+            background: var(--color-surface);
+            padding: 20px;
+            border: 1px solid var(--color-border);
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        @media (max-width: 768px) {
+            .pack-row-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .pack-row-grid > div:last-child {
+                grid-column: span 2;
+            }
+        }
+        @media (max-width: 480px) {
+            .pack-row-grid {
+                grid-template-columns: 1fr;
+            }
+            .pack-row-grid > div:last-child {
+                grid-column: span 1;
+            }
+        }
+        .pack-label {
+            display: block;
+            font-size: 13px;
+            color: var(--color-title);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .pack-input {
+            width: 100%;
+            height: 48px;
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            padding: 0 15px;
+            background: var(--color-body);
+            color: var(--color-text);
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .pack-input:focus {
+            border-color: var(--color-primary);
+            outline: none;
+        }
+        .remove-pack-btn {
+            height: 48px;
+            padding: 0 20px;
+            color: #ef4444;
+            border: 1px solid #fca5a5;
+            border-radius: 10px;
+            background: #fff5f5;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .remove-pack-btn:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+    </style>
+<?php
     $countries = db()->query("SELECT * FROM countries ORDER BY sort_order ASC, name ASC")->fetchAll();
     $brands = db()->query("SELECT * FROM brands ORDER BY sort_order ASC, name ASC")->fetchAll();
     $editData = ['id' => '', 'brand' => 'apple', 'denomination' => '', 'country' => '', 'currency' => 'AED', 'packs' => []];
@@ -370,47 +442,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="mb-30">
-                <div class="d-flex align-center just-between mb-15">
-                    <h4 class="color-title m-0">پک‌های محصول</h4>
-                    <button type="button" class="btn-sm" id="add-pack-btn" style="border-radius: 8px; background: var(--color-primary); color: white; border: none; padding: 5px 15px;">افزودن پک جدید +</button>
+                <div class="d-flex align-center just-between mb-20" style="background: var(--color-body); padding: 15px 20px; border-radius: 12px; border: 1px solid var(--color-border);">
+                    <h4 class="color-title m-0 d-flex align-center gap-10">
+                        <span class="icon icon-size-22 color-primary">📦</span>
+                        پک‌های محصول
+                    </h4>
+                    <button type="button" class="btn-primary" id="add-pack-btn" style="height: 40px; border-radius: 8px; font-size: 14px;">افزودن پک جدید +</button>
                 </div>
 
                 <div id="packs-container">
                     <?php if (empty($editData['packs'])): ?>
-                        <div class="pack-row d-flex-wrap gap-15 mb-15 align-end p-20 border radius-12" style="background: var(--color-surface);">
-                            <div class="input-item" style="flex: 1; min-width: 100px;">
-                                <div class="input-label">تعداد (پک)</div>
-                                <div class="input"><input type="number" name="pack_sizes[]" value="1" required min="1"></div>
+                        <div class="pack-row-grid">
+                            <div>
+                                <label class="pack-label">تعداد (پک)</label>
+                                <input type="number" class="pack-input" name="pack_sizes[]" value="1" required min="1">
                             </div>
-                            <div class="input-item" style="flex: 2; min-width: 150px;">
-                                <div class="input-label">قیمت دیجیتال (هر واحد)</div>
-                                <div class="input"><input type="number" step="0.01" name="prices_digital[]" required></div>
+                            <div>
+                                <label class="pack-label">قیمت دیجیتال (هر واحد)</label>
+                                <input type="number" step="0.01" class="pack-input" name="prices_digital[]" required>
                             </div>
-                            <div class="input-item" style="flex: 2; min-width: 150px;">
-                                <div class="input-label">قیمت فیزیکی (هر واحد)</div>
-                                <div class="input"><input type="number" step="0.01" name="prices_physical[]" required></div>
+                            <div>
+                                <label class="pack-label">قیمت فیزیکی (هر واحد)</label>
+                                <input type="number" step="0.01" class="pack-input" name="prices_physical[]" required>
                             </div>
-                            <div style="padding-bottom: 5px;">
-                                <button type="button" class="remove-pack-btn btn-sm" style="color: #ef4444; border: 1px solid #fecaca; background: white;">حذف</button>
+                            <div>
+                                <button type="button" class="remove-pack-btn">حذف</button>
                             </div>
                         </div>
                     <?php else: ?>
                         <?php foreach ($editData['packs'] as $pk): ?>
-                            <div class="pack-row d-flex-wrap gap-15 mb-15 align-end p-20 border radius-12" style="background: var(--color-surface);">
-                                <div class="input-item" style="flex: 1; min-width: 100px;">
-                                    <div class="input-label">تعداد (پک)</div>
-                                    <div class="input"><input type="number" name="pack_sizes[]" value="<?php echo e($pk['pack_size']); ?>" required min="1"></div>
+                            <div class="pack-row-grid">
+                                <div>
+                                    <label class="pack-label">تعداد (پک)</label>
+                                    <input type="number" class="pack-input" name="pack_sizes[]" value="<?php echo e($pk['pack_size']); ?>" required min="1">
                                 </div>
-                                <div class="input-item" style="flex: 2; min-width: 150px;">
-                                    <div class="input-label">قیمت دیجیتال (هر واحد)</div>
-                                    <div class="input"><input type="number" step="0.01" name="prices_digital[]" value="<?php echo e($pk['price_digital']); ?>" required></div>
+                                <div>
+                                    <label class="pack-label">قیمت دیجیتال (هر واحد)</label>
+                                    <input type="number" step="0.01" class="pack-input" name="prices_digital[]" value="<?php echo e($pk['price_digital']); ?>" required>
                                 </div>
-                                <div class="input-item" style="flex: 2; min-width: 150px;">
-                                    <div class="input-label">قیمت فیزیکی (هر واحد)</div>
-                                    <div class="input"><input type="number" step="0.01" name="prices_physical[]" value="<?php echo e($pk['price_physical']); ?>" required></div>
+                                <div>
+                                    <label class="pack-label">قیمت فیزیکی (هر واحد)</label>
+                                    <input type="number" step="0.01" class="pack-input" name="prices_physical[]" value="<?php echo e($pk['price_physical']); ?>" required>
                                 </div>
-                                <div style="padding-bottom: 5px;">
-                                    <button type="button" class="remove-pack-btn btn-sm" style="color: #ef4444; border: 1px solid #fecaca; background: white;">حذف</button>
+                                <div>
+                                    <button type="button" class="remove-pack-btn">حذف</button>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -429,23 +504,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     document.getElementById('add-pack-btn').addEventListener('click', function() {
         const container = document.getElementById('packs-container');
         const newRow = document.createElement('div');
-        newRow.className = 'pack-row d-flex-wrap gap-15 mb-15 align-end p-20 border radius-12';
-        newRow.style.background = 'var(--color-surface)';
+        newRow.className = 'pack-row-grid';
         newRow.innerHTML = `
-            <div class="input-item" style="flex: 1; min-width: 100px;">
-                <div class="input-label">تعداد (پک)</div>
-                <div class="input"><input type="number" name="pack_sizes[]" value="1" required min="1"></div>
+            <div>
+                <label class="pack-label">تعداد (پک)</label>
+                <input type="number" class="pack-input" name="pack_sizes[]" value="1" required min="1">
             </div>
-            <div class="input-item" style="flex: 2; min-width: 150px;">
-                <div class="input-label">قیمت دیجیتال (هر واحد)</div>
-                <div class="input"><input type="number" step="0.01" name="prices_digital[]" required></div>
+            <div>
+                <label class="pack-label">قیمت دیجیتال (هر واحد)</label>
+                <input type="number" step="0.01" class="pack-input" name="prices_digital[]" required>
             </div>
-            <div class="input-item" style="flex: 2; min-width: 150px;">
-                <div class="input-label">قیمت فیزیکی (هر واحد)</div>
-                <div class="input"><input type="number" step="0.01" name="prices_physical[]" required></div>
+            <div>
+                <label class="pack-label">قیمت فیزیکی (هر واحد)</label>
+                <input type="number" step="0.01" class="pack-input" name="prices_physical[]" required>
             </div>
-            <div style="padding-bottom: 5px;">
-                <button type="button" class="remove-pack-btn btn-sm" style="color: #ef4444; border: 1px solid #fecaca; background: white;">حذف</button>
+            <div>
+                <button type="button" class="remove-pack-btn">حذف</button>
             </div>
         `;
         container.appendChild(newRow);
@@ -454,9 +528,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     function attachRemoveEvent(btn) {
         btn.addEventListener('click', function() {
-            const rows = document.querySelectorAll('.pack-row');
+            const rows = document.querySelectorAll('.pack-row-grid');
             if (rows.length > 1) {
-                this.closest('.pack-row').remove();
+                this.closest('.pack-row-grid').remove();
             } else {
                 alert('حداقل یک پک باید وجود داشته باشد.');
             }
