@@ -192,7 +192,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                     <div class="drop-down grow-1">
                         <div class="drop-down-btn d-flex align-center gap-10 pointer">
                             <div class="drop-down-img">
-                                <img class="selected-img" src="<?php echo e($selectedBrandInfo['logo'] ?? 'assets/images/brand/default.png'); ?>" alt="" style="width:24px;">
+                                <img class="selected-img" src="<?php echo e($selectedBrandInfo['logo'] ?? 'assets/images/brand/default.png'); ?>" alt="" style="width:28px;">
                             </div>
                             <div class="selected-text"><?php echo e($selectedBrandInfo['name'] ?? 'Select Brand'); ?></div>
                             <span class="icon icon-arrow-down icon-size-16  lt-auto"></span>
@@ -203,7 +203,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                         <div class="drop-down-list">
                             <?php foreach ($allBrands as $b): ?>
                             <div class="drop-option d-flex gap-10 align-center <?php echo $b['code'] === $defaultBrand ? 'active' : ''; ?>">
-                                <div class="drop-option-img" data-option="<?php echo e($b['code']); ?>"><img src="<?php echo e($b['logo']); ?>" alt="" style="width:24px;"></div>
+                                <div class="drop-option-img" data-option="<?php echo e($b['code']); ?>"><img src="<?php echo e($b['logo']); ?>" alt="" style="width:28px;"></div>
                                 <span><?php echo e($b['name']); ?></span>
                             </div>
                             <?php endforeach; ?>
@@ -213,7 +213,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                     <div class="drop-down grow-1">
                         <div class="drop-down-btn d-flex align-center gap-10 pointer">
                             <div class="drop-down-img">
-                                <img class="selected-img" src="<?php echo e($selectedCountryInfo['flag'] ?? 'assets/images/flag/default.png'); ?>" alt="" style="width:24px;">
+                                <img class="selected-img" src="<?php echo e($selectedCountryInfo['flag'] ?? 'assets/images/flag/default.png'); ?>" alt="" style="width:28px;">
                             </div>
                             <div class="selected-text"><?php echo e($countryNames[$defaultCountry] ?? 'Select Country'); ?></div>
                             <span class="icon icon-arrow-down icon-size-16  lt-auto"></span>
@@ -224,7 +224,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                         <div class="drop-down-list">
                             <?php foreach ($allCountries as $c): ?>
                             <div class="drop-option d-flex gap-10 align-center <?php echo $c['code'] === $defaultCountry ? 'active' : ''; ?>">
-                                <div class="drop-option-img" data-option="<?php echo e($c['code']); ?>"><img src="<?php echo e($c['flag']); ?>" alt="" style="width:24px;"></div>
+                                <div class="drop-option-img" data-option="<?php echo e($c['code']); ?>"><img src="<?php echo e($c['flag']); ?>" alt="" style="width:28px;"></div>
                                 <span><?php echo e($c['name']); ?> (<?php echo e($c['currency']); ?>)</span>
                             </div>
                             <?php endforeach; ?>

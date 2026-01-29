@@ -942,7 +942,7 @@
 }
 
 .width-24 {
-  width: 24px;
+  width: 28px;
 }
 .width-30 {
   width: 30px;
@@ -963,7 +963,7 @@
   width: 100px;
 }
 .min-w24 {
-  min-width: 24px;
+  min-width: 28px;
 }
 .min-w30 {
   min-width: 30px;
@@ -993,7 +993,7 @@
   min-width: 100px;
 }
 .max-w24 {
-  max-width: 24px;
+  max-width: 28px;
 }
 .max-w30 {
   max-width: 30px;

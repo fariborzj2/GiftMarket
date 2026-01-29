@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ?>
                     <div class="drop-down-btn d-flex align-center gap-10 pointer" style="border: 1px solid var(--color-border); padding: 10px 15px; border-radius: 12px; background: var(--color-body);">
                         <div class="drop-down-img">
-                            <img class="selected-img" src="../<?php echo e($selectedBrand['logo'] ?? ''); ?>" alt="" style="width: 24px; <?php echo !$selectedBrand['logo'] ? 'display:none;' : ''; ?>">
+                            <img class="selected-img" src="../<?php echo e($selectedBrand['logo'] ?? ''); ?>" alt="" style="width: 28px; <?php echo !$selectedBrand['logo'] ? 'display:none;' : ''; ?>">
                         </div>
                         <div class="selected-text"><?php echo e($selectedBrand['name'] ?? 'انتخاب برند'); ?></div>
                         <span class="icon icon-arrow-down icon-size-16 lt-auto"></span>
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="drop-down-list" style="width: 100%; top: 100%;">
                         <?php foreach ($brands as $b): ?>
                             <div class="drop-option d-flex gap-10 align-center <?php echo $editData['brand'] == $b['code'] ? 'active' : ''; ?>" data-option="<?php echo e($b['code']); ?>">
-                                <div class="drop-option-img"><img src="../<?php echo e($b['logo']); ?>" alt="" style="width: 24px;"></div>
+                                <div class="drop-option-img"><img src="../<?php echo e($b['logo']); ?>" alt="" style="width: 28px;"></div>
                                 <span><?php echo e($b['name']); ?></span>
                             </div>
                         <?php endforeach; ?>
@@ -177,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ?>
                     <div class="drop-down-btn d-flex align-center gap-10 pointer" style="border: 1px solid var(--color-border); padding: 10px 15px; border-radius: 12px; background: var(--color-body);">
                         <div class="drop-down-img">
-                            <img class="selected-img" src="../<?php echo e($selectedCountry['flag'] ?? ''); ?>" alt="" style="width: 24px; <?php echo !$selectedCountry['flag'] ? 'display:none;' : ''; ?>">
+                            <img class="selected-img" src="../<?php echo e($selectedCountry['flag'] ?? ''); ?>" alt="" style="width: 28px; <?php echo !$selectedCountry['flag'] ? 'display:none;' : ''; ?>">
                         </div>
                         <div class="selected-text"><?php echo e($selectedCountry['name'] ?? 'انتخاب کشور'); ?></div>
                         <span class="icon icon-arrow-down icon-size-16 lt-auto"></span>
@@ -188,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="drop-down-list" style="width: 100%; top: 100%;">
                         <?php foreach ($countries as $c): ?>
                             <div class="drop-option d-flex gap-10 align-center <?php echo $editData['country'] == $c['code'] ? 'active' : ''; ?>" data-option="<?php echo e($c['code']); ?>">
-                                <div class="drop-option-img"><img src="../<?php echo e($c['flag']); ?>" alt="" style="width: 24px;"></div>
+                                <div class="drop-option-img"><img src="../<?php echo e($c['flag']); ?>" alt="" style="width: 28px;"></div>
                                 <span><?php echo e($c['name']); ?></span>
                             </div>
                         <?php endforeach; ?>
