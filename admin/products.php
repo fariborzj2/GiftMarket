@@ -56,8 +56,88 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <?php if ($action === 'list'):
-    $products = db()->query("SELECT products.*, countries.name as country_name, brands.name as brand_name FROM products LEFT JOIN countries ON products.country = countries.code LEFT JOIN brands ON products.brand = brands.code ORDER BY brand_name ASC, country_name ASC, pack_size ASC, denomination ASC")->fetchAll();
+    $search = clean($_GET['search'] ?? '');
+    $f_brand = clean($_GET['brand'] ?? '');
+    $f_country = clean($_GET['country'] ?? '');
+    $f_pack_size = clean($_GET['pack_size'] ?? '');
 
+    $query = "SELECT products.*, countries.name as country_name, brands.name as brand_name FROM products LEFT JOIN countries ON products.country = countries.code LEFT JOIN brands ON products.brand = brands.code WHERE 1=1";
+    $params = [];
+
+    if ($search) {
+        $query .= " AND products.denomination LIKE ?";
+        $params[] = "%$search%";
+    }
+    if ($f_brand) {
+        $query .= " AND products.brand = ?";
+        $params[] = $f_brand;
+    }
+    if ($f_country) {
+        $query .= " AND products.country = ?";
+        $params[] = $f_country;
+    }
+    if ($f_pack_size) {
+        $query .= " AND products.pack_size = ?";
+        $params[] = (int)$f_pack_size;
+    }
+
+    $query .= " ORDER BY brand_name ASC, country_name ASC, pack_size ASC, denomination ASC";
+    $stmt = db()->prepare($query);
+    $stmt->execute($params);
+    $products = $stmt->fetchAll();
+
+    $brands = db()->query("SELECT * FROM brands ORDER BY name ASC")->fetchAll();
+    $countries = db()->query("SELECT * FROM countries ORDER BY name ASC")->fetchAll();
+    $pack_sizes = db()->query("SELECT DISTINCT pack_size FROM products ORDER BY pack_size ASC")->fetchAll(PDO::FETCH_COLUMN);
+?>
+
+    <div class="admin-card mb-30">
+        <form method="GET" class="d-flex-wrap gap-15 align-end">
+            <div class="input-item grow-1" style="min-width: 200px;">
+                <div class="input-label">جستجو (مبلغ اعتبار)</div>
+                <div class="input">
+                    <input type="text" name="search" value="<?php echo e($search); ?>" placeholder="مثلاً 100 AED">
+                </div>
+            </div>
+
+            <div class="input-item" style="min-width: 150px;">
+                <div class="input-label">برند</div>
+                <select name="brand" class="input" style="height: 48px; border: 1px solid var(--color-border); border-radius: 12px; padding: 0 15px; width: 100%; background: var(--color-body); color: var(--color-text);">
+                    <option value="">همه برندها</option>
+                    <?php foreach ($brands as $b): ?>
+                        <option value="<?php echo e($b['code']); ?>" <?php echo $f_brand == $b['code'] ? 'selected' : ''; ?>><?php echo e($b['name']); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="input-item" style="min-width: 150px;">
+                <div class="input-label">کشور</div>
+                <select name="country" class="input" style="height: 48px; border: 1px solid var(--color-border); border-radius: 12px; padding: 0 15px; width: 100%; background: var(--color-body); color: var(--color-text);">
+                    <option value="">همه کشورها</option>
+                    <?php foreach ($countries as $c): ?>
+                        <option value="<?php echo e($c['code']); ?>" <?php echo $f_country == $c['code'] ? 'selected' : ''; ?>><?php echo e($c['name']); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="input-item" style="min-width: 120px;">
+                <div class="input-label">Pack Size</div>
+                <select name="pack_size" class="input" style="height: 48px; border: 1px solid var(--color-border); border-radius: 12px; padding: 0 15px; width: 100%; background: var(--color-body); color: var(--color-text);">
+                    <option value="">همه سایزها</option>
+                    <?php foreach ($pack_sizes as $size): ?>
+                        <option value="<?php echo e($size); ?>" <?php echo $f_pack_size == $size ? 'selected' : ''; ?>>Pack Of <?php echo e($size); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="d-flex gap-10">
+                <button type="submit" class="btn-primary radius-100" style="height: 48px;">اعمال فیلتر</button>
+                <a href="products.php" class="btn radius-100 d-flex align-center just-center" style="height: 48px; border: 1px solid var(--color-border);">حذف فیلتر</a>
+            </div>
+        </form>
+    </div>
+
+<?php
     $grouped = [];
     foreach ($products as $p) {
         $brand = $p['brand_name'] ?? strtoupper($p['brand']);
