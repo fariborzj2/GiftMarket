@@ -6,7 +6,7 @@ $appData = json_decode(file_get_contents(__DIR__ . '/../assets/js/data.json'), t
 // Fetch all necessary data from database
 $allBrands = db()->query("SELECT * FROM brands ORDER BY sort_order ASC, name ASC")->fetchAll();
 $allCountries = db()->query("SELECT * FROM countries ORDER BY sort_order ASC, name ASC")->fetchAll();
-$allPackSizes = db()->query("SELECT DISTINCT pack_size FROM products ORDER BY pack_size ASC")->fetchAll(PDO::FETCH_COLUMN);
+$allPackSizes = db()->query("SELECT DISTINCT pack_size FROM product_packs ORDER BY pack_size ASC")->fetchAll(PDO::FETCH_COLUMN);
 if (empty($allPackSizes)) $allPackSizes = [1, 10, 25, 50, 100];
 
 // Fetch products from database
@@ -26,16 +26,18 @@ foreach ($groupedProducts as $brandCode => $countries) {
         'logo' => $brandInfo['logo'] ?? ($appData['pricingData'][$brandCode]['logo'] ?? 'assets/images/brand/default.png'),
         'options' => []
     ];
-    foreach ($countries as $countryCode => $items) {
-        foreach ($items as $p) {
-            $dbPricingData[$brandCode]['options'][$countryCode][] = [
-                'denomination' => $p['denomination'],
-                'pack_size' => $p['pack_size'],
-                'price' => $p['price'],
-                'price_digital' => $p['price_digital'],
-                'price_physical' => $p['price_physical'],
-                'currency' => $p['currency']
-            ];
+    foreach ($countries as $countryCode => $products) {
+        foreach ($products as $product) {
+            foreach ($product['packs'] as $pack) {
+                $dbPricingData[$brandCode]['options'][$countryCode][] = [
+                    'denomination' => $product['denomination'],
+                    'pack_size' => $pack['pack_size'],
+                    'price' => $pack['price_digital'],
+                    'price_digital' => $pack['price_digital'],
+                    'price_physical' => $pack['price_physical'],
+                    'currency' => $product['currency']
+                ];
+            }
         }
     }
 }

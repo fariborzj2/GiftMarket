@@ -70,6 +70,15 @@ class Database {
                 logo VARCHAR(255) DEFAULT NULL,
                 sort_order INT DEFAULT 0
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+            CREATE TABLE IF NOT EXISTS product_packs (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                product_id INT NOT NULL,
+                pack_size INT NOT NULL DEFAULT 1,
+                price_digital DECIMAL(10, 2) NOT NULL DEFAULT 0,
+                price_physical DECIMAL(10, 2) NOT NULL DEFAULT 0,
+                FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ";
 
         // Multi-query handling for initialization
@@ -105,6 +114,55 @@ class Database {
         try {
             $this->pdo->exec("ALTER TABLE brands ADD COLUMN sort_order INT DEFAULT 0");
         } catch (PDOException $e) {}
+
+        // Migration to many-packs per product
+        try {
+            // Check if product_packs is empty and products has data
+            $stmt = $this->pdo->query("SELECT COUNT(*) FROM product_packs");
+            $packCount = $stmt->fetchColumn();
+
+            $stmt = $this->pdo->query("SELECT COUNT(*) FROM products");
+            $productCount = $stmt->fetchColumn();
+
+            if ($packCount == 0 && $productCount > 0) {
+                // Initial migration: move current product data to packs
+                $this->pdo->exec("INSERT INTO product_packs (product_id, pack_size, price_digital, price_physical)
+                                  SELECT id, pack_size, price_digital, price_physical FROM products");
+
+                // Identify duplicates and merge them
+                $stmt = $this->pdo->query("
+                    SELECT MIN(id) as master_id, brand, denomination, country, currency
+                    FROM products
+                    GROUP BY brand, denomination, country, currency
+                    HAVING COUNT(*) > 1
+                ");
+                $duplicates = $stmt->fetchAll();
+
+                foreach ($duplicates as $dup) {
+                    $masterId = $dup['master_id'];
+                    // Get all other IDs for this product identity
+                    $stmt2 = $this->pdo->prepare("
+                        SELECT id FROM products
+                        WHERE brand = ? AND denomination = ? AND country = ? AND currency = ? AND id != ?
+                    ");
+                    $stmt2->execute([$dup['brand'], $dup['denomination'], $dup['country'], $dup['currency'], $masterId]);
+                    $otherIds = $stmt2->fetchAll(PDO::FETCH_COLUMN);
+
+                    if (!empty($otherIds)) {
+                        $placeholders = implode(',', array_fill(0, count($otherIds), '?'));
+                        // Update product_packs to point to master_id
+                        $stmt3 = $this->pdo->prepare("UPDATE product_packs SET product_id = ? WHERE product_id IN ($placeholders)");
+                        $stmt3->execute(array_merge([$masterId], $otherIds));
+
+                        // Delete other product records
+                        $stmt4 = $this->pdo->prepare("DELETE FROM products WHERE id IN ($placeholders)");
+                        $stmt4->execute($otherIds);
+                    }
+                }
+            }
+        } catch (PDOException $e) {
+            // Log or handle error
+        }
 
         // Migrate existing price to price_digital and price_physical if they are 0
         try {
