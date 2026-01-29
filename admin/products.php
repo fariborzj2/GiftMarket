@@ -153,44 +153,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 
     <?php foreach ($grouped as $brandName => $countries): ?>
-    <h2 class="color-title mb-20 mt-30"><?php echo e($brandName); ?></h2>
-    <?php foreach ($countries as $countryName => $packSizes): ?>
-    <div class="mb-20" style="margin-right: 20px;">
-        <h3 class="color-text mb-15 d-flex align-center gap-10">
-            <span class="icon">🌍</span> <?php echo e($countryName); ?>
-        </h3>
-        <?php foreach ($packSizes as $packSizeName => $items): ?>
-        <div class="admin-card" style="margin-right: 20px;">
-            <h4 class="color-primary mb-15"><?php echo e($packSizeName); ?></h4>
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>مبلغ اعتبار</th>
-                            <th>قیمت دیجیتال</th>
-                            <th>قیمت فیزیکی</th>
-                            <th>عملیات</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($items as $p): ?>
-                        <tr>
-                            <td><?php echo e($p['denomination']); ?></td>
-                            <td><?php echo e($p['price_digital']) . ' ' . e($p['currency']); ?></td>
-                            <td><?php echo e($p['price_physical']) . ' ' . e($p['currency']); ?></td>
-                            <td class="d-flex gap-10">
-                                <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="btn" style="color: var(--color-primary);">ویرایش</a>
-                                <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="btn" style="color: #ef4444;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+    <div class="brand-section mb-50">
+        <h2 class="color-title mb-20 mt-40 d-flex align-center gap-10 font-size-1-5">
+            <span style="width: 12px; height: 12px; background: var(--color-primary); border-radius: 50%;"></span>
+            <?php echo e($brandName); ?>
+        </h2>
+
+        <?php foreach ($countries as $countryName => $packSizes): ?>
+        <div class="admin-card mb-30" style="padding: 0; overflow: hidden; border-radius: 15px;">
+            <div style="background: var(--color-body); padding: 15px 25px; border-bottom: 1px solid var(--color-border);" class="d-flex align-center just-between">
+                <h3 class="color-text d-flex align-center gap-10 font-size-1-1 m-0">
+                    <span class="icon" style="color: var(--color-primary);">🌍</span> <?php echo e($countryName); ?>
+                </h3>
+                <span class="font-size-0-8 color-bright"><?php echo count($packSizes); ?> سایز پکیج</span>
+            </div>
+
+            <div style="padding: 20px;">
+                <?php foreach ($packSizes as $packSizeName => $items): ?>
+                <div class="pack-size-group <?php echo $packSizeName !== array_key_last($packSizes) ? 'mb-30' : ''; ?>">
+                    <h4 class="color-primary mb-15 font-size-0-9 d-flex align-center gap-5">
+                        <span class="icon icon-size-14">📦</span> <?php echo e($packSizeName); ?>
+                    </h4>
+                    <div class="table-wrap" style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 10px;">
+                        <table style="margin: 0;">
+                            <thead>
+                                <tr style="background: rgba(0,0,0,0.02);">
+                                    <th>مبلغ اعتبار</th>
+                                    <th>قیمت دیجیتال</th>
+                                    <th>قیمت فیزیکی</th>
+                                    <th style="width: 120px;">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($items as $p): ?>
+                                <tr>
+                                    <td class="font-bold"><?php echo e($p['denomination']); ?></td>
+                                    <td><?php echo e($p['price_digital']) . ' ' . e($p['currency']); ?></td>
+                                    <td><?php echo e($p['price_physical']) . ' ' . e($p['currency']); ?></td>
+                                    <td class="d-flex gap-10">
+                                        <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: var(--color-primary); border-color: var(--color-primary); background: var(--color-surface); width: auto;">ویرایش</a>
+                                        <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: #ef4444; border-color: #fca5a5; background: var(--color-surface); width: auto;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <?php endforeach; ?>
             </div>
         </div>
         <?php endforeach; ?>
     </div>
-    <?php endforeach; ?>
     <?php endforeach; ?>
 
 <?php elseif ($action === 'add' || $action === 'edit'):
