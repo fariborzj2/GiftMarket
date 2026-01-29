@@ -6,8 +6,13 @@ $msg = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usd_to_aed = clean($_POST['usd_to_aed']);
+    $auto_update_rate = isset($_POST['auto_update_rate']) ? '1' : '0';
+    $update_interval_hours = (int)$_POST['update_interval_hours'];
+
     if (is_numeric($usd_to_aed)) {
         updateSetting('usd_to_aed', $usd_to_aed);
+        updateSetting('auto_update_rate', $auto_update_rate);
+        updateSetting('update_interval_hours', (string)$update_interval_hours);
         $msg = 'تنظیمات با موفقیت ذخیره شد!';
     } else {
         $msg = 'خطا: مقدار وارد شده برای نرخ ارز معتبر نیست.';
@@ -15,6 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $current_rate = getSetting('usd_to_aed', '3.673');
+$auto_update = getSetting('auto_update_rate', '0');
+$update_interval = getSetting('update_interval_hours', '12');
+$last_update = (int)getSetting('last_rate_update', 0);
 ?>
 
 <div class="d-flex just-between align-center mb-30">
@@ -30,18 +38,39 @@ $current_rate = getSetting('usd_to_aed', '3.673');
 <div class="admin-card max-w600">
     <h3 class="color-title mb-30">تنظیمات نرخ ارز</h3>
     <form method="POST" class="contact-form" style="box-shadow: none; padding: 0;">
-        <div class="input-item mb-20">
+        <div class="input-item mb-30">
             <div class="input-label">نرخ تبدیل ۱ دلار به درهم (USD to AED)</div>
             <div class="input d-flex align-center gap-10">
                 <input type="number" step="0.0001" name="usd_to_aed" id="usd_to_aed" value="<?php echo e($current_rate); ?>" required style="flex: 1;">
-                <button type="button" class="btn-sm" id="fetch-api-btn" style="height: 48px; width: auto; white-space: nowrap; border-color: var(--color-primary); color: var(--color-primary);">دریافت از API 🔄</button>
+                <button type="button" class="btn-sm" id="fetch-api-btn" style="height: 48px; width: auto; white-space: nowrap; border-color: var(--color-primary); color: var(--color-primary);">بروزرسانی دستی از API 🔄</button>
             </div>
             <div class="font-size-0-8 color-bright mt-10">
                 این نرخ برای محاسبه قیمت نمایش داده شده در سایت استفاده می‌شود. تمام قیمت‌های محصولات در پنل بر پایه دلار وارد می‌شوند.
             </div>
         </div>
 
-        <div class="d-flex gap-10">
+        <h3 class="color-title mb-20">بروزرسانی خودکار</h3>
+
+        <div class="input-item mb-20">
+            <label class="d-flex align-center gap-10 pointer">
+                <input type="checkbox" name="auto_update_rate" value="1" <?php echo $auto_update === '1' ? 'checked' : ''; ?>>
+                <span>فعالسازی بروزرسانی خودکار قیمت درهم</span>
+            </label>
+        </div>
+
+        <div class="input-item mb-20">
+            <div class="input-label">فاصله زمانی بروزرسانی (ساعت)</div>
+            <div class="input">
+                <input type="number" name="update_interval_hours" value="<?php echo e($update_interval); ?>" min="1" max="168">
+            </div>
+            <?php if ($last_update > 0): ?>
+            <div class="font-size-0-8 color-bright mt-10">
+                آخرین بروزرسانی موفق: <?php echo date('Y-m-d H:i:s', $last_update); ?>
+            </div>
+            <?php endif; ?>
+        </div>
+
+        <div class="d-flex gap-10 mt-30">
             <button type="submit" class="btn-primary radius-100">ذخیره تنظیمات</button>
         </div>
     </form>

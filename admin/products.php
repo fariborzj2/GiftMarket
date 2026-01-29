@@ -451,7 +451,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div style="margin-bottom: 20px; padding: 15px; background: #eff6ff; border-radius: 12px; border: 1px solid #bfdbfe; color: #1e40af; font-size: 0.9rem;">
-                    <span class="icon">ℹ️</span> تمام قیمت‌ها باید به <strong>دلار آمریکا (USD)</strong> وارد شوند. سیستم به صورت خودکار معادل درهم امارات (AED) را با نرخ نرخ <strong><?php echo e(getSetting('usd_to_aed', '3.673')); ?></strong> در سایت نمایش می‌دهد.
+                    <span class="icon">ℹ️</span> تمام قیمت‌ها باید به <strong>دلار آمریکا (USD)</strong> وارد شوند. سیستم به صورت خودکار معادل درهم امارات (AED) را با نرخ <strong><?php echo e(getSetting('usd_to_aed', '3.673')); ?></strong> در سایت نمایش می‌دهد.
                 </div>
 
                 <div id="packs-container">
