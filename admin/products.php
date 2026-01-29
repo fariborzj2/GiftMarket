@@ -85,8 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <td><?php echo e($p['price_digital']) . ' ' . e($p['currency']); ?></td>
                         <td><?php echo e($p['price_physical']) . ' ' . e($p['currency']); ?></td>
                         <td class="d-flex gap-10">
-                            <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: var(--color-primary);">ویرایش</a>
-                            <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: #ef4444;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
+                            <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="btn" style="color: var(--color-primary);">ویرایش</a>
+                            <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="btn" style="color: #ef4444;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
                         </td>
                     </tr>
                     <?php endforeach; ?>

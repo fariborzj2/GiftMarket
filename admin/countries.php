@@ -128,8 +128,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <td><?php echo strtoupper(e($c['code'])); ?></td>
                         <td><?php echo e($c['currency']); ?></td>
                         <td class="d-flex gap-10">
-                            <a href="countries.php?action=edit&id=<?php echo e($c['id']); ?>" class="btn-sm" style="color: var(--color-primary);">ویرایش</a>
-                            <a href="countries.php?action=delete&id=<?php echo e($c['id']); ?>" class="btn-sm" style="color: #ef4444;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
+                            <a href="countries.php?action=edit&id=<?php echo e($c['id']); ?>" class="btn" style="color: var(--color-primary);">ویرایش</a>
+                            <a href="countries.php?action=delete&id=<?php echo e($c['id']); ?>" class="btn" style="color: #ef4444;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
                         </td>
                     </tr>
                     <?php endforeach; ?>

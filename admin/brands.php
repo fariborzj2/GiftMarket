@@ -124,8 +124,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <td><?php echo e($b['name']); ?></td>
                         <td><?php echo strtoupper(e($b['code'])); ?></td>
                         <td class="d-flex gap-10">
-                            <a href="brands.php?action=edit&id=<?php echo e($b['id']); ?>" class="btn-sm" style="color: var(--color-primary);">ویرایش</a>
-                            <a href="brands.php?action=delete&id=<?php echo e($b['id']); ?>" class="btn-sm" style="color: #ef4444;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
+                            <a href="brands.php?action=edit&id=<?php echo e($b['id']); ?>" class="btn" style="color: var(--color-primary);">ویرایش</a>
+                            <a href="brands.php?action=delete&id=<?php echo e($b['id']); ?>" class="btn" style="color: #ef4444;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
                         </td>
                     </tr>
                     <?php endforeach; ?>
