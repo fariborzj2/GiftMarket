@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </select>
             </div>
 
-            <div class="d-flex gap-10">
+            <div class="d-flex gap-10 d-flex-wrap">
                 <button type="submit" class="btn-primary radius-100" style="height: 48px;">اعمال فیلتر</button>
                 <a href="products.php" class="btn radius-100 d-flex align-center just-center" style="height: 48px; border: 1px solid var(--color-border);">حذف فیلتر</a>
             </div>
@@ -207,12 +207,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <tbody>
                                 <?php foreach ($items as $p): ?>
                                 <tr>
-                                    <td class="font-bold"><?php echo e($p['denomination']); ?></td>
-                                    <td><?php echo e($p['price_digital']) . ' ' . e($p['currency']); ?></td>
-                                    <td><?php echo e($p['price_physical']) . ' ' . e($p['currency']); ?></td>
-                                    <td class="d-flex gap-10">
-                                        <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: var(--color-primary); border-color: var(--color-primary); background: var(--color-surface); width: auto;">ویرایش</a>
-                                        <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: #ef4444; border-color: #fca5a5; background: var(--color-surface); width: auto;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
+                                    <td data-label="مبلغ اعتبار" class="font-bold"><?php echo e($p['denomination']); ?></td>
+                                    <td data-label="قیمت دیجیتال"><?php echo e($p['price_digital']) . ' ' . e($p['currency']); ?></td>
+                                    <td data-label="قیمت فیزیکی"><?php echo e($p['price_physical']) . ' ' . e($p['currency']); ?></td>
+                                    <td data-label="عملیات">
+                                        <div class="d-flex gap-10">
+                                            <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: var(--color-primary); border-color: var(--color-primary); background: var(--color-surface); width: auto;">ویرایش</a>
+                                            <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: #ef4444; border-color: #fca5a5; background: var(--color-surface); width: auto;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
+                                        </div>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>

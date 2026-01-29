@@ -77,6 +77,17 @@ if (!isLoggedIn()) {
             border: 1px solid var(--color-border);
             margin-bottom: 30px;
         }
+        @media (max-width: 992px) {
+            .admin-card {
+                padding: 20px;
+            }
+        }
+        @media (max-width: 768px) {
+            .admin-card {
+                padding: 15px;
+                border-radius: 15px;
+            }
+        }
         .hamburger {
             display: none;
             cursor: pointer;
