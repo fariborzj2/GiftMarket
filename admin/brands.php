@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $params[] = "%$search%";
         $params[] = "%$search%";
     }
-    $query .= " ORDER BY name ASC";
+    $query .= " ORDER BY sort_order ASC, name ASC";
     $stmt = db()->prepare($query);
     $stmt->execute($params);
     $brands = $stmt->fetchAll();
@@ -134,18 +134,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <table style="margin: 0;">
                 <thead>
                     <tr style="background: rgba(0,0,0,0.02);">
+                        <th style="width: 40px;"></th>
                         <th style="width: 80px; text-align: center;">لوگو</th>
                         <th>نام برند</th>
                         <th>کد</th>
                         <th style="width: 150px;">عملیات</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="sortable-brands">
                     <?php if (empty($brands)): ?>
-                        <tr><td colspan="4" class="text-center">هیچ برندی یافت نشد.</td></tr>
+                        <tr><td colspan="5" class="text-center">هیچ برندی یافت نشد.</td></tr>
                     <?php endif; ?>
                     <?php foreach ($brands as $b): ?>
-                    <tr>
+                    <tr data-id="<?php echo $b['id']; ?>">
+                        <td style="cursor: move;" class="drag-handle">☰</td>
                         <td data-label="لوگو" style="text-align: center;">
                             <?php if ($b['logo']): ?>
                                 <img src="../<?php echo e($b['logo']); ?>" alt="" style="width: 38px; height: 38px; object-fit: contain; background: var(--color-surface); padding: 5px; border-radius: 8px; border: 1px solid var(--color-border); margin: auto;">
@@ -223,5 +225,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 <?php endif; ?>
+
+<script>
+    if (document.getElementById('sortable-brands')) {
+        new Sortable(document.getElementById('sortable-brands'), {
+            handle: '.drag-handle',
+            animation: 150,
+            onEnd: function() {
+                let ids = [];
+                document.querySelectorAll('#sortable-brands tr').forEach(row => {
+                    ids.push(row.dataset.id);
+                });
+
+                let formData = new FormData();
+                formData.append('table', 'brands');
+                ids.forEach(id => formData.append('ids[]', id));
+
+                fetch('api_update_order.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        alert('Error updating order: ' + data.message);
+                    }
+                });
+            }
+        });
+    }
+</script>
 
 <?php require_once 'layout_footer.php'; ?>

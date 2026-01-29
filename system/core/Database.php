@@ -59,14 +59,16 @@ class Database {
                 name VARCHAR(100) NOT NULL,
                 code VARCHAR(10) UNIQUE NOT NULL,
                 flag VARCHAR(255) DEFAULT NULL,
-                currency VARCHAR(10) DEFAULT NULL
+                currency VARCHAR(10) DEFAULT NULL,
+                sort_order INT DEFAULT 0
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
             CREATE TABLE IF NOT EXISTS brands (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 name VARCHAR(100) NOT NULL,
                 code VARCHAR(20) UNIQUE NOT NULL,
-                logo VARCHAR(255) DEFAULT NULL
+                logo VARCHAR(255) DEFAULT NULL,
+                sort_order INT DEFAULT 0
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ";
 
@@ -94,6 +96,14 @@ class Database {
 
         try {
             $this->pdo->exec("ALTER TABLE products ADD COLUMN pack_size INT DEFAULT 1");
+        } catch (PDOException $e) {}
+
+        try {
+            $this->pdo->exec("ALTER TABLE countries ADD COLUMN sort_order INT DEFAULT 0");
+        } catch (PDOException $e) {}
+
+        try {
+            $this->pdo->exec("ALTER TABLE brands ADD COLUMN sort_order INT DEFAULT 0");
         } catch (PDOException $e) {}
 
         // Migrate existing price to price_digital and price_physical if they are 0

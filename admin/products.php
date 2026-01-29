@@ -85,13 +85,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $params[] = (int)$f_pack_size;
     }
 
-    $query .= " ORDER BY brand_name ASC, country_name ASC, pack_size ASC, denomination ASC";
+    $query .= " ORDER BY brands.sort_order ASC, brand_name ASC, countries.sort_order ASC, country_name ASC, pack_size ASC, denomination ASC";
     $stmt = db()->prepare($query);
     $stmt->execute($params);
     $products = $stmt->fetchAll();
 
-    $brands = db()->query("SELECT * FROM brands ORDER BY name ASC")->fetchAll();
-    $countries = db()->query("SELECT * FROM countries ORDER BY name ASC")->fetchAll();
+    $brands = db()->query("SELECT * FROM brands ORDER BY sort_order ASC, name ASC")->fetchAll();
+    $countries = db()->query("SELECT * FROM countries ORDER BY sort_order ASC, name ASC")->fetchAll();
     $pack_sizes = db()->query("SELECT DISTINCT pack_size FROM products ORDER BY pack_size ASC")->fetchAll(PDO::FETCH_COLUMN);
 ?>
 
@@ -230,8 +230,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endforeach; ?>
 
 <?php elseif ($action === 'add' || $action === 'edit'):
-    $countries = db()->query("SELECT * FROM countries ORDER BY name ASC")->fetchAll();
-    $brands = db()->query("SELECT * FROM brands ORDER BY name ASC")->fetchAll();
+    $countries = db()->query("SELECT * FROM countries ORDER BY sort_order ASC, name ASC")->fetchAll();
+    $brands = db()->query("SELECT * FROM brands ORDER BY sort_order ASC, name ASC")->fetchAll();
     $editData = ['id' => '', 'brand' => 'apple', 'denomination' => '', 'pack_size' => '1', 'country' => '', 'price_digital' => '', 'price_physical' => '', 'currency' => 'AED'];
     if ($action === 'edit' && isset($_GET['id'])) {
         $stmt = db()->prepare("SELECT * FROM products WHERE id = ?");
