@@ -1,13 +1,13 @@
 <?php
-$pageTitle = 'مدیریت ربات تلگرام';
-require_once 'layout_header.php';
+ob_start();
+require_once __DIR__ . '/../system/includes/functions.php';
 require_once __DIR__ . '/../system/plugins/telegram-bot/TelegramBot.php';
 
 $bot = new TelegramBot();
 $msg = '';
 $tab = $_GET['tab'] ?? 'settings';
 
-// Handle Actions
+// Handle Actions BEFORE any output
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['save_settings'])) {
         updateSetting('telegram_bot_enabled', isset($_POST['enabled']) ? '1' : '0');
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         updateSetting('telegram_message_template', $defaultTemplate);
         updateSetting('telegram_currency_symbols', '$, USD, AED, EUR, GBP, TL');
         $msg = 'قالب پیام به حالت پیش‌فرض بازنشانی شد.';
-        // Reload settings
+        // Reload settings safely
         header("Location: ?tab=settings&msg=" . urlencode($msg));
         exit;
     }
@@ -49,7 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = db()->prepare("INSERT IGNORE INTO telegram_channels (channel_id, name) VALUES (?, ?)");
             $stmt->execute([$channelId, $channelName]);
             $msg = 'کانال با موفقیت اضافه شد!';
-            $tab = 'channels';
+            header("Location: ?tab=channels&msg=" . urlencode($msg));
+            exit;
         }
     }
 
@@ -59,6 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $msg = 'خطا در انتشار. لطفاً لاگ‌ها را بررسی کنید.';
         }
+        header("Location: ?tab=" . $tab . "&msg=" . urlencode($msg));
+        exit;
     }
 
     if (isset($_POST['save_config'])) {
@@ -88,7 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             db()->rollBack();
             $msg = 'خطا در ذخیره اطلاعات: ' . $e->getMessage();
         }
-        $tab = 'config';
+        header("Location: ?tab=config&msg=" . urlencode($msg));
+        exit;
     }
 }
 
@@ -96,8 +100,12 @@ if (isset($_GET['delete_channel'])) {
     $stmt = db()->prepare("DELETE FROM telegram_channels WHERE id = ?");
     $stmt->execute([$_GET['delete_channel']]);
     $msg = 'کانال حذف شد!';
-    $tab = 'channels';
+    header("Location: ?tab=channels&msg=" . urlencode($msg));
+    exit;
 }
+
+$pageTitle = 'مدیریت ربات تلگرام';
+require_once 'layout_header.php';
 
 // Fetch Data
 $st_enabled = getSetting('telegram_bot_enabled', '0');
