@@ -11,179 +11,113 @@ if (!isLoggedIn()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo (isset($pageTitle) ? $pageTitle . ' | ' : '') . SITE_NAME; ?></title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/grid.css">
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-    <style>
-        :root {
-            --sidebar-width: 260px;
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#497FFF',
+                    },
+                    fontFamily: {
+                        vazir: ['Vazirmatn', 'sans-serif'],
+                    }
+                }
+            }
         }
-        body {
-            background: var(--color-body);
-            font-family: 'Vazirmatn', sans-serif;
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply font-vazir bg-slate-50 text-slate-600 dark:bg-slate-950 dark:text-slate-400;
+            }
+            h1, h2, h3, h4, h5, h6 {
+                @apply text-slate-900 dark:text-white font-bold;
+            }
         }
-        input, button, textarea, select {
-            font-family: 'Vazirmatn', sans-serif !important;
-        }
-        .admin-main {
-            display: flex;
-            min-height: 100vh;
-        }
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--color-surface);
-            border-right: 1px solid var(--color-border);
-            padding: 30px 20px;
-            position: fixed;
-            height: 100vh;
-            left: 0;
-            top: 0;
-        }
-        [dir="rtl"] .sidebar {
-            left: auto;
-            right: 0;
-            border-right: none;
-            border-left: 1px solid var(--color-border);
-        }
-        .content-area {
-            flex: 1;
-            margin-left: var(--sidebar-width);
-            padding: 40px;
-        }
-        [dir="rtl"] .content-area {
-            margin-left: 0;
-            margin-right: var(--sidebar-width);
-        }
-        .sidebar-menu {
-            margin-top: 40px;
-        }
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            color: var(--color-text);
-            border-radius: 10px;
-            margin-bottom: 5px;
-            transition: all 0.3s;
-        }
-        .sidebar-menu a:hover, .sidebar-menu a.active {
-            background: var(--color-primary);
-            color: #fff;
-        }
-        .admin-card {
-            background: var(--color-surface);
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid var(--color-border);
-            margin-bottom: 30px;
-        }
-        @media (max-width: 992px) {
+        @layer components {
             .admin-card {
-                padding: 20px;
+                @apply bg-white dark:bg-slate-900 p-4 md:p-6 lg:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm;
             }
-        }
-        @media (max-width: 768px) {
-            .admin-card {
-                padding: 15px;
-                border-radius: 15px;
+            .btn-primary {
+                @apply bg-primary hover:bg-blue-600 text-white px-6 py-2 rounded-full transition-all duration-200 flex items-center justify-center gap-2 font-medium;
             }
-        }
-        .hamburger {
-            display: none;
-            cursor: pointer;
-            font-size: 24px;
-            color: var(--color-title);
-        }
-        @media (max-width: 992px) {
-            :root {
-                --sidebar-width: 260px;
+            .sidebar-link {
+                @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary;
             }
-            .sidebar {
-                transform: translateX(-100%);
-                transition: all 0.3s ease;
-                z-index: 1001;
+            .sidebar-link.active {
+                @apply bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primary hover:text-white;
             }
-            [dir="rtl"] .sidebar {
-                transform: translateX(100%);
-            }
-            .sidebar.active {
-                transform: translateX(0);
-            }
-            .content-area {
-                margin-left: 0;
-                padding: 20px;
-            }
-            [dir="rtl"] .content-area {
-                margin-right: 0;
-            }
-            .hamburger {
-                display: block;
-            }
-            .sidebar-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                z-index: 1000;
-            }
-            .sidebar-overlay.active {
-                display: block;
-            }
-        }
-        .stat-card {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            background: var(--color-body);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-primary);
-            font-size: 24px;
-            border: 1px solid var(--color-border);
-        }
-        .drop-down-btn {
-            height: 54px !important;
         }
     </style>
 </head>
-<body>
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    <div class="admin-main">
-        <div class="sidebar" id="sidebar">
-            <div class="logo">
-                <img src="../assets/images/logo.svg" alt="Logo">
+<body class="min-h-screen">
+    <div class="fixed inset-0 bg-slate-900/50 z-40 hidden" id="sidebarOverlay"></div>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="fixed inset-y-0 right-0 w-64 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 p-6 z-50 transform translate-x-full transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-0" id="sidebar">
+            <div class="mb-10">
+                <img src="../assets/images/logo.svg" alt="Logo" class="h-10 dark:invert dark:hue-rotate-180 dark:brightness-[1.5]">
             </div>
-            <div class="sidebar-menu">
-                <a href="index.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">داشبورد</a>
-                <a href="brands.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'brands.php' ? 'active' : ''; ?>">برندها</a>
-                <a href="countries.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'countries.php' ? 'active' : ''; ?>">کشورها</a>
-                <a href="products.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'products.php' ? 'active' : ''; ?>">محصولات</a>
-                <a href="settings.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">تنظیمات</a>
-                <a href="telegram_bot.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'telegram_bot.php' ? 'active' : ''; ?>">ربات تلگرام</a>
-                <!-- Future modules:
-                <a href="orders.php">سفارشات</a>
-                <a href="customers.php">مشتریان</a>
-                -->
-                <a href="logout.php" style="margin-top: 50px; color: #ef4444;">خروج</a>
-            </div>
-        </div>
-        <div class="content-area">
-            <header class="d-flex just-between align-center mb-40">
-                <div class="d-flex align-center gap-15">
-                    <div class="hamburger" id="hamburger">☰</div>
-                    <h1 class="color-title font-size-2"><?php echo $pageTitle ?? 'Dashboard'; ?></h1>
+
+            <nav class="space-y-1">
+                <a href="index.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">
+                    <span class="text-xl">📊</span>
+                    <span>داشبورد</span>
+                </a>
+                <a href="brands.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'brands.php' ? 'active' : ''; ?>">
+                    <span class="text-xl">🏷️</span>
+                    <span>برندها</span>
+                </a>
+                <a href="countries.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'countries.php' ? 'active' : ''; ?>">
+                    <span class="text-xl">🌍</span>
+                    <span>کشورها</span>
+                </a>
+                <a href="products.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'products.php' ? 'active' : ''; ?>">
+                    <span class="text-xl">📦</span>
+                    <span>محصولات</span>
+                </a>
+                <a href="settings.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">
+                    <span class="text-xl">⚙️</span>
+                    <span>تنظیمات</span>
+                </a>
+                <a href="telegram_bot.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'telegram_bot.php' ? 'active' : ''; ?>">
+                    <span class="text-xl">🤖</span>
+                    <span>ربات تلگرام</span>
+                </a>
+
+                <div class="pt-10">
+                    <a href="logout.php" class="sidebar-link text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600">
+                        <span class="text-xl">🚪</span>
+                        <span>خروج</span>
+                    </a>
                 </div>
-                <div class="user-info d-flex align-center gap-10">
-                    <span class="color-text">سلام، <b><?php echo $_SESSION['username']; ?></b></span>
+            </nav>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="flex-1 min-w-0 flex flex-col">
+            <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 px-4 md:px-8 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <button class="lg:hidden p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg" id="hamburger">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                    <h1 class="text-xl md:text-2xl"><?php echo $pageTitle ?? 'Dashboard'; ?></h1>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:block text-sm">
+                        <span class="text-slate-400">سلام،</span>
+                        <span class="font-bold text-slate-900 dark:text-white"><?php echo $_SESSION['username']; ?></span>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                        <?php echo mb_substr($_SESSION['username'], 0, 1); ?>
+                    </div>
                 </div>
             </header>
+
+            <div class="p-4 md:p-8">
