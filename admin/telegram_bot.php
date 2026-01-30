@@ -15,31 +15,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         updateSetting('telegram_bot_username', clean($_POST['username']));
         updateSetting('telegram_publish_time', clean($_POST['publish_time']));
         updateSetting('telegram_message_template', $_POST['template']);
-        updateSetting('telegram_pack_row_template', $_POST['pack_row_template']);
         updateSetting('telegram_use_emojis', isset($_POST['use_emojis']) ? '1' : '0');
         updateSetting('telegram_price_type', clean($_POST['price_type']));
-
-        // Labels
-        updateSetting('telegram_label_gift_card', clean($_POST['label_gift_card']));
-        updateSetting('telegram_label_digital', clean($_POST['label_digital']));
-        updateSetting('telegram_label_physical', clean($_POST['label_physical']));
-        updateSetting('telegram_label_pack', clean($_POST['label_pack']));
-        updateSetting('telegram_label_last_update', clean($_POST['label_last_update']));
         updateSetting('telegram_currency_symbols', clean($_POST['currency_symbols']));
 
         $msg = 'تنظیمات با موفقیت ذخیره شد!';
     }
 
     if (isset($_POST['reset_templates'])) {
-        updateSetting('telegram_message_template', "{emoji} {brand} {gift_card} – {currency} {denomination}\n\n{digital_packs}\n{physical_packs}\n{last_update_label}: {last_update_time}");
-        updateSetting('telegram_pack_row_template', "• {pack} {size} → {currency} {price}");
-        updateSetting('telegram_label_gift_card', 'Gift Card');
-        updateSetting('telegram_label_digital', 'Digital');
-        updateSetting('telegram_label_physical', 'Physical');
-        updateSetting('telegram_label_pack', 'Pack');
-        updateSetting('telegram_label_last_update', '🕒 Last update');
+        $defaultTemplate = "{emoji} {brand} گیفت کارت - {currency} {denomination}\n\n" .
+                          "بخش دیجیتال:\n" .
+                          "[DIGITAL_PACKS]\n" .
+                          "• پکیج {size} عدد -> {price} {currency}\n" .
+                          "[/DIGITAL_PACKS]\n\n" .
+                          "🕒 بروزرسانی: {last_update_time}";
+
+        updateSetting('telegram_message_template', $defaultTemplate);
         updateSetting('telegram_currency_symbols', '$, USD, AED, EUR, GBP, TL');
-        $msg = 'قالب‌ها و برچسب‌ها به حالت پیش‌فرض بازنشانی شدند.';
+        $msg = 'قالب پیام به حالت پیش‌فرض بازنشانی شد.';
         // Reload settings
         header("Location: ?tab=settings&msg=" . urlencode($msg));
         exit;
@@ -107,17 +100,9 @@ $st_enabled = getSetting('telegram_bot_enabled', '0');
 $st_token = getSetting('telegram_bot_token', '');
 $st_username = getSetting('telegram_bot_username', '');
 $st_publish_time = getSetting('telegram_publish_time', '09:00');
-$st_template = getSetting('telegram_message_template', "{emoji} {brand} {gift_card} – {currency} {denomination}");
-$st_pack_row_template = getSetting('telegram_pack_row_template', "• {pack} {size} → {currency} {price}");
+$st_template = getSetting('telegram_message_template', "{emoji} {brand} گیفت کارت - {currency} {denomination}\n\n[DIGITAL_PACKS]\n• پکیج {size} عدد -> {price} {currency}\n[/DIGITAL_PACKS]");
 $st_use_emojis = getSetting('telegram_use_emojis', '1');
 $st_price_type = getSetting('telegram_price_type', 'both');
-
-// Labels
-$st_label_gift_card = getSetting('telegram_label_gift_card', 'Gift Card');
-$st_label_digital = getSetting('telegram_label_digital', 'Digital');
-$st_label_physical = getSetting('telegram_label_physical', 'Physical');
-$st_label_pack = getSetting('telegram_label_pack', 'Pack');
-$st_label_last_update = getSetting('telegram_label_last_update', '🕒 Last update');
 $st_currency_symbols = getSetting('telegram_currency_symbols', '$, USD, AED, EUR, GBP, TL');
 
 $channels = db()->query("SELECT * FROM telegram_channels ORDER BY created_at DESC")->fetchAll();
@@ -201,22 +186,24 @@ foreach ($configs as $c) {
                     </div>
                 </div>
 
-                <div class="flex items-center gap-3">
-                    <input type="checkbox" name="use_emojis" id="use_emojis" value="1" <?php echo $st_use_emojis === '1' ? 'checked' : ''; ?>
-                           class="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary">
-                    <label for="use_emojis" class="text-sm text-slate-600 dark:text-slate-400 cursor-pointer">استفاده از ایموجی پرچم کشورها</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" name="use_emojis" id="use_emojis" value="1" <?php echo $st_use_emojis === '1' ? 'checked' : ''; ?>
+                               class="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary">
+                        <label for="use_emojis" class="text-sm text-slate-600 dark:text-slate-400 cursor-pointer">استفاده از ایموجی پرچم کشورها</label>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[11px] font-bold text-slate-500 uppercase">حذف نمادهای ارزی (جدا شده با کاما)</label>
+                        <input type="text" name="currency_symbols" value="<?php echo e($st_currency_symbols); ?>"
+                               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
+                    </div>
                 </div>
 
                 <div class="space-y-6">
                     <div class="space-y-2">
                         <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">قالب پیام (Message Template)</label>
-                        <textarea name="template" rows="6"
+                        <textarea name="template" rows="10"
                                   class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono leading-relaxed" dir="ltr"><?php echo e($st_template); ?></textarea>
-                    </div>
-                    <div class="space-y-2">
-                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">قالب ردیف پکیج (Pack Row Template)</label>
-                        <textarea name="pack_row_template" rows="2"
-                                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono leading-relaxed" dir="ltr"><?php echo e($st_pack_row_template); ?></textarea>
                     </div>
 
                     <!-- Variable Guide Table -->
@@ -226,58 +213,27 @@ foreach ($configs as $c) {
                                 <tr>
                                     <th class="px-4 py-2 border-b border-slate-200 dark:border-slate-800">متغیر</th>
                                     <th class="px-4 py-2 border-b border-slate-200 dark:border-slate-800">توضیح</th>
-                                    <th class="px-4 py-2 border-b border-slate-200 dark:border-slate-800">بخش</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-                                <tr><td class="px-4 py-2 font-mono text-primary">{emoji}</td><td class="px-4 py-2">پرچم کشور</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
-                                <tr><td class="px-4 py-2 font-mono text-primary">{brand}</td><td class="px-4 py-2">نام برند (Apple)</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
-                                <tr><td class="px-4 py-2 font-mono text-primary">{country_name}</td><td class="px-4 py-2">نام کشور</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
-                                <tr><td class="px-4 py-2 font-mono text-primary">{currency}</td><td class="px-4 py-2">واحد ارزی</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
-                                <tr><td class="px-4 py-2 font-mono text-primary">{denomination}</td><td class="px-4 py-2">مبلغ اعتبار</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
-                                <tr><td class="px-4 py-2 font-mono text-primary">{digital_packs}</td><td class="px-4 py-2">لیست قیمت‌های دیجیتال</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
-                                <tr><td class="px-4 py-2 font-mono text-primary">{physical_packs}</td><td class="px-4 py-2">لیست قیمت‌های فیزیکی</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
-                                <tr><td class="px-4 py-2 font-mono text-primary">{last_update_time}</td><td class="px-4 py-2">زمان بروزرسانی</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
-                                <tr><td class="px-4 py-2 font-mono text-indigo-500">{pack}</td><td class="px-4 py-2">برچسب Pack</td><td class="px-4 py-2 text-slate-400">ردیف پکیج</td></tr>
-                                <tr><td class="px-4 py-2 font-mono text-indigo-500">{size}</td><td class="px-4 py-2">تعداد در پکیج</td><td class="px-4 py-2 text-slate-400">ردیف پکیج</td></tr>
-                                <tr><td class="px-4 py-2 font-mono text-indigo-500">{currency}</td><td class="px-4 py-2">واحد ارزی</td><td class="px-4 py-2 text-slate-400">ردیف پکیج</td></tr>
-                                <tr><td class="px-4 py-2 font-mono text-indigo-500">{price}</td><td class="px-4 py-2">قیمت به ارز پایه</td><td class="px-4 py-2 text-slate-400">ردیف پکیج</td></tr>
-                                <tr><td class="px-4 py-2 font-mono text-indigo-500">{converted_price}</td><td class="px-4 py-2">قیمت تبدیل شده (AED)</td><td class="px-4 py-2 text-slate-400">ردیف پکیج</td></tr>
+                                <tr class="bg-slate-50/30 dark:bg-slate-900/30"><td colspan="2" class="px-4 py-1.5 font-bold text-[10px] text-slate-400 uppercase tracking-widest text-center">متغیرهای کلی</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-primary">{emoji}</td><td class="px-4 py-2">پرچم کشور</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-primary">{brand}</td><td class="px-4 py-2">نام برند (مثلاً Apple)</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-primary">{country_name}</td><td class="px-4 py-2">نام کشور</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-primary">{currency}</td><td class="px-4 py-2">واحد ارزی محصول</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-primary">{denomination}</td><td class="px-4 py-2">مبلغ اعتبار (بدون نماد ارز)</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-primary">{last_update_time}</td><td class="px-4 py-2">زمان بروزرسانی</td></tr>
+
+                                <tr class="bg-slate-50/30 dark:bg-slate-900/30"><td colspan="2" class="px-4 py-1.5 font-bold text-[10px] text-slate-400 uppercase tracking-widest text-center">بلاک‌های تکرار شونده</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-indigo-500" dir="ltr">[DIGITAL_PACKS] ... [/DIGITAL_PACKS]</td><td class="px-4 py-2">بلاک مربوط به قیمت‌های دیجیتال</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-indigo-500" dir="ltr">[PHYSICAL_PACKS] ... [/PHYSICAL_PACKS]</td><td class="px-4 py-2">بلاک مربوط به قیمت‌های فیزیکی</td></tr>
+
+                                <tr class="bg-slate-50/30 dark:bg-slate-900/30"><td colspan="2" class="px-4 py-1.5 font-bold text-[10px] text-slate-400 uppercase tracking-widest text-center">متغیرهای داخل بلاک</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-indigo-500">{size}</td><td class="px-4 py-2">تعداد در پکیج</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-indigo-500">{price}</td><td class="px-4 py-2">قیمت به ارز اصلی محصول</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-indigo-500">{converted_price}</td><td class="px-4 py-2">قیمت تبدیل شده (AED)</td></tr>
                             </tbody>
                         </table>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    <div class="space-y-1">
-                        <label class="text-[11px] font-bold text-slate-500 uppercase">برچسب Gift Card</label>
-                        <input type="text" name="label_gift_card" value="<?php echo e($st_label_gift_card); ?>"
-                               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="text-[11px] font-bold text-slate-500 uppercase">برچسب Digital</label>
-                        <input type="text" name="label_digital" value="<?php echo e($st_label_digital); ?>"
-                               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="text-[11px] font-bold text-slate-500 uppercase">برچسب Physical</label>
-                        <input type="text" name="label_physical" value="<?php echo e($st_label_physical); ?>"
-                               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="text-[11px] font-bold text-slate-500 uppercase">برچسب Pack</label>
-                        <input type="text" name="label_pack" value="<?php echo e($st_label_pack); ?>"
-                               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="text-[11px] font-bold text-slate-500 uppercase">برچسب آخرین بروزرسانی</label>
-                        <input type="text" name="label_last_update" value="<?php echo e($st_label_last_update); ?>"
-                               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
-                    </div>
-                    <div class="space-y-1 md:col-span-3">
-                        <label class="text-[11px] font-bold text-slate-500 uppercase">حذف نمادهای ارزی از مبلغ (جدا شده با کاما)</label>
-                        <input type="text" name="currency_symbols" value="<?php echo e($st_currency_symbols); ?>"
-                               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
                     </div>
                 </div>
 
