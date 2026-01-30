@@ -23,12 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_POST['reset_templates'])) {
-        $defaultTemplate = "{emoji} {brand} گیفت کارت - {currency} {denomination}\n\n" .
-                          "بخش دیجیتال:\n" .
+        $defaultTemplate = "{emoji} {brand} Gift Card – {currency} {denomination}\n\n" .
+                          "Digital\n\n" .
                           "[DIGITAL_PACKS]\n" .
-                          "• پکیج {size} عدد -> {price} {currency}\n" .
+                          "• Pack {size} → {currency}{price}\n" .
                           "[/DIGITAL_PACKS]\n\n" .
-                          "🕒 بروزرسانی: {last_update_time}";
+                          "Physical\n\n" .
+                          "[PHYSICAL_PACKS]\n" .
+                          "• Pack {size} → {currency}{price}\n" .
+                          "[/PHYSICAL_PACKS]\n\n" .
+                          "🕒 Last update: {last_update_time}";
 
         updateSetting('telegram_message_template', $defaultTemplate);
         updateSetting('telegram_currency_symbols', '$, USD, AED, EUR, GBP, TL');
@@ -100,7 +104,7 @@ $st_enabled = getSetting('telegram_bot_enabled', '0');
 $st_token = getSetting('telegram_bot_token', '');
 $st_username = getSetting('telegram_bot_username', '');
 $st_publish_time = getSetting('telegram_publish_time', '09:00');
-$st_template = getSetting('telegram_message_template', "{emoji} {brand} گیفت کارت - {currency} {denomination}\n\n[DIGITAL_PACKS]\n• پکیج {size} عدد -> {price} {currency}\n[/DIGITAL_PACKS]");
+$st_template = getSetting('telegram_message_template', "{emoji} {brand} Gift Card – {currency} {denomination}\n\nDigital\n\n[DIGITAL_PACKS]\n• Pack {size} → {currency}{price}\n[/DIGITAL_PACKS]\n\nPhysical\n\n[PHYSICAL_PACKS]\n• Pack {size} → {currency}{price}\n[/PHYSICAL_PACKS]\n\n🕒 Last update: {last_update_time}");
 $st_use_emojis = getSetting('telegram_use_emojis', '1');
 $st_price_type = getSetting('telegram_price_type', 'both');
 $st_currency_symbols = getSetting('telegram_currency_symbols', '$, USD, AED, EUR, GBP, TL');
