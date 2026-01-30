@@ -108,7 +108,7 @@ class TelegramBot {
         $currencySymbolsStr = getSetting('telegram_currency_symbols', '$, USD, AED, EUR, GBP, TL');
         $currencySymbols = array_map('trim', explode(',', $currencySymbolsStr));
         $exchangeRate = (float)getSetting('exchange_rate', 1.0);
-        $targetCurrency = getSetting('target_currency', 'AED');
+        $targetCurrency = $this->escapeMarkdown(getSetting('target_currency', 'AED'));
 
         // Extract Block Templates
         $digitalRowTpl = "• {size} -> {price} {currency}";
@@ -128,9 +128,9 @@ class TelegramBot {
         }
 
         foreach ($grouped as $key => $rows) {
-            $brandName = str_replace(['_', '*', '`', '['], '', $rows[0]['brand_name']);
-            $countryName = $rows[0]['country_name'];
-            $countryCode = $rows[0]['country_code'];
+            $brandName = $this->escapeMarkdown($rows[0]['brand_name']);
+            $countryName = $this->escapeMarkdown($rows[0]['country_name']);
+            $countryCode = $this->escapeMarkdown($rows[0]['country_code']);
             $customEmoji = $rows[0]['telegram_emoji'];
 
             $emoji = "";
@@ -145,7 +145,7 @@ class TelegramBot {
 
             foreach ($productGroups as $pid => $packs) {
                 $firstPack = $packs[0];
-                $currency = $firstPack['currency'];
+                $currency = $this->escapeMarkdown($firstPack['currency']);
                 $denomValue = trim(str_replace($currencySymbols, '', $firstPack['denomination']));
 
                 // Format Digital Packs
@@ -186,10 +186,10 @@ class TelegramBot {
                 $currentMsg = $template;
 
                 if ($hasDigitalBlock) {
-                    $currentMsg = preg_replace('/\[DIGITAL_PACKS\].*?\[\/DIGITAL_PACKS\]/s', trim($digitalPacksStr), $currentMsg);
+                    $currentMsg = str_replace($m1[0], trim($digitalPacksStr), $currentMsg);
                 }
                 if ($hasPhysicalBlock) {
-                    $currentMsg = preg_replace('/\[PHYSICAL_PACKS\].*?\[\/PHYSICAL_PACKS\]/s', trim($physicalPacksStr), $currentMsg);
+                    $currentMsg = str_replace($m2[0], trim($physicalPacksStr), $currentMsg);
                 }
 
                 $replacements = [
@@ -198,12 +198,17 @@ class TelegramBot {
                     '{country}' => $countryCode,
                     '{country_name}' => $countryName,
                     '{currency}' => $currency,
-                    '{denomination}' => $denomValue,
+                    '{denomination}' => $this->escapeMarkdown($denomValue),
                     '{last_update_time}' => $lastUpdate,
                     '{last_update}' => $lastUpdate,
                     '{lastupdate}' => $lastUpdate
                 ];
                 $currentMsg = str_ireplace(array_keys($replacements), array_values($replacements), $currentMsg);
+
+                // Auto-escape underscores in Telegram handles (e.g., @UAE_GIFT_PRICE)
+                $currentMsg = preg_replace_callback('/(@[a-zA-Z0-9_]+)/', function($m) {
+                    return str_replace('_', '\\_', $m[0]);
+                }, $currentMsg);
 
                 // Fallbacks
                 if (!$hasDigitalBlock && !empty(trim($digitalPacksStr)) && stripos($template, '{digital_packs}') === false) {
@@ -222,6 +227,16 @@ class TelegramBot {
         }
 
         return $messages;
+    }
+
+    /**
+     * Escape special characters for Telegram Markdown
+     */
+    private function escapeMarkdown($text) {
+        if (empty($text)) return '';
+        // Note: We escape underscores, asterisks, backticks and opening brackets
+        // which are the main formatting characters in Telegram's basic Markdown.
+        return str_replace(['_', '*', '`', '['], ['\_', '\*', '\`', '\['], $text);
     }
 
     /**
