@@ -110,7 +110,6 @@ class TelegramBot {
         $labelPhysical = getSetting('telegram_label_physical', 'Physical');
         $labelPack = getSetting('telegram_label_pack', 'Pack');
         $labelLastUpdate = getSetting('telegram_label_last_update', '🕒 Last update');
-        $labelSeparator = getSetting('telegram_label_separator', '━━━━━━━━━━━━━━');
         $currencySymbolsStr = getSetting('telegram_currency_symbols', '$, USD, AED, EUR, GBP, TL');
         $currencySymbols = array_map('trim', explode(',', $currencySymbolsStr));
         $packRowTemplate = getSetting('telegram_pack_row_template', "• {pack} {size} → {currency} {price}");
@@ -142,12 +141,7 @@ class TelegramBot {
                 $productGroups[$r['id']][] = $r;
             }
 
-            $currentMessage = "";
-            $count = 0;
-            $totalGroups = count($productGroups);
-
             foreach ($productGroups as $pid => $packs) {
-                $count++;
                 $firstPack = $packs[0];
                 $currency = $firstPack['currency'];
 
@@ -217,22 +211,8 @@ class TelegramBot {
                     $itemBlock .= $labelPhysical . "\n\n" . implode("\n\n", $physicalPacks) . "\n\n";
                 }
 
-                // Add separator if not last
-                if ($count < $totalGroups) {
-                    $itemBlock .= $labelSeparator . "\n\n";
-                }
-
-                // Avoid Telegram 4096 character limit
-                if (strlen($currentMessage . $itemBlock) > 3800) {
-                    $messages[] = trim($currentMessage) . "\n\n" . $labelLastUpdate . ": {$lastUpdate}";
-                    $currentMessage = $itemBlock;
-                } else {
-                    $currentMessage .= $itemBlock;
-                }
-            }
-
-            if (!empty(trim($currentMessage))) {
-                $messages[] = trim($currentMessage) . "\n\n" . $labelLastUpdate . ": {$lastUpdate}";
+                // Each product is now sent as a separate message
+                $messages[] = trim($itemBlock) . "\n\n" . $labelLastUpdate . ": {$lastUpdate}";
             }
         }
 
