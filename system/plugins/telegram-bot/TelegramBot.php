@@ -144,8 +144,8 @@ class TelegramBot {
                 if ($priceType === 'digital' || $priceType === 'both') {
                     foreach ($packs as $pk) {
                         if ($pk['price_digital'] > 0) {
-                            $totalPrice = (float)$pk['price_digital'];
-                            $digitalPacks[] = "• Pack {$pk['pack_size']} → {$currency} {$totalPrice}";
+                            $totalPrice = (float)$pk['price_digital'] * (int)$pk['pack_size'];
+                            $digitalPacks[] = "• Pack {$pk['pack_size']} → {$currency} " . (float)round($totalPrice, 2);
                         }
                     }
                 }
@@ -159,8 +159,8 @@ class TelegramBot {
                 if ($priceType === 'physical' || $priceType === 'both') {
                     foreach ($packs as $pk) {
                         if ($pk['price_physical'] > 0) {
-                            $totalPrice = (float)$pk['price_physical'];
-                            $physicalPacks[] = "• Pack {$pk['pack_size']} → {$currency} {$totalPrice}";
+                            $totalPrice = (float)$pk['price_physical'] * (int)$pk['pack_size'];
+                            $physicalPacks[] = "• Pack {$pk['pack_size']} → {$currency} " . (float)round($totalPrice, 2);
                         }
                     }
                 }
