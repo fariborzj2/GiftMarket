@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         updateSetting('telegram_label_pack', 'Pack');
         updateSetting('telegram_label_last_update', '🕒 Last update');
         updateSetting('telegram_label_separator', '━━━━━━━━━━━━━━');
+        updateSetting('telegram_currency_symbols', '$, USD, AED, EUR, GBP, TL');
         $msg = 'قالب‌ها و برچسب‌ها به حالت پیش‌فرض بازنشانی شدند.';
         // Reload settings
         header("Location: ?tab=settings&msg=" . urlencode($msg));
