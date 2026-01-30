@@ -155,17 +155,22 @@ class TelegramBot {
                 $denomValue = trim(str_replace($currencySymbols, '', $firstPack['denomination']));
 
                 // Item Header
-                $itemHeader = str_replace(
-                    ['{emoji}', '{brand}', '{country}', '{country_name}', '{gift_card}', '{currency}', '{denomination}', '{last_update}'],
-                    [$emoji, $brandName, $countryCode, $countryName, $labelGiftCard, $currency, $denomValue, $lastUpdate],
-                    $template
-                );
-                // Clean up any remaining variables from old template that don't belong in grouped header
-                $itemHeader = str_replace(
-                    ['{type}', '{price}', '{converted_price}', '{target_currency}', '{lastupdate}', '{convertedprice}', '{targetcurrency}'],
-                    '',
-                    $itemHeader
-                );
+                $replacements = [
+                    '{emoji}' => $emoji,
+                    '{brand}' => $brandName,
+                    '{country}' => $countryCode,
+                    '{country_name}' => $countryName,
+                    '{gift_card}' => $labelGiftCard,
+                    '{currency}' => $currency,
+                    '{denomination}' => $denomValue,
+                    '{last_update}' => $lastUpdate,
+                    '{lastupdate}' => $lastUpdate
+                ];
+                $itemHeader = str_ireplace(array_keys($replacements), array_values($replacements), $template);
+
+                // Regex cleanup for any remaining {tags} to prevent raw output
+                $itemHeader = preg_replace('/\{[a-zA-Z0-9_-]+\}/i', '', $itemHeader);
+
                 $itemBlock = trim($itemHeader) . "\n\n";
 
                 // Digital Section
@@ -176,11 +181,12 @@ class TelegramBot {
                             $totalPrice = (float)$pk['price_digital'] * (int)$pk['pack_size'];
                             $priceVal = (float)round($totalPrice, 2);
                             $convPrice = (float)round($totalPrice * $exchangeRate, 2);
-                            $digitalPacks[] = str_replace(
+                            $packLine = str_ireplace(
                                 ['{pack}', '{size}', '{currency}', '{price}', '{converted_price}', '{target_currency}'],
                                 [$labelPack, $pk['pack_size'], $currency, $priceVal, $convPrice, $targetCurrency],
                                 $packRowTemplate
                             );
+                            $digitalPacks[] = preg_replace('/\{[a-zA-Z0-9_-]+\}/i', '', $packLine);
                         }
                     }
                 }
@@ -197,11 +203,12 @@ class TelegramBot {
                             $totalPrice = (float)$pk['price_physical'] * (int)$pk['pack_size'];
                             $priceVal = (float)round($totalPrice, 2);
                             $convPrice = (float)round($totalPrice * $exchangeRate, 2);
-                            $physicalPacks[] = str_replace(
+                            $packLine = str_ireplace(
                                 ['{pack}', '{size}', '{currency}', '{price}', '{converted_price}', '{target_currency}'],
                                 [$labelPack, $pk['pack_size'], $currency, $priceVal, $convPrice, $targetCurrency],
                                 $packRowTemplate
                             );
+                            $physicalPacks[] = preg_replace('/\{[a-zA-Z0-9_-]+\}/i', '', $packLine);
                         }
                     }
                 }
