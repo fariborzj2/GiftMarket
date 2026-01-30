@@ -192,7 +192,7 @@ class TelegramBot {
                 }
 
                 if (!empty($digitalPacks)) {
-                    $itemBlock .= $labelDigital . " " . implode(" ", $digitalPacks) . "\n\n";
+                    $itemBlock .= $labelDigital . "\n\n" . implode("\n\n", $digitalPacks) . "\n\n";
                 }
 
                 // Physical Section
@@ -214,7 +214,7 @@ class TelegramBot {
                 }
 
                 if (!empty($physicalPacks)) {
-                    $itemBlock .= $labelPhysical . " " . implode(" ", $physicalPacks) . "\n\n";
+                    $itemBlock .= $labelPhysical . "\n\n" . implode("\n\n", $physicalPacks) . "\n\n";
                 }
 
                 // Add separator if not last
