@@ -15,8 +15,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         updateSetting('telegram_bot_username', clean($_POST['username']));
         updateSetting('telegram_publish_time', clean($_POST['publish_time']));
         updateSetting('telegram_message_template', $_POST['template']);
+        updateSetting('telegram_pack_row_template', $_POST['pack_row_template']);
         updateSetting('telegram_use_emojis', isset($_POST['use_emojis']) ? '1' : '0');
         updateSetting('telegram_price_type', clean($_POST['price_type']));
+
+        // Labels
+        updateSetting('telegram_label_gift_card', clean($_POST['label_gift_card']));
+        updateSetting('telegram_label_digital', clean($_POST['label_digital']));
+        updateSetting('telegram_label_physical', clean($_POST['label_physical']));
+        updateSetting('telegram_label_pack', clean($_POST['label_pack']));
+        updateSetting('telegram_label_last_update', clean($_POST['label_last_update']));
+        updateSetting('telegram_label_separator', clean($_POST['label_separator']));
+        updateSetting('telegram_currency_symbols', clean($_POST['currency_symbols']));
+
         $msg = 'تنظیمات با موفقیت ذخیره شد!';
     }
 
@@ -82,9 +93,19 @@ $st_enabled = getSetting('telegram_bot_enabled', '0');
 $st_token = getSetting('telegram_bot_token', '');
 $st_username = getSetting('telegram_bot_username', '');
 $st_publish_time = getSetting('telegram_publish_time', '09:00');
-$st_template = getSetting('telegram_message_template', "*{brand}* {country} ({denomination})\n{type}: {price}{currency} → {converted_price} {target_currency}\nLast update: {last_update}");
+$st_template = getSetting('telegram_message_template', "{emoji} {brand} {gift_card} – {currency} {denomination}");
+$st_pack_row_template = getSetting('telegram_pack_row_template', "• {pack} {size} → {currency} {price}");
 $st_use_emojis = getSetting('telegram_use_emojis', '1');
 $st_price_type = getSetting('telegram_price_type', 'both');
+
+// Labels
+$st_label_gift_card = getSetting('telegram_label_gift_card', 'Gift Card');
+$st_label_digital = getSetting('telegram_label_digital', 'Digital');
+$st_label_physical = getSetting('telegram_label_physical', 'Physical');
+$st_label_pack = getSetting('telegram_label_pack', 'Pack');
+$st_label_last_update = getSetting('telegram_label_last_update', '🕒 Last update');
+$st_label_separator = getSetting('telegram_label_separator', '━━━━━━━━━━━━━━');
+$st_currency_symbols = getSetting('telegram_currency_symbols', '$, USD, AED, EUR, GBP, TL');
 
 $channels = db()->query("SELECT * FROM telegram_channels ORDER BY created_at DESC")->fetchAll();
 $logs = db()->query("SELECT * FROM telegram_logs ORDER BY created_at DESC LIMIT 50")->fetchAll();
@@ -171,14 +192,61 @@ foreach ($configs as $c) {
                     <label for="use_emojis" class="text-sm text-slate-600 dark:text-slate-400 cursor-pointer">استفاده از ایموجی پرچم کشورها</label>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">قالب پیام (Message Template)</label>
-                    <textarea name="template" rows="6"
-                              class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono" dir="ltr"><?php echo e($st_template); ?></textarea>
-                    <div class="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/20 text-[11px] text-amber-700 dark:text-amber-400 leading-relaxed">
-                        <span class="font-bold">⚠️ توجه:</span> در حال حاضر از قالب دسته‌بندی شده پیش‌فرض استفاده می‌شود. این تنظیمات در نسخه‌های بعدی اعمال خواهد شد.<br>
-                        متغیرهای مجاز: {brand}, {country}, {denomination}, {price}, {currency}, {converted_price}, {target_currency}, {type}, {last_update}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">قالب هدر محصول (Product Header Template)</label>
+                        <input type="text" name="template" value="<?php echo e($st_template); ?>"
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono" dir="ltr">
+                        <p class="text-[10px] text-slate-400">متغیرها: {emoji}, {brand}, {gift_card}, {currency}, {denomination}</p>
                     </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">قالب ردیف پکیج (Pack Row Template)</label>
+                        <input type="text" name="pack_row_template" value="<?php echo e($st_pack_row_template); ?>"
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono" dir="ltr">
+                        <p class="text-[10px] text-slate-400">متغیرها: {pack}, {size}, {currency}, {price}</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[11px] font-bold text-slate-500 uppercase">برچسب Gift Card</label>
+                        <input type="text" name="label_gift_card" value="<?php echo e($st_label_gift_card); ?>"
+                               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[11px] font-bold text-slate-500 uppercase">برچسب Digital</label>
+                        <input type="text" name="label_digital" value="<?php echo e($st_label_digital); ?>"
+                               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[11px] font-bold text-slate-500 uppercase">برچسب Physical</label>
+                        <input type="text" name="label_physical" value="<?php echo e($st_label_physical); ?>"
+                               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[11px] font-bold text-slate-500 uppercase">برچسب Pack</label>
+                        <input type="text" name="label_pack" value="<?php echo e($st_label_pack); ?>"
+                               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[11px] font-bold text-slate-500 uppercase">برچسب آخرین بروزرسانی</label>
+                        <input type="text" name="label_last_update" value="<?php echo e($st_label_last_update); ?>"
+                               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[11px] font-bold text-slate-500 uppercase">جداکننده (Separator)</label>
+                        <input type="text" name="label_separator" value="<?php echo e($st_label_separator); ?>"
+                               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
+                    </div>
+                    <div class="space-y-1 md:col-span-2">
+                        <label class="text-[11px] font-bold text-slate-500 uppercase">حذف نمادهای ارزی از مبلغ (جدا شده با کاما)</label>
+                        <input type="text" name="currency_symbols" value="<?php echo e($st_currency_symbols); ?>"
+                               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/20 text-[11px] text-blue-700 dark:text-blue-400 leading-relaxed">
+                    <span class="font-bold">ℹ️ راهنما:</span> مقادیر بالا در ساخت پیام‌های تلگرام استفاده می‌شوند. با تغییر این مقادیر، تمام پیام‌های ارسالی از این پس با ساختار جدید ارسال خواهند شد.
                 </div>
 
                 <div class="pt-4">
