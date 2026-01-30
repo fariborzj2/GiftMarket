@@ -205,10 +205,43 @@ foreach ($configs as $c) {
 
                 <div class="space-y-6">
                     <div class="space-y-2">
-                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">قالب پیام (Message Template)</label>
-                        <textarea name="template" rows="10"
+                        <div class="flex items-center justify-between gap-4">
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">قالب پیام (Message Template)</label>
+
+                            <!-- Markdown Toolbar -->
+                            <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+                                <button type="button" onclick="insertMarkdown('*', '*')" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded transition-all text-slate-600 dark:text-slate-400 flex items-center" title="Bold">
+                                    <iconify-icon icon="solar:bold-bold" class="text-lg"></iconify-icon>
+                                </button>
+                                <button type="button" onclick="insertMarkdown('_', '_')" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded transition-all text-slate-600 dark:text-slate-400 flex items-center" title="Italic">
+                                    <iconify-icon icon="solar:italic-bold" class="text-lg"></iconify-icon>
+                                </button>
+                                <button type="button" onclick="insertMarkdown('[', '](url)')" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded transition-all text-slate-600 dark:text-slate-400 flex items-center" title="Link">
+                                    <iconify-icon icon="solar:link-bold" class="text-lg"></iconify-icon>
+                                </button>
+                                <button type="button" onclick="insertMarkdown('`', '`')" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded transition-all text-slate-600 dark:text-slate-400 flex items-center" title="Code">
+                                    <iconify-icon icon="solar:code-bold" class="text-lg"></iconify-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <textarea id="template_textarea" name="template" rows="10"
                                   class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono leading-relaxed" dir="ltr"><?php echo e($st_template); ?></textarea>
                     </div>
+
+                    <script>
+                    function insertMarkdown(prefix, suffix) {
+                        const textarea = document.getElementById('template_textarea');
+                        const start = textarea.selectionStart;
+                        const end = textarea.selectionEnd;
+                        const text = textarea.value;
+                        const selectedText = text.substring(start, end);
+                        const replacement = prefix + selectedText + suffix;
+
+                        textarea.value = text.substring(0, start) + replacement + text.substring(end);
+                        textarea.focus();
+                        textarea.setSelectionRange(start + prefix.length, start + prefix.length + selectedText.length);
+                    }
+                    </script>
 
                     <!-- Variable Guide Table -->
                     <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
@@ -236,13 +269,17 @@ foreach ($configs as $c) {
                                 <tr><td class="px-4 py-2 font-mono text-indigo-500">{size}</td><td class="px-4 py-2">تعداد در پکیج</td></tr>
                                 <tr><td class="px-4 py-2 font-mono text-indigo-500">{price}</td><td class="px-4 py-2">قیمت به ارز اصلی محصول</td></tr>
                                 <tr><td class="px-4 py-2 font-mono text-indigo-500">{converted_price}</td><td class="px-4 py-2">قیمت تبدیل شده (AED)</td></tr>
+                                <tr class="bg-slate-50/30 dark:bg-slate-900/30"><td colspan="2" class="px-4 py-1.5 font-bold text-[10px] text-slate-400 uppercase tracking-widest text-center">فرمت‌دهی متن (Markdown)</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-slate-500">*bold text*</td><td class="px-4 py-2 text-bold italic font-bold">متن ضخیم (Bold)</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-slate-500">_italic text_</td><td class="px-4 py-2 italic font-serif">متن کج (Italic)</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-slate-500">[Text](URL)</td><td class="px-4 py-2 underline text-primary">ایجاد لینک (Link)</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
                 <div class="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/20 text-[11px] text-blue-700 dark:text-blue-400 leading-relaxed space-y-2">
-                    <p><span class="font-bold">ℹ️ راهنما:</span> مقادیر بالا در ساخت پیام‌های تلگرام استفاده می‌شوند. با تغییر این مقادیر، تمام پیام‌های ارسالی از این پس با ساختار جدید ارسال خواهند شد.</p>
+                    <p><span class="font-bold">ℹ️ راهنما:</span> مقادیر بالا در ساخت پیام‌های تلگرام استفاده می‌شوند. شما می‌توانید از تگ‌های Markdown برای ضخیم یا کج کردن متن و همچنین لینک‌دار کردن عبارات استفاده کنید.</p>
                     <p class="opacity-80">برای داشتن خروجی استاندارد، از دکمه <span class="font-bold">بازنشانی به پیش‌فرض</span> استفاده کنید.</p>
                 </div>
 
