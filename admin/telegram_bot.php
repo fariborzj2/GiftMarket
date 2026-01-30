@@ -25,21 +25,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         updateSetting('telegram_label_physical', clean($_POST['label_physical']));
         updateSetting('telegram_label_pack', clean($_POST['label_pack']));
         updateSetting('telegram_label_last_update', clean($_POST['label_last_update']));
-        updateSetting('telegram_label_separator', clean($_POST['label_separator']));
         updateSetting('telegram_currency_symbols', clean($_POST['currency_symbols']));
 
         $msg = 'تنظیمات با موفقیت ذخیره شد!';
     }
 
     if (isset($_POST['reset_templates'])) {
-        updateSetting('telegram_message_template', "{emoji} {brand} {gift_card} – {currency} {denomination}");
+        updateSetting('telegram_message_template', "{emoji} {brand} {gift_card} – {currency} {denomination}\n\n{digital_packs}\n{physical_packs}\n{last_update_label}: {last_update_time}");
         updateSetting('telegram_pack_row_template', "• {pack} {size} → {currency} {price}");
         updateSetting('telegram_label_gift_card', 'Gift Card');
         updateSetting('telegram_label_digital', 'Digital');
         updateSetting('telegram_label_physical', 'Physical');
         updateSetting('telegram_label_pack', 'Pack');
         updateSetting('telegram_label_last_update', '🕒 Last update');
-        updateSetting('telegram_label_separator', '━━━━━━━━━━━━━━');
         updateSetting('telegram_currency_symbols', '$, USD, AED, EUR, GBP, TL');
         $msg = 'قالب‌ها و برچسب‌ها به حالت پیش‌فرض بازنشانی شدند.';
         // Reload settings
@@ -120,7 +118,6 @@ $st_label_digital = getSetting('telegram_label_digital', 'Digital');
 $st_label_physical = getSetting('telegram_label_physical', 'Physical');
 $st_label_pack = getSetting('telegram_label_pack', 'Pack');
 $st_label_last_update = getSetting('telegram_label_last_update', '🕒 Last update');
-$st_label_separator = getSetting('telegram_label_separator', '━━━━━━━━━━━━━━');
 $st_currency_symbols = getSetting('telegram_currency_symbols', '$, USD, AED, EUR, GBP, TL');
 
 $channels = db()->query("SELECT * FROM telegram_channels ORDER BY created_at DESC")->fetchAll();
@@ -210,18 +207,44 @@ foreach ($configs as $c) {
                     <label for="use_emojis" class="text-sm text-slate-600 dark:text-slate-400 cursor-pointer">استفاده از ایموجی پرچم کشورها</label>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-6">
                     <div class="space-y-2">
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">قالب هدر محصول (Product Header Template)</label>
-                        <input type="text" name="template" value="<?php echo e($st_template); ?>"
-                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono" dir="ltr">
-                        <p class="text-[10px] text-slate-400">متغیرها: {emoji}, {brand}, {country}, {country_name}, {gift_card}, {currency}, {denomination}, {last_update}</p>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">قالب پیام (Message Template)</label>
+                        <textarea name="template" rows="6"
+                                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono leading-relaxed" dir="ltr"><?php echo e($st_template); ?></textarea>
                     </div>
                     <div class="space-y-2">
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">قالب ردیف پکیج (Pack Row Template)</label>
-                        <input type="text" name="pack_row_template" value="<?php echo e($st_pack_row_template); ?>"
-                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono" dir="ltr">
-                        <p class="text-[10px] text-slate-400">متغیرها: {pack}, {size}, {currency}, {price}, {converted_price}, {target_currency}</p>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">قالب ردیف پکیج (Pack Row Template)</label>
+                        <textarea name="pack_row_template" rows="2"
+                                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono leading-relaxed" dir="ltr"><?php echo e($st_pack_row_template); ?></textarea>
+                    </div>
+
+                    <!-- Variable Guide Table -->
+                    <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
+                        <table class="w-full text-right text-xs">
+                            <thead class="bg-slate-50 dark:bg-slate-900/50 text-slate-500 font-bold">
+                                <tr>
+                                    <th class="px-4 py-2 border-b border-slate-200 dark:border-slate-800">متغیر</th>
+                                    <th class="px-4 py-2 border-b border-slate-200 dark:border-slate-800">توضیح</th>
+                                    <th class="px-4 py-2 border-b border-slate-200 dark:border-slate-800">بخش</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                <tr><td class="px-4 py-2 font-mono text-primary">{emoji}</td><td class="px-4 py-2">پرچم کشور</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-primary">{brand}</td><td class="px-4 py-2">نام برند (Apple)</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-primary">{country_name}</td><td class="px-4 py-2">نام کشور</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-primary">{currency}</td><td class="px-4 py-2">واحد ارزی</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-primary">{denomination}</td><td class="px-4 py-2">مبلغ اعتبار</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-primary">{digital_packs}</td><td class="px-4 py-2">لیست قیمت‌های دیجیتال</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-primary">{physical_packs}</td><td class="px-4 py-2">لیست قیمت‌های فیزیکی</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-primary">{last_update_time}</td><td class="px-4 py-2">زمان بروزرسانی</td><td class="px-4 py-2 text-slate-400">قالب پیام</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-indigo-500">{pack}</td><td class="px-4 py-2">برچسب Pack</td><td class="px-4 py-2 text-slate-400">ردیف پکیج</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-indigo-500">{size}</td><td class="px-4 py-2">تعداد در پکیج</td><td class="px-4 py-2 text-slate-400">ردیف پکیج</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-indigo-500">{currency}</td><td class="px-4 py-2">واحد ارزی</td><td class="px-4 py-2 text-slate-400">ردیف پکیج</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-indigo-500">{price}</td><td class="px-4 py-2">قیمت به ارز پایه</td><td class="px-4 py-2 text-slate-400">ردیف پکیج</td></tr>
+                                <tr><td class="px-4 py-2 font-mono text-indigo-500">{converted_price}</td><td class="px-4 py-2">قیمت تبدیل شده (AED)</td><td class="px-4 py-2 text-slate-400">ردیف پکیج</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -251,12 +274,7 @@ foreach ($configs as $c) {
                         <input type="text" name="label_last_update" value="<?php echo e($st_label_last_update); ?>"
                                class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
                     </div>
-                    <div class="space-y-1">
-                        <label class="text-[11px] font-bold text-slate-500 uppercase">جداکننده (Separator)</label>
-                        <input type="text" name="label_separator" value="<?php echo e($st_label_separator); ?>"
-                               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">
-                    </div>
-                    <div class="space-y-1 md:col-span-2">
+                    <div class="space-y-1 md:col-span-3">
                         <label class="text-[11px] font-bold text-slate-500 uppercase">حذف نمادهای ارزی از مبلغ (جدا شده با کاما)</label>
                         <input type="text" name="currency_symbols" value="<?php echo e($st_currency_symbols); ?>"
                                class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm outline-none focus:border-primary">

@@ -165,11 +165,10 @@ class TelegramBot {
                 // Regex cleanup for any remaining {tags} to prevent raw output
                 $itemHeader = preg_replace('/\{[a-zA-Z0-9_-]+\}/i', '', $itemHeader);
 
-                $itemBlock = trim($itemHeader) . "\n\n";
-
                 // Digital Section
-                $digitalPacks = [];
+                $digitalPacksStr = "";
                 if ($priceType === 'digital' || $priceType === 'both') {
+                    $digitalPacks = [];
                     foreach ($packs as $pk) {
                         if ($pk['price_digital'] > 0) {
                             $totalPrice = (float)$pk['price_digital'] * (int)$pk['pack_size'];
@@ -183,15 +182,15 @@ class TelegramBot {
                             $digitalPacks[] = preg_replace('/\{[a-zA-Z0-9_-]+\}/i', '', $packLine);
                         }
                     }
-                }
-
-                if (!empty($digitalPacks)) {
-                    $itemBlock .= $labelDigital . "\n\n" . implode("\n\n", $digitalPacks) . "\n\n";
+                    if (!empty($digitalPacks)) {
+                        $digitalPacksStr = $labelDigital . "\n\n" . implode("\n\n", $digitalPacks) . "\n\n";
+                    }
                 }
 
                 // Physical Section
-                $physicalPacks = [];
+                $physicalPacksStr = "";
                 if ($priceType === 'physical' || $priceType === 'both') {
+                    $physicalPacks = [];
                     foreach ($packs as $pk) {
                         if ($pk['price_physical'] > 0) {
                             $totalPrice = (float)$pk['price_physical'] * (int)$pk['pack_size'];
@@ -205,14 +204,44 @@ class TelegramBot {
                             $physicalPacks[] = preg_replace('/\{[a-zA-Z0-9_-]+\}/i', '', $packLine);
                         }
                     }
+                    if (!empty($physicalPacks)) {
+                        $physicalPacksStr = $labelPhysical . "\n\n" . implode("\n\n", $physicalPacks) . "\n\n";
+                    }
                 }
 
-                if (!empty($physicalPacks)) {
-                    $itemBlock .= $labelPhysical . "\n\n" . implode("\n\n", $physicalPacks) . "\n\n";
+                // Final Message Assembly
+                $replacements = [
+                    '{emoji}' => $emoji,
+                    '{brand}' => $brandName,
+                    '{country}' => $countryCode,
+                    '{country_name}' => $countryName,
+                    '{gift_card}' => $labelGiftCard,
+                    '{currency}' => $currency,
+                    '{denomination}' => $denomValue,
+                    '{digital_packs}' => $digitalPacksStr,
+                    '{physical_packs}' => $physicalPacksStr,
+                    '{last_update_label}' => $labelLastUpdate,
+                    '{last_update_time}' => $lastUpdate,
+                    '{last_update}' => $lastUpdate,
+                    '{lastupdate}' => $lastUpdate
+                ];
+
+                $message = str_ireplace(array_keys($replacements), array_values($replacements), $template);
+
+                // Compatibility: If packs tags are missing, append them at the end
+                if (stripos($template, '{digital_packs}') === false && !empty($digitalPacksStr)) {
+                    $message .= "\n\n" . $digitalPacksStr;
+                }
+                if (stripos($template, '{physical_packs}') === false && !empty($physicalPacksStr)) {
+                    $message .= "\n\n" . $physicalPacksStr;
+                }
+                if (stripos($template, '{last_update_time}') === false && stripos($template, '{last_update}') === false && stripos($template, '{lastupdate}') === false) {
+                    $message .= "\n\n" . $labelLastUpdate . ": " . $lastUpdate;
                 }
 
-                // Each product is now sent as a separate message
-                $messages[] = trim($itemBlock) . "\n\n" . $labelLastUpdate . ": {$lastUpdate}";
+                // Cleanup and add to messages
+                $message = preg_replace('/\{[a-zA-Z0-9_-]+\}/i', '', $message);
+                $messages[] = trim($message);
             }
         }
 
