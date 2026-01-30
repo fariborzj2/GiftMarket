@@ -13,6 +13,7 @@ if (!isLoggedIn()) {
     <title><?php echo (isset($pageTitle) ? $pageTitle . ' | ' : '') . SITE_NAME; ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script>
         tailwind.config = {
@@ -66,33 +67,33 @@ if (!isLoggedIn()) {
 
             <nav class="space-y-1">
                 <a href="index.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">
-                    <span class="text-xl">📊</span>
+                    <iconify-icon icon="solar:chart-2-bold-duotone" class="text-2xl"></iconify-icon>
                     <span>داشبورد</span>
                 </a>
                 <a href="brands.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'brands.php' ? 'active' : ''; ?>">
-                    <span class="text-xl">🏷️</span>
+                    <iconify-icon icon="solar:tag-bold-duotone" class="text-2xl"></iconify-icon>
                     <span>برندها</span>
                 </a>
                 <a href="countries.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'countries.php' ? 'active' : ''; ?>">
-                    <span class="text-xl">🌍</span>
+                    <iconify-icon icon="solar:globus-bold-duotone" class="text-2xl"></iconify-icon>
                     <span>کشورها</span>
                 </a>
                 <a href="products.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'products.php' ? 'active' : ''; ?>">
-                    <span class="text-xl">📦</span>
+                    <iconify-icon icon="solar:box-bold-duotone" class="text-2xl"></iconify-icon>
                     <span>محصولات</span>
                 </a>
                 <a href="settings.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">
-                    <span class="text-xl">⚙️</span>
+                    <iconify-icon icon="solar:settings-bold-duotone" class="text-2xl"></iconify-icon>
                     <span>تنظیمات</span>
                 </a>
                 <a href="telegram_bot.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'telegram_bot.php' ? 'active' : ''; ?>">
-                    <span class="text-xl">🤖</span>
+                    <iconify-icon icon="solar:plain-2-bold-duotone" class="text-2xl"></iconify-icon>
                     <span>ربات تلگرام</span>
                 </a>
 
                 <div class="pt-10">
                     <a href="logout.php" class="sidebar-link text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600">
-                        <span class="text-xl">🚪</span>
+                        <iconify-icon icon="solar:logout-bold-duotone" class="text-2xl"></iconify-icon>
                         <span>خروج</span>
                     </a>
                 </div>
@@ -104,7 +105,7 @@ if (!isLoggedIn()) {
             <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 px-4 md:px-8 py-4 flex items-center justify-between">
                 <div class="flex items-center gap-4">
                     <button class="lg:hidden p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg" id="hamburger">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                        <iconify-icon icon="solar:hamburger-menu-bold-duotone" class="text-2xl"></iconify-icon>
                     </button>
                     <h1 class="text-xl md:text-2xl"><?php echo $pageTitle ?? 'Dashboard'; ?></h1>
                 </div>

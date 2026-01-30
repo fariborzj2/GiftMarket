@@ -102,14 +102,15 @@ foreach ($configs as $c) {
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
         <?php if ($msg): ?>
-            <div class="<?php echo (strpos($msg, 'خطا') !== false || strpos($msg, 'حذف') !== false) ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30' : 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30'; ?> px-6 py-3 rounded-xl border text-sm">
-                <?php echo (strpos($msg, 'خطا') !== false || strpos($msg, 'حذف') !== false) ? '❌' : '✅'; ?> <?php echo e($msg); ?>
+            <div class="<?php echo (strpos($msg, 'خطا') !== false || strpos($msg, 'حذف') !== false) ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30' : 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-2">
+                <iconify-icon icon="<?php echo (strpos($msg, 'خطا') !== false || strpos($msg, 'حذف') !== false) ? 'solar:danger-bold-duotone' : 'solar:check-circle-bold-duotone'; ?>" class="text-xl"></iconify-icon>
+                <?php echo e($msg); ?>
             </div>
         <?php endif; ?>
     </div>
     <form method="POST">
         <button type="submit" name="publish_now" class="btn-primary shadow-lg shadow-primary/30" onclick="return confirm('آیا از انتشار دستی قیمت‌ها اطمینان دارید؟')">
-            <span>🚀</span>
+            <iconify-icon icon="solar:rocket-bold-duotone" class="text-xl"></iconify-icon>
             <span>انتشار همزمان (Publish Now)</span>
         </button>
     </form>
@@ -188,7 +189,7 @@ foreach ($configs as $c) {
         <?php elseif ($tab === 'channels'): ?>
             <div class="bg-slate-50 dark:bg-slate-950/50 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 mb-8">
                 <h4 class="text-sm font-bold mb-4 flex items-center gap-2">
-                    <span class="text-primary">➕</span>
+                    <iconify-icon icon="solar:add-circle-bold-duotone" class="text-primary text-xl"></iconify-icon>
                     <span>افزودن کانال جدید</span>
                 </h4>
                 <form method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -240,7 +241,7 @@ foreach ($configs as $c) {
             <form method="POST" class="space-y-12">
                 <div>
                     <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
-                        <span class="text-primary">🚩</span>
+                        <iconify-icon icon="solar:flag-bold-duotone" class="text-primary text-2xl"></iconify-icon>
                         <span>تنظیمات ایموجی کشورها</span>
                     </h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -258,7 +259,7 @@ foreach ($configs as $c) {
 
                 <div>
                     <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
-                        <span class="text-primary">🔌</span>
+                        <iconify-icon icon="solar:plain-2-bold-duotone" class="text-primary text-2xl"></iconify-icon>
                         <span>فعالسازی برند/کشور برای ربات</span>
                     </h3>
                     <div class="space-y-8 max-h-[600px] overflow-y-auto pr-4 scroll-smooth">

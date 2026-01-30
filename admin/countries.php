@@ -83,13 +83,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div>
         <?php if ($msg): ?>
             <div class="<?php echo (strpos($msg, 'خطا') === false) ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-3">
-                <span><?php echo (strpos($msg, 'خطا') === false) ? '✅' : '❌'; ?></span>
+                <iconify-icon icon="<?php echo (strpos($msg, 'خطا') === false) ? 'solar:check-circle-bold-duotone' : 'solar:danger-bold-duotone'; ?>" class="text-xl"></iconify-icon>
                 <?php echo e($msg); ?>
             </div>
         <?php endif; ?>
     </div>
     <a href="countries.php?action=add" class="btn-primary shadow-lg shadow-primary/30">
-        <span>➕</span>
+        <iconify-icon icon="solar:add-circle-bold-duotone" class="text-xl"></iconify-icon>
         <span>افزودن کشور جدید</span>
     </a>
 </div>
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="admin-card !p-0 overflow-hidden">
         <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
             <h3 class="text-lg flex items-center gap-2 m-0">
-                <span class="text-primary">🌍</span>
+                <iconify-icon icon="solar:globus-bold-duotone" class="text-primary text-2xl"></iconify-icon>
                 <span>لیست کشورها</span>
             </h3>
             <span class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
@@ -125,15 +125,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php if (empty($countries)): ?>
                         <tr>
                             <td colspan="6" class="px-6 py-10 text-center text-slate-400">
-                                <div class="text-4xl mb-4">📭</div>
-                                هیچ کشوری یافت نشد.
+                                <iconify-icon icon="solar:mailbox-bold-duotone" class="text-5xl mb-4 opacity-20"></iconify-icon>
+                                <div>هیچ کشوری یافت نشد.</div>
                             </td>
                         </tr>
                     <?php endif; ?>
                     <?php foreach ($countries as $c): ?>
                     <tr data-id="<?php echo $c['id']; ?>" class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
                         <td class="px-6 py-4 cursor-move drag-handle text-slate-300 group-hover:text-slate-500 transition-colors">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path></svg>
+                            <iconify-icon icon="solar:reorder-bold-duotone" class="text-xl"></iconify-icon>
                         </td>
                         <td class="px-6 py-4">
                             <div class="w-10 h-7 mx-auto rounded shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden shrink-0">
@@ -154,10 +154,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-2">
                                 <a href="countries.php?action=edit&id=<?php echo e($c['id']); ?>" class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors" title="ویرایش">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                    <iconify-icon icon="solar:pen-new-square-bold-duotone" class="text-xl"></iconify-icon>
                                 </a>
                                 <a href="countries.php?action=delete&id=<?php echo e($c['id']); ?>" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" onclick="return confirm('آیا از حذف این کشور اطمینان دارید؟')" title="حذف">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    <iconify-icon icon="solar:trash-bin-trash-bold-duotone" class="text-xl"></iconify-icon>
                                 </a>
                             </div>
                         </td>
@@ -186,7 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
     <div class="admin-card max-w-2xl mx-auto">
         <h3 class="text-xl mb-8 flex items-center gap-2">
-            <span class="text-primary"><?php echo $action === 'add' ? '➕' : '📝'; ?></span>
+            <iconify-icon icon="<?php echo $action === 'add' ? 'solar:add-circle-bold-duotone' : 'solar:pen-new-square-bold-duotone'; ?>" class="text-primary text-2xl"></iconify-icon>
             <span><?php echo $action === 'add' ? 'افزودن کشور جدید' : 'ویرایش کشور'; ?></span>
         </h3>
 
