@@ -60,13 +60,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
         <?php if ($msg): ?>
-            <div class="bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30 px-6 py-3 rounded-xl text-sm">
-                ✅ <?php echo e($msg); ?>
+            <div class="bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30 px-6 py-3 rounded-xl text-sm flex items-center gap-2">
+                <iconify-icon icon="solar:check-circle-bold-duotone" class="text-xl"></iconify-icon>
+                <?php echo e($msg); ?>
             </div>
         <?php endif; ?>
     </div>
     <a href="products.php?action=add" class="btn-primary shadow-lg shadow-primary/30">
-        <span>➕</span>
+        <iconify-icon icon="solar:add-circle-bold-duotone" class="text-xl"></iconify-icon>
         <span>افزودن محصول جدید</span>
     </a>
 </div>
@@ -135,14 +136,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="admin-card mb-8 !p-6">
         <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
             <div class="space-y-1.5 lg:col-span-1">
-                <label class="text-xs font-bold text-slate-400 uppercase ms-1">جستجو</label>
+                <label class="text-xs font-bold text-slate-400 uppercase ms-1 flex items-center gap-1">
+                    <iconify-icon icon="solar:magnifer-bold-duotone"></iconify-icon>
+                    جستجو
+                </label>
                 <input type="text" name="search" value="<?php echo e($search); ?>"
                        class="w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm"
                        placeholder="مبلغ اعتبار...">
             </div>
 
             <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-400 uppercase ms-1">برند</label>
+                <label class="text-xs font-bold text-slate-400 uppercase ms-1 flex items-center gap-1">
+                    <iconify-icon icon="solar:tag-bold-duotone"></iconify-icon>
+                    برند
+                </label>
                 <select name="brand" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm">
                     <option value="">همه برندها</option>
                     <?php foreach ($brands as $b): ?>
@@ -152,7 +159,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-400 uppercase ms-1">کشور</label>
+                <label class="text-xs font-bold text-slate-400 uppercase ms-1 flex items-center gap-1">
+                    <iconify-icon icon="solar:globus-bold-duotone"></iconify-icon>
+                    کشور
+                </label>
                 <select name="country" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm">
                     <option value="">همه کشورها</option>
                     <?php foreach ($countries as $c): ?>
@@ -162,7 +172,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-400 uppercase ms-1">سایز پک</label>
+                <label class="text-xs font-bold text-slate-400 uppercase ms-1 flex items-center gap-1">
+                    <iconify-icon icon="solar:box-bold-duotone"></iconify-icon>
+                    سایز پک
+                </label>
                 <select name="pack_size" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm">
                     <option value="">همه سایزها</option>
                     <?php foreach ($pack_sizes as $size): ?>
@@ -195,8 +208,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
     <?php if (empty($products)): ?>
         <div class="admin-card text-center py-20 text-slate-400">
-            <div class="text-5xl mb-4">🔍</div>
-            هیچ محصولی با این مشخصات یافت نشد.
+            <iconify-icon icon="solar:magnifer-bold-duotone" class="text-6xl mb-4 opacity-20"></iconify-icon>
+            <div>هیچ محصولی با این مشخصات یافت نشد.</div>
         </div>
     <?php endif; ?>
 
@@ -266,10 +279,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-1">
                                             <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors" title="ویرایش">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                                <iconify-icon icon="solar:pen-new-square-bold-duotone" class="text-xl"></iconify-icon>
                                             </a>
                                             <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" onclick="return confirm('حذف محصول؟')" title="حذف">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                <iconify-icon icon="solar:trash-bin-trash-bold-duotone" class="text-xl"></iconify-icon>
                                             </a>
                                         </div>
                                     </td>
@@ -304,7 +317,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
     <div class="admin-card max-w-4xl mx-auto">
         <h3 class="text-xl mb-8 flex items-center gap-2">
-            <span class="text-primary"><?php echo $action === 'add' ? '➕' : '📝'; ?></span>
+            <iconify-icon icon="<?php echo $action === 'add' ? 'solar:add-circle-bold-duotone' : 'solar:pen-new-square-bold-duotone'; ?>" class="text-primary text-2xl"></iconify-icon>
             <span><?php echo $action === 'add' ? 'افزودن محصول جدید' : 'ویرایش محصول'; ?></span>
         </h3>
 
@@ -327,7 +340,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <img class="selected-img max-w-full max-h-full object-contain" src="../<?php echo e($selectedBrand['logo'] ?? ''); ?>" alt="" style="<?php echo empty($selectedBrand['logo']) ? 'display:none;' : ''; ?>">
                             </div>
                             <span class="selected-text flex-1 text-sm font-medium"><?php echo e($selectedBrand['name'] ?? 'انتخاب برند'); ?></span>
-                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <iconify-icon icon="solar:alt-arrow-down-bold-duotone" class="text-slate-400"></iconify-icon>
                         </button>
                         <input type="hidden" class="selected-option" name="brand" value="<?php echo e($editData['brand']); ?>" required>
                         <div class="drop-down-list hidden absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-60 overflow-y-auto">
@@ -358,7 +371,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <img class="selected-img w-full h-full object-cover" src="../<?php echo e($selectedCountry['flag'] ?? ''); ?>" alt="" style="<?php echo empty($selectedCountry['flag']) ? 'display:none;' : ''; ?>">
                             </div>
                             <span class="selected-text flex-1 text-sm font-medium"><?php echo e($selectedCountry['name'] ?? 'انتخاب کشور'); ?></span>
-                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <iconify-icon icon="solar:alt-arrow-down-bold-duotone" class="text-slate-400"></iconify-icon>
                         </button>
                         <input type="hidden" class="selected-option" name="country" value="<?php echo e($editData['country']); ?>" required>
                         <div class="drop-down-list hidden absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-60 overflow-y-auto">
@@ -385,7 +398,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="space-y-4">
                 <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">📦</div>
+                        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                            <iconify-icon icon="solar:box-bold-duotone" class="text-xl"></iconify-icon>
+                        </div>
                         <h4 class="font-bold text-slate-900 dark:text-white">پک‌های محصول</h4>
                     </div>
                     <button type="button" id="add-pack-btn" class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-primary/20">
@@ -394,7 +409,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/20 rounded-xl p-4 flex gap-3 text-sm text-blue-700 dark:text-blue-300">
-                    <span class="text-lg">ℹ️</span>
+                    <iconify-icon icon="solar:info-circle-bold-duotone" class="text-xl shrink-0"></iconify-icon>
                     <p>تمام قیمت‌ها باید به <strong>دلار آمریکا (USD)</strong> وارد شوند. سیستم به صورت خودکار معادل درهم امارات (AED) را با نرخ <strong><?php echo e(getSetting('usd_to_aed', '3.673')); ?></strong> در سایت نمایش می‌دهد.</p>
                 </div>
 
