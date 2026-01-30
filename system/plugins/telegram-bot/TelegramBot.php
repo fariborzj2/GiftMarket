@@ -81,7 +81,8 @@ class TelegramBot {
     private function getProductsToPublish() {
         try {
             $query = "SELECT p.*, pk.pack_size, pk.price_digital, pk.price_physical,
-                             b.name as brand_name, c.name as country_name, c.code as country_code
+                             b.name as brand_name, c.name as country_name, c.code as country_code,
+                             c.telegram_emoji
                       FROM products p
                       JOIN telegram_config tc ON p.brand = tc.brand_code AND p.country = tc.country_code
                       JOIN brands b ON p.brand = b.code
@@ -116,7 +117,12 @@ class TelegramBot {
             $brandName = str_replace(['_', '*', '`', '['], '', $rows[0]['brand_name']);
             $countryName = $rows[0]['country_name'];
             $countryCode = $rows[0]['country_code'];
-            $emoji = $useEmojis ? $this->getCountryEmoji($countryCode) : "";
+            $customEmoji = $rows[0]['telegram_emoji'];
+
+            $emoji = "";
+            if ($useEmojis) {
+                $emoji = !empty($customEmoji) ? $customEmoji : $this->getCountryEmoji($countryCode);
+            }
 
             // Step 2: Group by Product (Denomination)
             $productGroups = [];
