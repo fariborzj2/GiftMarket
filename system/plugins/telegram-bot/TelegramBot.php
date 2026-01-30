@@ -104,19 +104,23 @@ class TelegramBot {
         $messages = [];
         $lastUpdate = date('H:i');
 
-        // Fetch Settings/Labels
-        $labelGiftCard = getSetting('telegram_label_gift_card', 'Gift Card');
-        $labelDigital = getSetting('telegram_label_digital', 'Digital');
-        $labelPhysical = getSetting('telegram_label_physical', 'Physical');
-        $labelPack = getSetting('telegram_label_pack', 'Pack');
-        $labelLastUpdate = getSetting('telegram_label_last_update', '🕒 Last update');
+        // Fetch Settings/Defaults
         $currencySymbolsStr = getSetting('telegram_currency_symbols', '$, USD, AED, EUR, GBP, TL');
         $currencySymbols = array_map('trim', explode(',', $currencySymbolsStr));
-        $packRowTemplate = getSetting('telegram_pack_row_template', "• {pack} {size} → {currency} {price}");
         $exchangeRate = (float)getSetting('exchange_rate', 1.0);
         $targetCurrency = getSetting('target_currency', 'AED');
 
-        // Step 1: Group by Brand and Country
+        // Extract Block Templates
+        $digitalRowTpl = "• {size} -> {price} {currency}";
+        $physicalRowTpl = "• {size} -> {price} {currency}";
+
+        $hasDigitalBlock = preg_match('/\[DIGITAL_PACKS\](.*?)\[\/DIGITAL_PACKS\]/s', $template, $m1);
+        if ($hasDigitalBlock) $digitalRowTpl = trim($m1[1]);
+
+        $hasPhysicalBlock = preg_match('/\[PHYSICAL_PACKS\](.*?)\[\/PHYSICAL_PACKS\]/s', $template, $m2);
+        if ($hasPhysicalBlock) $physicalRowTpl = trim($m2[1]);
+
+        // Group by Brand and Country
         $grouped = [];
         foreach ($products as $p) {
             $key = $p['brand'] . '_' . $p['country'];
@@ -124,7 +128,6 @@ class TelegramBot {
         }
 
         foreach ($grouped as $key => $rows) {
-            // Escape for Markdown
             $brandName = str_replace(['_', '*', '`', '['], '', $rows[0]['brand_name']);
             $countryName = $rows[0]['country_name'];
             $countryCode = $rows[0]['country_code'];
@@ -135,7 +138,6 @@ class TelegramBot {
                 $emoji = !empty($customEmoji) ? $customEmoji : $this->getCountryEmoji($countryCode);
             }
 
-            // Step 2: Group by Product (Denomination)
             $productGroups = [];
             foreach ($rows as $r) {
                 $productGroups[$r['id']][] = $r;
@@ -144,104 +146,78 @@ class TelegramBot {
             foreach ($productGroups as $pid => $packs) {
                 $firstPack = $packs[0];
                 $currency = $firstPack['currency'];
-
-                // Clean denomination value for the header
                 $denomValue = trim(str_replace($currencySymbols, '', $firstPack['denomination']));
 
-                // Item Header
-                $replacements = [
-                    '{emoji}' => $emoji,
-                    '{brand}' => $brandName,
-                    '{country}' => $countryCode,
-                    '{country_name}' => $countryName,
-                    '{gift_card}' => $labelGiftCard,
-                    '{currency}' => $currency,
-                    '{denomination}' => $denomValue,
-                    '{last_update}' => $lastUpdate,
-                    '{lastupdate}' => $lastUpdate
-                ];
-                $itemHeader = str_ireplace(array_keys($replacements), array_values($replacements), $template);
-
-                // Regex cleanup for any remaining {tags} to prevent raw output
-                $itemHeader = preg_replace('/\{[a-zA-Z0-9_-]+\}/i', '', $itemHeader);
-
-                // Digital Section
+                // Format Digital Packs
                 $digitalPacksStr = "";
                 if ($priceType === 'digital' || $priceType === 'both') {
-                    $digitalPacks = [];
                     foreach ($packs as $pk) {
                         if ($pk['price_digital'] > 0) {
                             $totalPrice = (float)$pk['price_digital'] * (int)$pk['pack_size'];
                             $priceVal = (float)round($totalPrice, 2);
                             $convPrice = (float)round($totalPrice * $exchangeRate, 2);
-                            $packLine = str_ireplace(
-                                ['{pack}', '{size}', '{currency}', '{price}', '{converted_price}', '{target_currency}'],
-                                [$labelPack, $pk['pack_size'], $currency, $priceVal, $convPrice, $targetCurrency],
-                                $packRowTemplate
-                            );
-                            $digitalPacks[] = preg_replace('/\{[a-zA-Z0-9_-]+\}/i', '', $packLine);
+                            $digitalPacksStr .= str_ireplace(
+                                ['{size}', '{currency}', '{price}', '{converted_price}', '{target_currency}'],
+                                [$pk['pack_size'], $currency, $priceVal, $convPrice, $targetCurrency],
+                                $digitalRowTpl
+                            ) . "\n";
                         }
-                    }
-                    if (!empty($digitalPacks)) {
-                        $digitalPacksStr = $labelDigital . "\n\n" . implode("\n\n", $digitalPacks) . "\n\n";
                     }
                 }
 
-                // Physical Section
+                // Format Physical Packs
                 $physicalPacksStr = "";
                 if ($priceType === 'physical' || $priceType === 'both') {
-                    $physicalPacks = [];
                     foreach ($packs as $pk) {
                         if ($pk['price_physical'] > 0) {
                             $totalPrice = (float)$pk['price_physical'] * (int)$pk['pack_size'];
                             $priceVal = (float)round($totalPrice, 2);
                             $convPrice = (float)round($totalPrice * $exchangeRate, 2);
-                            $packLine = str_ireplace(
-                                ['{pack}', '{size}', '{currency}', '{price}', '{converted_price}', '{target_currency}'],
-                                [$labelPack, $pk['pack_size'], $currency, $priceVal, $convPrice, $targetCurrency],
-                                $packRowTemplate
-                            );
-                            $physicalPacks[] = preg_replace('/\{[a-zA-Z0-9_-]+\}/i', '', $packLine);
+                            $physicalPacksStr .= str_ireplace(
+                                ['{size}', '{currency}', '{price}', '{converted_price}', '{target_currency}'],
+                                [$pk['pack_size'], $currency, $priceVal, $convPrice, $targetCurrency],
+                                $physicalRowTpl
+                            ) . "\n";
                         }
-                    }
-                    if (!empty($physicalPacks)) {
-                        $physicalPacksStr = $labelPhysical . "\n\n" . implode("\n\n", $physicalPacks) . "\n\n";
                     }
                 }
 
-                // Final Message Assembly
+                // Assembly
+                $currentMsg = $template;
+
+                if ($hasDigitalBlock) {
+                    $currentMsg = preg_replace('/\[DIGITAL_PACKS\].*?\[\/DIGITAL_PACKS\]/s', trim($digitalPacksStr), $currentMsg);
+                }
+                if ($hasPhysicalBlock) {
+                    $currentMsg = preg_replace('/\[PHYSICAL_PACKS\].*?\[\/PHYSICAL_PACKS\]/s', trim($physicalPacksStr), $currentMsg);
+                }
+
                 $replacements = [
                     '{emoji}' => $emoji,
                     '{brand}' => $brandName,
                     '{country}' => $countryCode,
                     '{country_name}' => $countryName,
-                    '{gift_card}' => $labelGiftCard,
                     '{currency}' => $currency,
                     '{denomination}' => $denomValue,
-                    '{digital_packs}' => $digitalPacksStr,
-                    '{physical_packs}' => $physicalPacksStr,
-                    '{last_update_label}' => $labelLastUpdate,
                     '{last_update_time}' => $lastUpdate,
                     '{last_update}' => $lastUpdate,
                     '{lastupdate}' => $lastUpdate
                 ];
+                $currentMsg = str_ireplace(array_keys($replacements), array_values($replacements), $currentMsg);
 
-                $message = str_ireplace(array_keys($replacements), array_values($replacements), $template);
-
-                // Compatibility: If packs tags are missing, append them at the end
-                if (stripos($template, '{digital_packs}') === false && !empty($digitalPacksStr)) {
-                    $message .= "\n\n" . $digitalPacksStr;
+                // Fallbacks
+                if (!$hasDigitalBlock && !empty(trim($digitalPacksStr)) && stripos($template, '{digital_packs}') === false) {
+                    $currentMsg .= "\n\n" . trim($digitalPacksStr);
                 }
-                if (stripos($template, '{physical_packs}') === false && !empty($physicalPacksStr)) {
-                    $message .= "\n\n" . $physicalPacksStr;
+                if (!$hasPhysicalBlock && !empty(trim($physicalPacksStr)) && stripos($template, '{physical_packs}') === false) {
+                    $currentMsg .= "\n\n" . trim($physicalPacksStr);
                 }
-                if (stripos($template, '{last_update_time}') === false && stripos($template, '{last_update}') === false && stripos($template, '{lastupdate}') === false) {
-                    $message .= "\n\n" . $labelLastUpdate . ": " . $lastUpdate;
+                if (stripos($currentMsg, $lastUpdate) === false) {
+                    $currentMsg .= "\n\n🕒 Last update: " . $lastUpdate;
                 }
 
-                // Cleanup and add to messages
-                $message = preg_replace('/\{[a-zA-Z0-9_-]+\}/i', '', $message);
-                $messages[] = trim($message);
+                $currentMsg = preg_replace('/\{[a-zA-Z0-9_-]+\}/i', '', $currentMsg);
+                $messages[] = trim($currentMsg);
             }
         }
 
