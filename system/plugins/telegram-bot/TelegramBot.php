@@ -114,6 +114,8 @@ class TelegramBot {
         $currencySymbolsStr = getSetting('telegram_currency_symbols', '$, USD, AED, EUR, GBP, TL');
         $currencySymbols = array_map('trim', explode(',', $currencySymbolsStr));
         $packRowTemplate = getSetting('telegram_pack_row_template', "• {pack} {size} → {currency} {price}");
+        $exchangeRate = (float)getSetting('exchange_rate', 1.0);
+        $targetCurrency = getSetting('target_currency', 'AED');
 
         // Step 1: Group by Brand and Country
         $grouped = [];
@@ -154,9 +156,15 @@ class TelegramBot {
 
                 // Item Header
                 $itemHeader = str_replace(
-                    ['{emoji}', '{brand}', '{gift_card}', '{currency}', '{denomination}'],
-                    [$emoji, $brandName, $labelGiftCard, $currency, $denomValue],
+                    ['{emoji}', '{brand}', '{country}', '{country_name}', '{gift_card}', '{currency}', '{denomination}', '{last_update}'],
+                    [$emoji, $brandName, $countryCode, $countryName, $labelGiftCard, $currency, $denomValue, $lastUpdate],
                     $template
+                );
+                // Clean up any remaining variables from old template that don't belong in grouped header
+                $itemHeader = str_replace(
+                    ['{type}', '{price}', '{converted_price}', '{target_currency}', '{lastupdate}', '{convertedprice}', '{targetcurrency}'],
+                    '',
+                    $itemHeader
                 );
                 $itemBlock = trim($itemHeader) . "\n\n";
 
@@ -167,9 +175,10 @@ class TelegramBot {
                         if ($pk['price_digital'] > 0) {
                             $totalPrice = (float)$pk['price_digital'] * (int)$pk['pack_size'];
                             $priceVal = (float)round($totalPrice, 2);
+                            $convPrice = (float)round($totalPrice * $exchangeRate, 2);
                             $digitalPacks[] = str_replace(
-                                ['{pack}', '{size}', '{currency}', '{price}'],
-                                [$labelPack, $pk['pack_size'], $currency, $priceVal],
+                                ['{pack}', '{size}', '{currency}', '{price}', '{converted_price}', '{target_currency}'],
+                                [$labelPack, $pk['pack_size'], $currency, $priceVal, $convPrice, $targetCurrency],
                                 $packRowTemplate
                             );
                         }
@@ -187,9 +196,10 @@ class TelegramBot {
                         if ($pk['price_physical'] > 0) {
                             $totalPrice = (float)$pk['price_physical'] * (int)$pk['pack_size'];
                             $priceVal = (float)round($totalPrice, 2);
+                            $convPrice = (float)round($totalPrice * $exchangeRate, 2);
                             $physicalPacks[] = str_replace(
-                                ['{pack}', '{size}', '{currency}', '{price}'],
-                                [$labelPack, $pk['pack_size'], $currency, $priceVal],
+                                ['{pack}', '{size}', '{currency}', '{price}', '{converted_price}', '{target_currency}'],
+                                [$labelPack, $pk['pack_size'], $currency, $priceVal, $convPrice, $targetCurrency],
                                 $packRowTemplate
                             );
                         }
