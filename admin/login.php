@@ -30,66 +30,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ورود | پنل مدیریت</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <style>
-        .login-page {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--color-body);
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#497FFF',
+                    },
+                    fontFamily: {
+                        vazir: ['Vazirmatn', 'sans-serif'],
+                    }
+                }
+            }
         }
-        .login-card {
-            width: 100%;
-            max-width: 400px;
-            padding: 40px;
-            background: var(--color-surface);
-            border-radius: 20px;
-            border: 1px solid var(--color-border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-        .error-msg {
-            background: #fee2e2;
-            color: #b91c1c;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            text-align: center;
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply font-vazir bg-slate-50 text-slate-600 dark:bg-slate-950 dark:text-slate-400;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="login-page">
-        <div class="login-card">
-            <div class="text-center mb-30">
-                <img src="../assets/images/logo.svg" alt="Logo" class="m-auto mb-20">
-                <h2 class="color-title">ورود به مدیریت</h2>
-                <p>برای ادامه اطلاعات خود را وارد کنید</p>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl p-8 md:p-10">
+            <div class="text-center mb-10">
+                <img src="../assets/images/logo.svg" alt="Logo" class="h-12 mx-auto mb-6 dark:invert dark:hue-rotate-180 dark:brightness-[1.5]">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">ورود به مدیریت</h2>
+                <p class="text-slate-500 dark:text-slate-400">برای ادامه اطلاعات خود را وارد کنید</p>
             </div>
 
             <?php if ($error): ?>
-                <div class="error-msg"><?php echo e($error); ?></div>
+                <div class="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm text-center mb-6">
+                    <?php echo e($error); ?>
+                </div>
             <?php endif; ?>
 
-            <form method="POST" class="contact-form" style="box-shadow: none; padding: 0;">
-                <div class="input-item mb-20">
-                    <div class="input-label">نام کاربری</div>
-                    <div class="input">
-                        <input type="text" name="username" placeholder="نام کاربری" required>
-                    </div>
+            <form method="POST" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">نام کاربری</label>
+                    <input type="text" name="username" required
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                           placeholder="نام کاربری خود را وارد کنید">
                 </div>
 
-                <div class="input-item mb-30">
-                    <div class="input-label">رمز عبور</div>
-                    <div class="input">
-                        <input type="password" name="password" placeholder="رمز عبور" required>
-                    </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">رمز عبور</label>
+                    <input type="password" name="password" required
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                           placeholder="••••••••">
                 </div>
 
-                <button type="submit" class="btn-primary radius-100 full-width">ورود</button>
+                <button type="submit"
+                        class="w-full bg-primary hover:bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all duration-200 active:transform active:scale-[0.98]">
+                    ورود به پنل
+                </button>
             </form>
         </div>
+
+        <p class="text-center mt-8 text-sm text-slate-500">
+            &copy; <?php echo date('Y'); ?> <?php echo SITE_NAME; ?>. تمامی حقوق محفوظ است.
+        </p>
     </div>
 </body>
 </html>

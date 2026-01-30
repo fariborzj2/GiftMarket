@@ -99,62 +99,64 @@ foreach ($configs as $c) {
 }
 ?>
 
-<div class="d-flex just-between align-center mb-30">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
         <?php if ($msg): ?>
-            <div style="background: <?php echo (strpos($msg, 'خطا') !== false || strpos($msg, 'حذف') !== false) ? '#fee2e2' : '#dcfce7'; ?>; color: <?php echo (strpos($msg, 'خطا') !== false || strpos($msg, 'حذف') !== false) ? '#991b1b' : '#166534'; ?>; padding: 10px 20px; border-radius: 10px; margin-bottom: 20px;">
-                <?php echo e($msg); ?>
+            <div class="<?php echo (strpos($msg, 'خطا') !== false || strpos($msg, 'حذف') !== false) ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30' : 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30'; ?> px-6 py-3 rounded-xl border text-sm">
+                <?php echo (strpos($msg, 'خطا') !== false || strpos($msg, 'حذف') !== false) ? '❌' : '✅'; ?> <?php echo e($msg); ?>
             </div>
         <?php endif; ?>
     </div>
     <form method="POST">
-        <button type="submit" name="publish_now" class="btn-primary radius-100" onclick="return confirm('آیا از انتشار دستی قیمت‌ها اطمینان دارید؟')">انتشار همزمان (Publish Now) 🚀</button>
+        <button type="submit" name="publish_now" class="btn-primary shadow-lg shadow-primary/30" onclick="return confirm('آیا از انتشار دستی قیمت‌ها اطمینان دارید؟')">
+            <span>🚀</span>
+            <span>انتشار همزمان (Publish Now)</span>
+        </button>
     </form>
 </div>
 
-<div class="admin-card mb-30" style="padding: 0;">
-    <div class="d-flex border-bottom" style="background: var(--color-body); border-radius: 15px 15px 0 0;">
-        <a href="?tab=settings" class="p-20 color-title font-bold <?php echo $tab === 'settings' ? 'border-bottom-primary' : ''; ?>" style="text-decoration: none;">تنظیمات کلی</a>
-        <a href="?tab=channels" class="p-20 color-title font-bold <?php echo $tab === 'channels' ? 'border-bottom-primary' : ''; ?>" style="text-decoration: none;">مدیریت کانال‌ها</a>
-        <a href="?tab=config" class="p-20 color-title font-bold <?php echo $tab === 'config' ? 'border-bottom-primary' : ''; ?>" style="text-decoration: none;">پیکربندی برند/کشور</a>
-        <a href="?tab=logs" class="p-20 color-title font-bold <?php echo $tab === 'logs' ? 'border-bottom-primary' : ''; ?>" style="text-decoration: none;">لاگ‌ها</a>
+<div class="admin-card !p-0 overflow-hidden">
+    <!-- Tabs Header -->
+    <div class="flex flex-wrap border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+        <a href="?tab=settings" class="px-6 py-4 text-sm font-bold transition-all border-b-2 <?php echo $tab === 'settings' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'; ?>">تنظیمات کلی</a>
+        <a href="?tab=channels" class="px-6 py-4 text-sm font-bold transition-all border-b-2 <?php echo $tab === 'channels' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'; ?>">مدیریت کانال‌ها</a>
+        <a href="?tab=config" class="px-6 py-4 text-sm font-bold transition-all border-b-2 <?php echo $tab === 'config' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'; ?>">پیکربندی برند/کشور</a>
+        <a href="?tab=logs" class="px-6 py-4 text-sm font-bold transition-all border-b-2 <?php echo $tab === 'logs' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'; ?>">لاگ‌ها</a>
     </div>
 
-    <div class="p-30">
+    <div class="p-6 md:p-8 lg:p-10">
         <?php if ($tab === 'settings'): ?>
-            <form method="POST" class="contact-form" style="box-shadow: none; padding: 0;">
-                <div class="mb-30">
-                    <label class="d-flex align-center gap-10 pointer">
-                        <input type="checkbox" name="enabled" value="1" <?php echo $st_enabled === '1' ? 'checked' : ''; ?>>
-                        <span class="font-bold color-title">فعالسازی ربات تلگرام</span>
+            <form method="POST" class="space-y-8 max-w-3xl">
+                <div class="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" name="enabled" value="1" <?php echo $st_enabled === '1' ? 'checked' : ''; ?>
+                               class="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary">
+                        <span class="font-bold text-slate-900 dark:text-white">فعالسازی ربات تلگرام</span>
                     </label>
                 </div>
 
-                <div class="d-flex-wrap gap-20 mb-20">
-                    <div class="input-item grow-1">
-                        <div class="input-label">توکن ربات (Bot Token)</div>
-                        <div class="input">
-                            <input type="text" name="token" value="<?php echo e($st_token); ?>" placeholder="123456789:ABCDE...">
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">توکن ربات (Bot Token)</label>
+                        <input type="text" name="token" value="<?php echo e($st_token); ?>" placeholder="123456789:ABCDE..."
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono">
                     </div>
-                    <div class="input-item grow-1">
-                        <div class="input-label">نام کاربری ربات (Bot Username)</div>
-                        <div class="input">
-                            <input type="text" name="username" value="<?php echo e($st_username); ?>" placeholder="@my_price_bot">
-                        </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">نام کاربری ربات (@Username)</label>
+                        <input type="text" name="username" value="<?php echo e($st_username); ?>" placeholder="@my_price_bot"
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono" dir="ltr">
                     </div>
                 </div>
 
-                <div class="d-flex-wrap gap-20 mb-20">
-                    <div class="input-item grow-1">
-                        <div class="input-label">زمان انتشار خودکار (روزانه)</div>
-                        <div class="input">
-                            <input type="time" name="publish_time" value="<?php echo e($st_publish_time); ?>">
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">زمان انتشار خودکار (روزانه)</label>
+                        <input type="time" name="publish_time" value="<?php echo e($st_publish_time); ?>"
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none">
                     </div>
-                    <div class="input-item grow-1">
-                        <div class="input-label">نوع قیمت برای انتشار</div>
-                        <select name="price_type" class="input" style="height: 54px; border: 1px solid var(--color-border); border-radius: 10px; padding: 0 15px; width: 100%; background: var(--color-body); color: var(--color-text);">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">نوع قیمت برای انتشار</label>
+                        <select name="price_type" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none">
                             <option value="both" <?php echo $st_price_type === 'both' ? 'selected' : ''; ?>>هر دو (دیجیتال و فیزیکی)</option>
                             <option value="digital" <?php echo $st_price_type === 'digital' ? 'selected' : ''; ?>>فقط دیجیتال</option>
                             <option value="physical" <?php echo $st_price_type === 'physical' ? 'selected' : ''; ?>>فقط فیزیکی</option>
@@ -162,143 +164,159 @@ foreach ($configs as $c) {
                     </div>
                 </div>
 
-                <div class="input-item mb-20">
-                    <label class="d-flex align-center gap-10 pointer">
-                        <input type="checkbox" name="use_emojis" value="1" <?php echo $st_use_emojis === '1' ? 'checked' : ''; ?>>
-                        <span>استفاده از ایموجی پرچم کشورها</span>
-                    </label>
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" name="use_emojis" id="use_emojis" value="1" <?php echo $st_use_emojis === '1' ? 'checked' : ''; ?>
+                           class="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary">
+                    <label for="use_emojis" class="text-sm text-slate-600 dark:text-slate-400 cursor-pointer">استفاده از ایموجی پرچم کشورها</label>
                 </div>
 
-                <div class="input-item mb-20">
-                    <div class="input-label">قالب پیام (Message Template)</div>
-                    <textarea name="template" rows="6" style="font-family: monospace; direction: ltr;"><?php echo e($st_template); ?></textarea>
-                    <div class="font-size-0-8 color-bright mt-10">
-                        <span class="color-primary">⚠️ در حال حاضر از قالب دسته‌بندی شده پیش‌فرض استفاده می‌شود. این تنظیمات در نسخه‌های بعدی اعمال خواهد شد.</span><br>
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">قالب پیام (Message Template)</label>
+                    <textarea name="template" rows="6"
+                              class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono" dir="ltr"><?php echo e($st_template); ?></textarea>
+                    <div class="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/20 text-[11px] text-amber-700 dark:text-amber-400 leading-relaxed">
+                        <span class="font-bold">⚠️ توجه:</span> در حال حاضر از قالب دسته‌بندی شده پیش‌فرض استفاده می‌شود. این تنظیمات در نسخه‌های بعدی اعمال خواهد شد.<br>
                         متغیرهای مجاز: {brand}, {country}, {denomination}, {price}, {currency}, {converted_price}, {target_currency}, {type}, {last_update}
                     </div>
                 </div>
 
-                <button type="submit" name="save_settings" class="btn-primary radius-100">ذخیره تنظیمات</button>
+                <div class="pt-4">
+                    <button type="submit" name="save_settings" class="btn-primary px-10 py-3 shadow-lg shadow-primary/30">ذخیره تنظیمات</button>
+                </div>
             </form>
 
         <?php elseif ($tab === 'channels'): ?>
-            <form method="POST" class="d-flex-wrap gap-15 align-end mb-30">
-                <div class="input-item grow-1" style="min-width: 250px;">
-                    <div class="input-label">Channel ID</div>
-                    <div class="input">
-                        <input type="text" name="channel_id" placeholder="مثلاً 100123456789- یا @mychannel" required dir="ltr">
+            <div class="bg-slate-50 dark:bg-slate-950/50 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 mb-8">
+                <h4 class="text-sm font-bold mb-4 flex items-center gap-2">
+                    <span class="text-primary">➕</span>
+                    <span>افزودن کانال جدید</span>
+                </h4>
+                <form method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ms-1">Channel ID</label>
+                        <input type="text" name="channel_id" placeholder="مثلاً -100123456789" required dir="ltr"
+                               class="w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none">
                     </div>
-                </div>
-                <div class="input-item grow-1" style="min-width: 200px;">
-                    <div class="input-label">نام کانال</div>
-                    <div class="input">
-                        <input type="text" name="channel_name" placeholder="نام نمایشی برای مدیریت">
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ms-1">نام کانال</label>
+                        <input type="text" name="channel_name" placeholder="نام نمایشی..."
+                               class="w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none">
                     </div>
-                </div>
-                <button type="submit" name="add_channel" class="btn-primary radius-100" style="height: 54px; white-space: nowrap;">افزودن کانال +</button>
-            </form>
+                    <button type="submit" name="add_channel" class="btn-primary !py-2.5 text-sm">افزودن کانال</button>
+                </form>
+            </div>
 
-            <div class="table-wrap">
-                <table>
+            <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
+                <table class="w-full text-right border-collapse text-sm">
                     <thead>
-                        <tr>
-                            <th>Channel ID</th>
-                            <th>نام کانال</th>
-                            <th>تاریخ افزودن</th>
-                            <th>عملیات</th>
+                        <tr class="bg-slate-50/50 dark:bg-slate-800/50 text-slate-400 text-[10px] uppercase tracking-widest font-bold border-b border-slate-200 dark:border-slate-800">
+                            <th class="px-6 py-4 font-bold">Channel ID</th>
+                            <th class="px-6 py-4 font-bold">نام کانال</th>
+                            <th class="px-6 py-4 font-bold">تاریخ افزودن</th>
+                            <th class="px-6 py-4 font-bold w-24">عملیات</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                         <?php foreach ($channels as $c): ?>
-                        <tr>
-                            <td dir="ltr"><?php echo e($c['channel_id']); ?></td>
-                            <td><?php echo e($c['name']); ?></td>
-                            <td><?php echo date('Y-m-d H:i', strtotime($c['created_at'])); ?></td>
-                            <td>
-                                <a href="?tab=channels&delete_channel=<?php echo $c['id']; ?>" class="color-danger" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
+                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/20">
+                            <td class="px-6 py-4 font-mono text-xs" dir="ltr"><?php echo e($c['channel_id']); ?></td>
+                            <td class="px-6 py-4 font-bold text-slate-900 dark:text-white"><?php echo e($c['name']); ?></td>
+                            <td class="px-6 py-4 text-slate-500"><?php echo date('Y-m-d H:i', strtotime($c['created_at'])); ?></td>
+                            <td class="px-6 py-4">
+                                <a href="?tab=channels&delete_channel=<?php echo $c['id']; ?>"
+                                   class="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-1.5 rounded-lg transition-all font-bold"
+                                   onclick="return confirm('آیا از حذف این کانال اطمینان دارید؟')">حذف</a>
                             </td>
                         </tr>
                         <?php endforeach; ?>
                         <?php if (empty($channels)): ?>
-                        <tr><td colspan="4" class="text-center">هیچ کانالی ثبت نشده است.</td></tr>
+                            <tr><td colspan="4" class="px-6 py-10 text-center text-slate-400 italic">هیچ کانالی ثبت نشده است.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
             </div>
 
         <?php elseif ($tab === 'config'): ?>
-            <form method="POST">
-                <div class="mb-40">
-                    <h3 class="color-title mb-20 d-flex align-center gap-10">
-                        <span>🚩</span> تنظیمات ایموجی کشورها
+            <form method="POST" class="space-y-12">
+                <div>
+                    <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+                        <span class="text-primary">🚩</span>
+                        <span>تنظیمات ایموجی کشورها</span>
                     </h3>
-                    <div class="d-flex-wrap gap-15">
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                         <?php foreach ($countries as $country): ?>
-                            <div class="input-item" style="flex: 1; min-width: 150px;">
-                                <div class="input-label"><?php echo e($country['name']); ?></div>
-                                <div class="input">
-                                    <input type="text" name="country_emojis[<?php echo e($country['code']); ?>]" value="<?php echo e($country['telegram_emoji']); ?>" placeholder="ایموجی">
+                            <div class="space-y-1.5 p-3 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-950/30">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block truncate"><?php echo e($country['name']); ?></label>
+                                <input type="text" name="country_emojis[<?php echo e($country['code']); ?>]" value="<?php echo e($country['telegram_emoji']); ?>" placeholder="ایموجی"
+                                       class="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-center text-lg focus:border-primary outline-none transition-all">
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <div class="h-px bg-slate-200 dark:bg-slate-800"></div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+                        <span class="text-primary">🔌</span>
+                        <span>فعالسازی برند/کشور برای ربات</span>
+                    </h3>
+                    <div class="space-y-8 max-h-[600px] overflow-y-auto pr-4 scroll-smooth">
+                        <?php foreach ($brands as $brand): ?>
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-2">
+                                    <?php if($brand['logo']): ?><img src="../<?php echo $brand['logo']; ?>" class="w-6 h-6 object-contain"><?php endif; ?>
+                                    <h4 class="font-bold text-slate-900 dark:text-white"><?php echo e($brand['name']); ?></h4>
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    <?php foreach ($countries as $country): ?>
+                                        <label class="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary cursor-pointer transition-all bg-white dark:bg-slate-900 has-[:checked]:bg-primary/5 has-[:checked]:border-primary">
+                                            <input type="checkbox" name="config[]" value="<?php echo $brand['code'] . '|' . $country['code']; ?>" <?php echo isset($configMap[$brand['code']][$country['code']]) ? 'checked' : ''; ?>
+                                                   class="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary">
+                                            <span class="text-xs font-medium"><?php echo e($country['name']); ?></span>
+                                        </label>
+                                    <?php endforeach; ?>
                                 </div>
                             </div>
                         <?php endforeach; ?>
                     </div>
-                    <div class="font-size-0-8 color-bright mt-10">
-                        ایموجی وارد شده در این بخش جایگزین ایموجی پیش‌فرض سیستم در پیام‌های تلگرام خواهد شد.
-                    </div>
                 </div>
 
-                <hr class="mb-30" style="border: 0; border-top: 1px dashed var(--color-border);">
-
-                <h3 class="color-title mb-20 d-flex align-center gap-10">
-                    <span>🔌</span> فعالسازی برند/کشور برای ربات
-                </h3>
-                <div style="max-height: 500px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;" class="mb-30 scorllstyle">
-                    <?php foreach ($brands as $brand): ?>
-                        <div class="mb-20">
-                            <h4 class="color-primary border-bottom pb-5 mb-10 d-flex align-center gap-10">
-                                <?php if($brand['logo']): ?><img src="../<?php echo $brand['logo']; ?>" style="width:20px;"><?php endif; ?>
-                                <?php echo e($brand['name']); ?>
-                            </h4>
-                            <div class="d-flex-wrap gap-15">
-                                <?php foreach ($countries as $country): ?>
-                                    <label class="d-flex align-center gap-5 pointer" style="background: var(--color-body); padding: 5px 10px; border-radius: 5px; border: 1px solid var(--color-border);">
-                                        <input type="checkbox" name="config[]" value="<?php echo $brand['code'] . '|' . $country['code']; ?>" <?php echo isset($configMap[$brand['code']][$country['code']]) ? 'checked' : ''; ?>>
-                                        <span class="font-size-0-9"><?php echo e($country['name']); ?></span>
-                                    </label>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
+                <div class="pt-6 border-t border-slate-100 dark:border-slate-800">
+                    <button type="submit" name="save_config" class="btn-primary px-10 py-4 shadow-xl shadow-primary/30">ذخیره پیکربندی</button>
                 </div>
-                <button type="submit" name="save_config" class="btn-primary radius-100">ذخیره تنظیمات پیکربندی</button>
             </form>
 
         <?php elseif ($tab === 'logs'): ?>
-            <div class="table-wrap">
-                <table>
+            <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
+                <table class="w-full text-right border-collapse text-sm">
                     <thead>
-                        <tr>
-                            <th>زمان</th>
-                            <th>وضعیت</th>
-                            <th>پیام</th>
-                            <th>پاسخ سرور</th>
+                        <tr class="bg-slate-50/50 dark:bg-slate-800/50 text-slate-400 text-[10px] uppercase tracking-widest font-bold border-b border-slate-200 dark:border-slate-800">
+                            <th class="px-6 py-4 font-bold">زمان</th>
+                            <th class="px-6 py-4 font-bold">وضعیت</th>
+                            <th class="px-6 py-4 font-bold">پیام</th>
+                            <th class="px-6 py-4 font-bold">پاسخ سرور</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                         <?php foreach ($logs as $log): ?>
-                        <tr>
-                            <td style="white-space: nowrap;"><?php echo date('Y-m-d H:i', strtotime($log['created_at'])); ?></td>
-                            <td>
-                                <span style="background: <?php echo $log['status'] === 'success' ? '#dcfce7' : ($log['status'] === 'error' ? '#fee2e2' : '#fef9c3'); ?>; color: <?php echo $log['status'] === 'success' ? '#166534' : ($log['status'] === 'error' ? '#991b1b' : '#854d0e'); ?>; padding: 3px 8px; border-radius: 5px; font-size: 0.8rem;">
+                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/20">
+                            <td class="px-6 py-4 text-slate-500 whitespace-nowrap"><?php echo date('Y-m-d H:i', strtotime($log['created_at'])); ?></td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 rounded-md text-[10px] font-black uppercase tracking-widest <?php echo $log['status'] === 'success' ? 'bg-green-100 text-green-700' : ($log['status'] === 'error' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'); ?>">
                                     <?php echo e($log['status']); ?>
                                 </span>
                             </td>
-                            <td><?php echo e($log['message']); ?></td>
-                            <td><small dir="ltr"><?php echo e(mb_strimwidth($log['response'], 0, 100, '...')); ?></small></td>
+                            <td class="px-6 py-4 text-slate-700 dark:text-slate-300"><?php echo e($log['message']); ?></td>
+                            <td class="px-6 py-4">
+                                <div class="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap font-mono text-[10px] text-slate-400" title="<?php echo e($log['response']); ?>" dir="ltr">
+                                    <?php echo e($log['response']); ?>
+                                </div>
+                            </td>
                         </tr>
                         <?php endforeach; ?>
                         <?php if (empty($logs)): ?>
-                        <tr><td colspan="4" class="text-center">هیچ لاگی یافت نشد.</td></tr>
+                            <tr><td colspan="4" class="px-6 py-10 text-center text-slate-400 italic">هیچ لاگی یافت نشد.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -306,13 +324,5 @@ foreach ($configs as $c) {
         <?php endif; ?>
     </div>
 </div>
-
-<style>
-.border-bottom-primary { border-bottom: 3px solid var(--color-primary); color: var(--color-primary) !important; }
-.color-danger { color: #ef4444; }
-.p-20 { padding: 20px; }
-.p-30 { padding: 30px; }
-.border-bottom { border-bottom: 1px solid var(--color-border); }
-</style>
 
 <?php require_once 'layout_footer.php'; ?>

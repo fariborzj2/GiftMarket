@@ -25,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $prices_digital = $_POST['prices_digital'] ?? [];
         $prices_physical = $_POST['prices_physical'] ?? [];
 
-        // Fetch currency from country
         $stmt = $db->prepare("SELECT currency FROM countries WHERE code = ?");
         $stmt->execute([$country]);
         $currency = $stmt->fetchColumn() ?: 'AED';
@@ -40,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $productId = $db->lastInsertId();
         }
 
-        // Handle packs: delete existing and re-insert
         $stmt = $db->prepare("DELETE FROM product_packs WHERE product_id = ?");
         $stmt->execute([$productId]);
 
@@ -57,18 +55,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $action = 'list';
 }
-
 ?>
 
-<div class="d-flex just-between align-center mb-30">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
         <?php if ($msg): ?>
-            <div style="background: #dcfce7; color: #166534; padding: 10px 20px; border-radius: 10px; margin-bottom: 20px;">
-                <?php echo e($msg); ?>
+            <div class="bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30 px-6 py-3 rounded-xl text-sm">
+                ✅ <?php echo e($msg); ?>
             </div>
         <?php endif; ?>
     </div>
-    <a href="products.php?action=add" class="btn-primary radius-100">افزودن محصول جدید</a>
+    <a href="products.php?action=add" class="btn-primary shadow-lg shadow-primary/30">
+        <span>➕</span>
+        <span>افزودن محصول جدید</span>
+    </a>
 </div>
 
 <?php if ($action === 'list'):
@@ -100,7 +100,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $params[] = $f_country;
     }
     if ($f_pack_size) {
-        // Show products that have at least one pack of this size
         $query .= " AND p.id IN (SELECT product_id FROM product_packs WHERE pack_size = ?)";
         $params[] = (int)$f_pack_size;
     }
@@ -110,7 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute($params);
     $results = $stmt->fetchAll();
 
-    // Grouping logic for the list view
     $products = [];
     foreach ($results as $row) {
         $pid = $row['id'];
@@ -133,18 +131,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pack_sizes = db()->query("SELECT DISTINCT pack_size FROM product_packs ORDER BY pack_size ASC")->fetchAll(PDO::FETCH_COLUMN);
 ?>
 
-    <div class="admin-card mb-30">
-        <form method="GET" class="d-flex-wrap gap-15 align-end">
-            <div class="input-item grow-1" style="min-width: 200px;">
-                <div class="input-label">جستجو (مبلغ اعتبار)</div>
-                <div class="input">
-                    <input type="text" name="search" value="<?php echo e($search); ?>" placeholder="مثلاً 100 AED">
-                </div>
+    <!-- Filters -->
+    <div class="admin-card mb-8 !p-6">
+        <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+            <div class="space-y-1.5 lg:col-span-1">
+                <label class="text-xs font-bold text-slate-400 uppercase ms-1">جستجو</label>
+                <input type="text" name="search" value="<?php echo e($search); ?>"
+                       class="w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm"
+                       placeholder="مبلغ اعتبار...">
             </div>
 
-            <div class="input-item" style="min-width: 150px;">
-                <div class="input-label">برند</div>
-                <select name="brand" class="input" style="height: 48px; border: 1px solid var(--color-border); border-radius: 12px; padding: 0 15px; width: 100%; background: var(--color-body); color: var(--color-text);">
+            <div class="space-y-1.5">
+                <label class="text-xs font-bold text-slate-400 uppercase ms-1">برند</label>
+                <select name="brand" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm">
                     <option value="">همه برندها</option>
                     <?php foreach ($brands as $b): ?>
                         <option value="<?php echo e($b['code']); ?>" <?php echo $f_brand == $b['code'] ? 'selected' : ''; ?>><?php echo e($b['name']); ?></option>
@@ -152,9 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </select>
             </div>
 
-            <div class="input-item" style="min-width: 150px;">
-                <div class="input-label">کشور</div>
-                <select name="country" class="input" style="height: 48px; border: 1px solid var(--color-border); border-radius: 12px; padding: 0 15px; width: 100%; background: var(--color-body); color: var(--color-text);">
+            <div class="space-y-1.5">
+                <label class="text-xs font-bold text-slate-400 uppercase ms-1">کشور</label>
+                <select name="country" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm">
                     <option value="">همه کشورها</option>
                     <?php foreach ($countries as $c): ?>
                         <option value="<?php echo e($c['code']); ?>" <?php echo $f_country == $c['code'] ? 'selected' : ''; ?>><?php echo e($c['name']); ?></option>
@@ -162,9 +161,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </select>
             </div>
 
-            <div class="input-item" style="min-width: 120px;">
-                <div class="input-label">Pack Size</div>
-                <select name="pack_size" class="input" style="height: 48px; border: 1px solid var(--color-border); border-radius: 12px; padding: 0 15px; width: 100%; background: var(--color-body); color: var(--color-text);">
+            <div class="space-y-1.5">
+                <label class="text-xs font-bold text-slate-400 uppercase ms-1">سایز پک</label>
+                <select name="pack_size" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm">
                     <option value="">همه سایزها</option>
                     <?php foreach ($pack_sizes as $size): ?>
                         <option value="<?php echo e($size); ?>" <?php echo $f_pack_size == $size ? 'selected' : ''; ?>>Pack Of <?php echo e($size); ?></option>
@@ -172,9 +171,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </select>
             </div>
 
-            <div class="d-flex gap-10 d-flex-wrap">
-                <button type="submit" class="btn-primary radius-100" style="height: 48px;">اعمال فیلتر</button>
-                <a href="products.php" class="btn radius-100 d-flex align-center just-center" style="height: 48px; border: 1px solid var(--color-border);">حذف فیلتر</a>
+            <div class="flex gap-2">
+                <button type="submit" class="btn-primary !px-4 !py-2 text-sm flex-1">اعمال</button>
+                <a href="products.php" class="px-4 py-2 rounded-full border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-sm">حذف</a>
             </div>
         </form>
     </div>
@@ -195,156 +194,98 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 ?>
     <?php if (empty($products)): ?>
-    <div class="admin-card">
-        <div class="text-center">هیچ محصولی یافت نشد.</div>
-    </div>
+        <div class="admin-card text-center py-20 text-slate-400">
+            <div class="text-5xl mb-4">🔍</div>
+            هیچ محصولی با این مشخصات یافت نشد.
+        </div>
     <?php endif; ?>
 
     <?php foreach ($grouped as $brandName => $brandData): ?>
-    <div class="brand-section mb-50">
-        <h2 class="color-title mb-20 mt-40 d-flex align-center gap-15 font-size-1-5">
-            <?php if ($brandData['logo']): ?>
-                <img src="../<?php echo e($brandData['logo']); ?>" alt="" style="width: 38px; height: 38px; object-fit: contain; background: var(--color-surface); padding: 5px; border-radius: 8px; border: 1px solid var(--color-border);">
-            <?php else: ?>
-                <span style="width: 12px; height: 12px; background: var(--color-primary); border-radius: 50%;"></span>
-            <?php endif; ?>
-            <?php echo e($brandName); ?>
-        </h2>
-
-        <?php foreach ($brandData['countries'] as $countryName => $countryData): ?>
-        <div class="admin-card mb-30" style="padding: 0; overflow: hidden; border-radius: 15px;">
-            <div style="background: var(--color-body); padding: 15px 25px; border-bottom: 1px solid var(--color-border);" class="d-flex align-center just-between">
-                <h3 class="color-text d-flex align-center gap-10 font-size-1-1 m-0">
-                    <?php if ($countryData['flag']): ?>
-                        <img src="../<?php echo e($countryData['flag']); ?>" alt="" style="width: 24px; border-radius: 4px;">
-                    <?php else: ?>
-                        <span class="icon" style="color: var(--color-primary);">🌍</span>
-                    <?php endif; ?>
-                    <?php echo e($countryName); ?>
-                </h3>
-                <span class="font-size-0-8 color-bright"><?php echo count($countryData['products']); ?> محصول</span>
+    <div class="mb-12">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1.5 flex items-center justify-center shrink-0 shadow-sm">
+                <?php if ($brandData['logo']): ?>
+                    <img src="../<?php echo e($brandData['logo']); ?>" alt="" class="max-w-full max-h-full object-contain">
+                <?php else: ?>
+                    <div class="w-2 h-2 bg-primary rounded-full"></div>
+                <?php endif; ?>
             </div>
+            <h2 class="text-xl md:text-2xl font-black text-slate-900 dark:text-white"><?php echo e($brandName); ?></h2>
+            <div class="h-px flex-1 bg-gradient-to-l from-transparent via-slate-200 dark:via-slate-800 to-transparent"></div>
+        </div>
 
-            <div style="padding: 20px;">
-                <div class="table-wrap" style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 10px;">
-                    <table style="margin: 0;">
-                        <thead>
-                            <tr style="background: rgba(0,0,0,0.02);">
-                                <th>نام محصول (اعتبار)</th>
-                                <th>پک‌های موجود</th>
-                                <th style="width: 120px;">عملیات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($countryData['products'] as $p): ?>
-                            <tr>
-                                <td data-label="نام محصول" class="font-bold">
-                                    <?php echo e($p['denomination']); ?>
-                                    <div class="font-size-0-8 color-bright font-normal"><?php echo e($p['currency']); ?></div>
-                                </td>
-                                <td data-label="پک‌ها">
-                                    <div class="d-flex-wrap gap-10">
-                                        <?php foreach ($p['packs'] as $pk): ?>
-                                            <span style="background: var(--color-body); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--color-border); font-size: 0.85rem;">
-                                                <strong><?php echo e($pk['pack_size']); ?> عددی:</strong>
-                                                <span class="color-primary">$<?php echo e($pk['price_digital']); ?></span> /
-                                                <span class="color-bright">$<?php echo e($pk['price_physical']); ?></span>
-                                            </span>
-                                        <?php endforeach; ?>
-                                        <?php if (empty($p['packs'])): ?>
-                                            <span class="color-bright font-size-0-8">بدون پک</span>
-                                        <?php endif; ?>
-                                    </div>
-                                </td>
-                                <td data-label="عملیات">
-                                    <div class="d-flex gap-10">
-                                        <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: var(--color-primary); border-color: var(--color-primary); background: var(--color-surface); width: auto;">ویرایش</a>
-                                        <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="btn-sm" style="color: #ef4444; border-color: #fca5a5; background: var(--color-surface); width: auto;" onclick="return confirm('آیا مطمئن هستید؟')">حذف</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <?php foreach ($brandData['countries'] as $countryName => $countryData): ?>
+            <div class="flex flex-col">
+                <div class="flex items-center justify-between mb-4 px-2">
+                    <div class="flex items-center gap-2">
+                        <?php if ($countryData['flag']): ?>
+                            <img src="../<?php echo e($countryData['flag']); ?>" alt="" class="w-6 h-4 rounded shadow-sm">
+                        <?php else: ?>
+                            <span class="text-lg">🌍</span>
+                        <?php endif; ?>
+                        <h3 class="text-sm font-bold text-slate-600 dark:text-slate-400"><?php echo e($countryName); ?></h3>
+                    </div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                        <?php echo count($countryData['products']); ?> محصول
+                    </span>
+                </div>
+
+                <div class="admin-card !p-0 overflow-hidden border-primary/20">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-slate-50/50 dark:bg-slate-800/50 text-slate-400 text-[10px] uppercase tracking-widest font-bold border-b border-slate-100 dark:border-slate-800">
+                                    <th class="px-6 py-3 font-bold">محصول (اعتبار)</th>
+                                    <th class="px-6 py-3 font-bold text-center">پک‌های موجود</th>
+                                    <th class="px-6 py-3 font-bold w-24">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                <?php foreach ($countryData['products'] as $p): ?>
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-slate-900 dark:text-white"><?php echo e($p['denomination']); ?></div>
+                                        <div class="text-[10px] text-slate-400 font-mono mt-0.5"><?php echo e($p['currency']); ?></div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-wrap justify-center gap-1.5">
+                                            <?php foreach ($p['packs'] as $pk): ?>
+                                                <div class="group relative px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-[11px]">
+                                                    <span class="font-bold text-slate-700 dark:text-slate-300"><?php echo e($pk['pack_size']); ?>x:</span>
+                                                    <span class="text-primary font-bold">$<?php echo e($pk['price_digital']); ?></span>
+                                                    <span class="mx-0.5 text-slate-300">/</span>
+                                                    <span class="text-emerald-500 font-bold">$<?php echo e($pk['price_physical']); ?></span>
+                                                </div>
+                                            <?php endforeach; ?>
+                                            <?php if (empty($p['packs'])): ?>
+                                                <span class="text-xs text-slate-400 italic">بدون پک</span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-1">
+                                            <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors" title="ویرایش">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                            </a>
+                                            <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" onclick="return confirm('حذف محصول؟')" title="حذف">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+            <?php endforeach; ?>
         </div>
-        <?php endforeach; ?>
     </div>
     <?php endforeach; ?>
 
 <?php elseif ($action === 'add' || $action === 'edit'): ?>
-    <style>
-        .pack-row-grid {
-            display: grid;
-            grid-template-columns: 120px 1fr 1fr auto;
-            gap: 20px;
-            align-items: flex-end;
-            background: var(--color-surface);
-            padding: 20px;
-            border: 1px solid var(--color-border);
-            border-radius: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        }
-        @media (max-width: 768px) {
-            .pack-row-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .pack-row-grid > div:last-child {
-                grid-column: span 2;
-            }
-        }
-        @media (max-width: 480px) {
-            .pack-row-grid {
-                grid-template-columns: 1fr;
-            }
-            .pack-row-grid > div:last-child {
-                grid-column: span 1;
-            }
-        }
-        .pack-label {
-            display: block;
-            font-size: 13px;
-            color: var(--color-title);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        .pack-input {
-            width: 100%;
-            height: 48px;
-            border: 1px solid var(--color-border);
-            border-radius: 10px;
-            padding: 0 15px;
-            background: var(--color-body);
-            color: var(--color-text);
-            font-size: 14px;
-            transition: border-color 0.2s;
-        }
-        .pack-input:focus {
-            border-color: var(--color-primary);
-            outline: none;
-        }
-        .remove-pack-btn {
-            height: 48px;
-            padding: 0 20px;
-            color: #ef4444;
-            border: 1px solid #fca5a5;
-            border-radius: 10px;
-            background: #fff5f5;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-        .remove-pack-btn:hover {
-            background: #ef4444;
-            color: #fff;
-        }
-    </style>
 <?php
     $countries = db()->query("SELECT * FROM countries ORDER BY sort_order ASC, name ASC")->fetchAll();
     $brands = db()->query("SELECT * FROM brands ORDER BY sort_order ASC, name ASC")->fetchAll();
@@ -361,72 +302,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 ?>
-    <div class="admin-card max-w800">
-        <h3 class="color-title mb-30"><?php echo $action === 'add' ? 'افزودن محصول جدید' : 'ویرایش محصول'; ?></h3>
-        <form method="POST" class="contact-form" style="box-shadow: none; padding: 0;">
+    <div class="admin-card max-w-4xl mx-auto">
+        <h3 class="text-xl mb-8 flex items-center gap-2">
+            <span class="text-primary"><?php echo $action === 'add' ? '➕' : '📝'; ?></span>
+            <span><?php echo $action === 'add' ? 'افزودن محصول جدید' : 'ویرایش محصول'; ?></span>
+        </h3>
+
+        <form method="POST" class="space-y-8">
             <input type="hidden" name="id" value="<?php echo e($editData['id']); ?>">
 
-            <div class="d-flex-wrap gap-20 mb-20">
-                <div class="input-item grow-1">
-                    <div class="input-label">برند</div>
-                    <div class="drop-down w-full">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Custom Dropdown for Brand -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">برند</label>
+                    <div class="drop-down relative">
                         <?php
                         $selectedBrand = null;
                         foreach ($brands as $b) {
-                            if ($b['code'] == $editData['brand']) {
-                                $selectedBrand = $b;
-                                break;
-                            }
+                            if ($b['code'] == $editData['brand']) { $selectedBrand = $b; break; }
                         }
                         ?>
-                        <div class="drop-down-btn d-flex align-center gap-10 pointer" style="border: 1px solid var(--color-border); padding: 10px 15px; border-radius: 12px; background: var(--color-body);">
-                            <div class="drop-down-img">
-                                <img class="selected-img" src="../<?php echo e($selectedBrand['logo'] ?? ''); ?>" alt="" style="width: 28px; <?php echo empty($selectedBrand['logo']) ? 'display:none;' : ''; ?>">
+                        <button type="button" class="drop-down-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-right transition-all">
+                            <div class="w-6 h-6 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1 flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
+                                <img class="selected-img max-w-full max-h-full object-contain" src="../<?php echo e($selectedBrand['logo'] ?? ''); ?>" alt="" style="<?php echo empty($selectedBrand['logo']) ? 'display:none;' : ''; ?>">
                             </div>
-                            <div class="selected-text"><?php echo e($selectedBrand['name'] ?? 'انتخاب برند'); ?></div>
-                            <span class="icon icon-arrow-down icon-size-16 lt-auto"></span>
-                        </div>
-
+                            <span class="selected-text flex-1 text-sm font-medium"><?php echo e($selectedBrand['name'] ?? 'انتخاب برند'); ?></span>
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
                         <input type="hidden" class="selected-option" name="brand" value="<?php echo e($editData['brand']); ?>" required>
-
-                        <div class="drop-down-list" style="width: 100%; top: 100%;">
+                        <div class="drop-down-list hidden absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-60 overflow-y-auto">
                             <?php foreach ($brands as $b): ?>
-                                <div class="drop-option d-flex gap-10 align-center <?php echo $editData['brand'] == $b['code'] ? 'active' : ''; ?>" data-option="<?php echo e($b['code']); ?>">
-                                    <div class="drop-option-img"><img src="../<?php echo e($b['logo']); ?>" alt="" style="width: 28px;"></div>
-                                    <span><?php echo e($b['name']); ?></span>
+                                <div class="drop-option flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors <?php echo $editData['brand'] == $b['code'] ? 'bg-primary/5 text-primary' : ''; ?>" data-option="<?php echo e($b['code']); ?>">
+                                    <div class="w-6 h-6 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-1 flex items-center justify-center overflow-hidden shrink-0">
+                                        <img src="../<?php echo e($b['logo']); ?>" alt="" class="max-w-full max-h-full object-contain">
+                                    </div>
+                                    <span class="text-sm font-medium"><?php echo e($b['name']); ?></span>
                                 </div>
                             <?php endforeach; ?>
                         </div>
                     </div>
                 </div>
 
-                <div class="input-item grow-1">
-                    <div class="input-label">کشور</div>
-                    <div class="drop-down w-full">
+                <!-- Custom Dropdown for Country -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">کشور</label>
+                    <div class="drop-down relative">
                         <?php
                         $selectedCountry = null;
                         foreach ($countries as $c) {
-                            if ($c['code'] == $editData['country']) {
-                                $selectedCountry = $c;
-                                break;
-                            }
+                            if ($c['code'] == $editData['country']) { $selectedCountry = $c; break; }
                         }
                         ?>
-                        <div class="drop-down-btn d-flex align-center gap-10 pointer" style="border: 1px solid var(--color-border); padding: 10px 15px; border-radius: 12px; background: var(--color-body);">
-                            <div class="drop-down-img">
-                                <img class="selected-img" src="../<?php echo e($selectedCountry['flag'] ?? ''); ?>" alt="" style="width: 28px; <?php echo empty($selectedCountry['flag']) ? 'display:none;' : ''; ?>">
+                        <button type="button" class="drop-down-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-right transition-all">
+                            <div class="w-6 h-4 rounded shadow-sm overflow-hidden shrink-0">
+                                <img class="selected-img w-full h-full object-cover" src="../<?php echo e($selectedCountry['flag'] ?? ''); ?>" alt="" style="<?php echo empty($selectedCountry['flag']) ? 'display:none;' : ''; ?>">
                             </div>
-                            <div class="selected-text"><?php echo e($selectedCountry['name'] ?? 'انتخاب کشور'); ?></div>
-                            <span class="icon icon-arrow-down icon-size-16 lt-auto"></span>
-                        </div>
-
+                            <span class="selected-text flex-1 text-sm font-medium"><?php echo e($selectedCountry['name'] ?? 'انتخاب کشور'); ?></span>
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
                         <input type="hidden" class="selected-option" name="country" value="<?php echo e($editData['country']); ?>" required>
-
-                        <div class="drop-down-list" style="width: 100%; top: 100%;">
+                        <div class="drop-down-list hidden absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-60 overflow-y-auto">
                             <?php foreach ($countries as $c): ?>
-                                <div class="drop-option d-flex gap-10 align-center <?php echo $editData['country'] == $c['code'] ? 'active' : ''; ?>" data-option="<?php echo e($c['code']); ?>">
-                                    <div class="drop-option-img"><img src="../<?php echo e($c['flag']); ?>" alt="" style="width: 28px;"></div>
-                                    <span><?php echo e($c['name']); ?></span>
+                                <div class="drop-option flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors <?php echo $editData['country'] == $c['code'] ? 'bg-primary/5 text-primary' : ''; ?>" data-option="<?php echo e($c['code']); ?>">
+                                    <div class="w-6 h-4 rounded shadow-sm overflow-hidden shrink-0">
+                                        <img src="../<?php echo e($c['flag']); ?>" alt="" class="w-full h-full object-cover">
+                                    </div>
+                                    <span class="text-sm font-medium"><?php echo e($c['name']); ?></span>
                                 </div>
                             <?php endforeach; ?>
                         </div>
@@ -434,72 +375,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
-            <div class="input-item mb-30">
-                <div class="input-label">مبلغ اعتبار (نام محصول)</div>
-                <div class="input">
-                    <input type="text" name="denomination" value="<?php echo e($editData['denomination']); ?>" required placeholder="مثلاً 100 AED, $50">
-                </div>
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">مبلغ اعتبار (نام محصول)</label>
+                <input type="text" name="denomination" value="<?php echo e($editData['denomination']); ?>" required
+                       class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold"
+                       placeholder="مثلاً 100 AED, $50">
             </div>
 
-            <div class="mb-30">
-                <div class="d-flex align-center just-between mb-20" style="background: var(--color-body); padding: 15px 20px; border-radius: 12px; border: 1px solid var(--color-border);">
-                    <h4 class="color-title m-0 d-flex align-center gap-10">
-                        <span class="icon icon-size-22 color-primary">📦</span>
-                        پک‌های محصول
-                    </h4>
-                    <button type="button" class="btn-primary" id="add-pack-btn" style="height: 40px; border-radius: 8px; font-size: 14px;">افزودن پک جدید +</button>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">📦</div>
+                        <h4 class="font-bold text-slate-900 dark:text-white">پک‌های محصول</h4>
+                    </div>
+                    <button type="button" id="add-pack-btn" class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-primary/20">
+                        افزودن پک +
+                    </button>
                 </div>
 
-                <div style="margin-bottom: 20px; padding: 15px; background: #eff6ff; border-radius: 12px; border: 1px solid #bfdbfe; color: #1e40af; font-size: 0.9rem;">
-                    <span class="icon">ℹ️</span> تمام قیمت‌ها باید به <strong>دلار آمریکا (USD)</strong> وارد شوند. سیستم به صورت خودکار معادل درهم امارات (AED) را با نرخ <strong><?php echo e(getSetting('usd_to_aed', '3.673')); ?></strong> در سایت نمایش می‌دهد.
+                <div class="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/20 rounded-xl p-4 flex gap-3 text-sm text-blue-700 dark:text-blue-300">
+                    <span class="text-lg">ℹ️</span>
+                    <p>تمام قیمت‌ها باید به <strong>دلار آمریکا (USD)</strong> وارد شوند. سیستم به صورت خودکار معادل درهم امارات (AED) را با نرخ <strong><?php echo e(getSetting('usd_to_aed', '3.673')); ?></strong> در سایت نمایش می‌دهد.</p>
                 </div>
 
-                <div id="packs-container">
-                    <?php if (empty($editData['packs'])): ?>
-                        <div class="pack-row-grid">
-                            <div>
-                                <label class="pack-label">تعداد (پک)</label>
-                                <input type="number" class="pack-input" name="pack_sizes[]" value="1" required min="1">
+                <div id="packs-container" class="space-y-3">
+                    <?php
+                    $packsToShow = !empty($editData['packs']) ? $editData['packs'] : [['pack_size' => 1, 'price_digital' => '', 'price_physical' => '']];
+                    foreach ($packsToShow as $pk):
+                    ?>
+                        <div class="pack-row grid grid-cols-1 md:grid-cols-4 gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm relative group">
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">تعداد (پک)</label>
+                                <input type="number" name="pack_sizes[]" value="<?php echo e($pk['pack_size']); ?>" required min="1"
+                                       class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
                             </div>
-                            <div>
-                                <label class="pack-label">قیمت دیجیتال (دلار USD)</label>
-                                <input type="number" step="0.01" class="pack-input" name="prices_digital[]" required>
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">قیمت دیجیتال ($)</label>
+                                <input type="number" step="0.01" name="prices_digital[]" value="<?php echo e($pk['price_digital']); ?>" required
+                                       class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
                             </div>
-                            <div>
-                                <label class="pack-label">قیمت فیزیکی (دلار USD)</label>
-                                <input type="number" step="0.01" class="pack-input" name="prices_physical[]" required>
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">قیمت فیزیکی ($)</label>
+                                <input type="number" step="0.01" name="prices_physical[]" value="<?php echo e($pk['price_physical']); ?>" required
+                                       class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
                             </div>
-                            <div>
-                                <button type="button" class="remove-pack-btn">حذف</button>
+                            <div class="flex items-end">
+                                <button type="button" class="remove-pack-btn w-full py-2 rounded-xl border border-red-100 dark:border-red-900/30 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs font-bold transition-all">
+                                    حذف پک
+                                </button>
                             </div>
                         </div>
-                    <?php else: ?>
-                        <?php foreach ($editData['packs'] as $pk): ?>
-                            <div class="pack-row-grid">
-                                <div>
-                                    <label class="pack-label">تعداد (پک)</label>
-                                    <input type="number" class="pack-input" name="pack_sizes[]" value="<?php echo e($pk['pack_size']); ?>" required min="1">
-                                </div>
-                                <div>
-                                    <label class="pack-label">قیمت دیجیتال (دلار USD)</label>
-                                    <input type="number" step="0.01" class="pack-input" name="prices_digital[]" value="<?php echo e($pk['price_digital']); ?>" required>
-                                </div>
-                                <div>
-                                    <label class="pack-label">قیمت فیزیکی (دلار USD)</label>
-                                    <input type="number" step="0.01" class="pack-input" name="prices_physical[]" value="<?php echo e($pk['price_physical']); ?>" required>
-                                </div>
-                                <div>
-                                    <button type="button" class="remove-pack-btn">حذف</button>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
-            <div class="d-flex gap-10">
-                <button type="submit" class="btn-primary radius-100">ذخیره محصول</button>
-                <a href="products.php" class="btn radius-100" style="height: 48px;">انصراف</a>
+            <div class="flex items-center gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+                <button type="submit" class="btn-primary flex-1 py-4 text-lg font-bold shadow-xl shadow-primary/30">ذخیره محصول</button>
+                <a href="products.php" class="px-8 py-4 rounded-full border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-bold">انصراف</a>
             </div>
         </form>
     </div>
@@ -508,22 +440,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     document.getElementById('add-pack-btn').addEventListener('click', function() {
         const container = document.getElementById('packs-container');
         const newRow = document.createElement('div');
-        newRow.className = 'pack-row-grid';
+        newRow.className = 'pack-row grid grid-cols-1 md:grid-cols-4 gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm relative group';
         newRow.innerHTML = `
-            <div>
-                <label class="pack-label">تعداد (پک)</label>
-                <input type="number" class="pack-input" name="pack_sizes[]" value="1" required min="1">
+            <div class="space-y-1.5">
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">تعداد (پک)</label>
+                <input type="number" name="pack_sizes[]" value="1" required min="1"
+                       class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
             </div>
-            <div>
-                <label class="pack-label">قیمت دیجیتال (دلار USD)</label>
-                <input type="number" step="0.01" class="pack-input" name="prices_digital[]" required>
+            <div class="space-y-1.5">
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">قیمت دیجیتال ($)</label>
+                <input type="number" step="0.01" name="prices_digital[]" required
+                       class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
             </div>
-            <div>
-                <label class="pack-label">قیمت فیزیکی (دلار USD)</label>
-                <input type="number" step="0.01" class="pack-input" name="prices_physical[]" required>
+            <div class="space-y-1.5">
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">قیمت فیزیکی ($)</label>
+                <input type="number" step="0.01" name="prices_physical[]" required
+                       class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
             </div>
-            <div>
-                <button type="button" class="remove-pack-btn">حذف</button>
+            <div class="flex items-end">
+                <button type="button" class="remove-pack-btn w-full py-2 rounded-xl border border-red-100 dark:border-red-900/30 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs font-bold transition-all">
+                    حذف پک
+                </button>
             </div>
         `;
         container.appendChild(newRow);
@@ -532,9 +469,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     function attachRemoveEvent(btn) {
         btn.addEventListener('click', function() {
-            const rows = document.querySelectorAll('.pack-row-grid');
+            const rows = document.querySelectorAll('.pack-row');
             if (rows.length > 1) {
-                this.closest('.pack-row-grid').remove();
+                this.closest('.pack-row').remove();
             } else {
                 alert('حداقل یک پک باید وجود داشته باشد.');
             }
