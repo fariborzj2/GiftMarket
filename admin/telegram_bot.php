@@ -41,15 +41,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['save_config'])) {
         $enabledConfigs = $_POST['config'] ?? [];
-        // Reset all to disabled first for the submitted brands/countries or just handle incrementally
-        // Better: handle via checkboxes in the form
-        db()->exec("UPDATE telegram_config SET enabled = 0");
-        $stmt = db()->prepare("INSERT INTO telegram_config (brand_code, country_code, enabled) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE enabled = 1");
-        foreach ($enabledConfigs as $cfg) {
-            list($b, $c) = explode('|', $cfg);
-            $stmt->execute([$b, $c]);
+        $countryEmojis = $_POST['country_emojis'] ?? [];
+
+        db()->beginTransaction();
+        try {
+            // Update Emojis
+            $stmtEmoji = db()->prepare("UPDATE countries SET telegram_emoji = ? WHERE code = ?");
+            foreach ($countryEmojis as $code => $emoji) {
+                $stmtEmoji->execute([$emoji, $code]);
+            }
+
+            // Update Enabled Toggles
+            db()->exec("UPDATE telegram_config SET enabled = 0");
+            $stmt = db()->prepare("INSERT INTO telegram_config (brand_code, country_code, enabled) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE enabled = 1");
+            foreach ($enabledConfigs as $cfg) {
+                if (strpos($cfg, '|') !== false) {
+                    list($b, $c) = explode('|', $cfg);
+                    $stmt->execute([$b, $c]);
+                }
+            }
+            db()->commit();
+            $msg = 'پیکربندی و ایموجی‌ها با موفقیت ذخیره شد!';
+        } catch (Exception $e) {
+            db()->rollBack();
+            $msg = 'خطا در ذخیره اطلاعات: ' . $e->getMessage();
         }
-        $msg = 'پیکربندی با موفقیت ذخیره شد!';
         $tab = 'config';
     }
 }
@@ -212,7 +228,31 @@ foreach ($configs as $c) {
 
         <?php elseif ($tab === 'config'): ?>
             <form method="POST">
-                <div style="max-height: 600px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;" class="mb-30">
+                <div class="mb-40">
+                    <h3 class="color-title mb-20 d-flex align-center gap-10">
+                        <span>🚩</span> تنظیمات ایموجی کشورها
+                    </h3>
+                    <div class="d-flex-wrap gap-15">
+                        <?php foreach ($countries as $country): ?>
+                            <div class="input-item" style="flex: 1; min-width: 150px;">
+                                <div class="input-label"><?php echo e($country['name']); ?></div>
+                                <div class="input">
+                                    <input type="text" name="country_emojis[<?php echo e($country['code']); ?>]" value="<?php echo e($country['telegram_emoji']); ?>" placeholder="ایموجی">
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="font-size-0-8 color-bright mt-10">
+                        ایموجی وارد شده در این بخش جایگزین ایموجی پیش‌فرض سیستم در پیام‌های تلگرام خواهد شد.
+                    </div>
+                </div>
+
+                <hr class="mb-30" style="border: 0; border-top: 1px dashed var(--color-border);">
+
+                <h3 class="color-title mb-20 d-flex align-center gap-10">
+                    <span>🔌</span> فعالسازی برند/کشور برای ربات
+                </h3>
+                <div style="max-height: 500px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: 10px; padding: 20px;" class="mb-30 scorllstyle">
                     <?php foreach ($brands as $brand): ?>
                         <div class="mb-20">
                             <h4 class="color-primary border-bottom pb-5 mb-10 d-flex align-center gap-10">
@@ -230,7 +270,7 @@ foreach ($configs as $c) {
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <button type="submit" name="save_config" class="btn-primary radius-100">ذخیره پیکربندی</button>
+                <button type="submit" name="save_config" class="btn-primary radius-100">ذخیره تنظیمات پیکربندی</button>
             </form>
 
         <?php elseif ($tab === 'logs'): ?>
