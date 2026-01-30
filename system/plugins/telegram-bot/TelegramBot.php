@@ -32,7 +32,7 @@ class TelegramBot {
             return false;
         }
 
-        $template = getSetting('telegram_message_template', "*{brand} Gift Card* {country}\n\n{type}: {price} {currency}\n\n_Last update: {last_update}_");
+        $template = getSetting('telegram_message_template', "{emoji} {brand} {gift_card} – {currency} {denomination}");
         $useEmojis = getSetting('telegram_use_emojis', '1') === '1';
         $priceType = getSetting('telegram_price_type', 'both');
 
@@ -99,11 +99,21 @@ class TelegramBot {
 
     /**
      * Format product data into messages grouped by Brand and Country
-     * Note: This follows the exact format requested by the user, ignoring the text template for now.
      */
     private function formatMessages($products, $template, $useEmojis, $priceType) {
         $messages = [];
         $lastUpdate = date('H:i');
+
+        // Fetch Settings/Labels
+        $labelGiftCard = getSetting('telegram_label_gift_card', 'Gift Card');
+        $labelDigital = getSetting('telegram_label_digital', 'Digital');
+        $labelPhysical = getSetting('telegram_label_physical', 'Physical');
+        $labelPack = getSetting('telegram_label_pack', 'Pack');
+        $labelLastUpdate = getSetting('telegram_label_last_update', '🕒 Last update');
+        $labelSeparator = getSetting('telegram_label_separator', '━━━━━━━━━━━━━━');
+        $currencySymbolsStr = getSetting('telegram_currency_symbols', '$, USD, AED, EUR, GBP, TL');
+        $currencySymbols = array_map('trim', explode(',', $currencySymbolsStr));
+        $packRowTemplate = getSetting('telegram_pack_row_template', "• {pack} {size} → {currency} {price}");
 
         // Step 1: Group by Brand and Country
         $grouped = [];
@@ -140,10 +150,15 @@ class TelegramBot {
                 $currency = $firstPack['currency'];
 
                 // Clean denomination value for the header
-                $denomValue = trim(str_replace(['$', 'USD', 'AED', 'EUR', 'GBP', 'TL'], '', $firstPack['denomination']));
+                $denomValue = trim(str_replace($currencySymbols, '', $firstPack['denomination']));
 
-                // Header: 🇺🇸 Apple iTunes Gift Card – USD 2
-                $itemBlock = trim("{$emoji} {$brandName} Gift Card – {$currency} {$denomValue}") . "\n\n";
+                // Item Header
+                $itemHeader = str_replace(
+                    ['{emoji}', '{brand}', '{gift_card}', '{currency}', '{denomination}'],
+                    [$emoji, $brandName, $labelGiftCard, $currency, $denomValue],
+                    $template
+                );
+                $itemBlock = trim($itemHeader) . "\n\n";
 
                 // Digital Section
                 $digitalPacks = [];
@@ -151,13 +166,18 @@ class TelegramBot {
                     foreach ($packs as $pk) {
                         if ($pk['price_digital'] > 0) {
                             $totalPrice = (float)$pk['price_digital'] * (int)$pk['pack_size'];
-                            $digitalPacks[] = "• Pack {$pk['pack_size']} → {$currency} " . (float)round($totalPrice, 2);
+                            $priceVal = (float)round($totalPrice, 2);
+                            $digitalPacks[] = str_replace(
+                                ['{pack}', '{size}', '{currency}', '{price}'],
+                                [$labelPack, $pk['pack_size'], $currency, $priceVal],
+                                $packRowTemplate
+                            );
                         }
                     }
                 }
 
                 if (!empty($digitalPacks)) {
-                    $itemBlock .= "Digital\n" . implode("\n", $digitalPacks) . "\n\n";
+                    $itemBlock .= $labelDigital . "\n" . implode("\n", $digitalPacks) . "\n\n";
                 }
 
                 // Physical Section
@@ -166,23 +186,28 @@ class TelegramBot {
                     foreach ($packs as $pk) {
                         if ($pk['price_physical'] > 0) {
                             $totalPrice = (float)$pk['price_physical'] * (int)$pk['pack_size'];
-                            $physicalPacks[] = "• Pack {$pk['pack_size']} → {$currency} " . (float)round($totalPrice, 2);
+                            $priceVal = (float)round($totalPrice, 2);
+                            $physicalPacks[] = str_replace(
+                                ['{pack}', '{size}', '{currency}', '{price}'],
+                                [$labelPack, $pk['pack_size'], $currency, $priceVal],
+                                $packRowTemplate
+                            );
                         }
                     }
                 }
 
                 if (!empty($physicalPacks)) {
-                    $itemBlock .= "Physical\n" . implode("\n", $physicalPacks) . "\n\n";
+                    $itemBlock .= $labelPhysical . "\n" . implode("\n", $physicalPacks) . "\n\n";
                 }
 
                 // Add separator if not last
                 if ($count < $totalGroups) {
-                    $itemBlock .= "━━━━━━━━━━━━━━\n\n";
+                    $itemBlock .= $labelSeparator . "\n\n";
                 }
 
                 // Avoid Telegram 4096 character limit
                 if (strlen($currentMessage . $itemBlock) > 3800) {
-                    $messages[] = trim($currentMessage) . "\n\n🕒 Last update: {$lastUpdate}";
+                    $messages[] = trim($currentMessage) . "\n\n" . $labelLastUpdate . ": {$lastUpdate}";
                     $currentMessage = $itemBlock;
                 } else {
                     $currentMessage .= $itemBlock;
@@ -190,7 +215,7 @@ class TelegramBot {
             }
 
             if (!empty(trim($currentMessage))) {
-                $messages[] = trim($currentMessage) . "\n\n🕒 Last update: {$lastUpdate}";
+                $messages[] = trim($currentMessage) . "\n\n" . $labelLastUpdate . ": {$lastUpdate}";
             }
         }
 
