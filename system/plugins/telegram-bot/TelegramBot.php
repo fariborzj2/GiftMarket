@@ -35,9 +35,8 @@ class TelegramBot {
         $template = getSetting('telegram_message_template', "*{brand} Gift Card* {country}\n\n{type}: {price} {currency}\n\n_Last update: {last_update}_");
         $useEmojis = getSetting('telegram_use_emojis', '1') === '1';
         $priceType = getSetting('telegram_price_type', 'both');
-        $usdToAed = getSetting('usd_to_aed', '3.673');
 
-        $messages = $this->formatMessages($products, $template, $useEmojis, $priceType, $usdToAed);
+        $messages = $this->formatMessages($products, $template, $useEmojis, $priceType);
 
         if (empty($messages)) {
             $this->log('warning', 'No messages formatted. Check template and price type settings.', '');
@@ -99,8 +98,9 @@ class TelegramBot {
 
     /**
      * Format product data into messages grouped by Brand and Country
+     * Note: This follows the exact format requested by the user, ignoring the text template for now.
      */
-    private function formatMessages($products, $template, $useEmojis, $priceType, $usdToAed) {
+    private function formatMessages($products, $template, $useEmojis, $priceType) {
         $messages = [];
         $lastUpdate = date('H:i');
 
@@ -112,7 +112,8 @@ class TelegramBot {
         }
 
         foreach ($grouped as $key => $rows) {
-            $brandName = $rows[0]['brand_name'];
+            // Escape for Markdown
+            $brandName = str_replace(['_', '*', '`', '['], '', $rows[0]['brand_name']);
             $countryName = $rows[0]['country_name'];
             $countryCode = $rows[0]['country_code'];
             $emoji = $useEmojis ? $this->getCountryEmoji($countryCode) : "";
@@ -132,17 +133,19 @@ class TelegramBot {
                 $firstPack = $packs[0];
                 $currency = $firstPack['currency'];
 
-                // Header: 🇺🇸 Apple iTunes Gift Card – $2
-                $itemBlock = trim("{$emoji} {$brandName} Gift Card – {$firstPack['denomination']}") . "\n\n";
+                // Clean denomination value for the header
+                $denomValue = trim(str_replace(['$', 'USD', 'AED', 'EUR', 'GBP', 'TL'], '', $firstPack['denomination']));
+
+                // Header: 🇺🇸 Apple iTunes Gift Card – USD 2
+                $itemBlock = trim("{$emoji} {$brandName} Gift Card – {$currency} {$denomValue}") . "\n\n";
 
                 // Digital Section
                 $digitalPacks = [];
                 if ($priceType === 'digital' || $priceType === 'both') {
                     foreach ($packs as $pk) {
                         if ($pk['price_digital'] > 0) {
-                            $unitPrice = number_format($pk['price_digital'] / $pk['pack_size'], 2);
-                            $totalPrice = number_format($pk['price_digital'], 2);
-                            $digitalPacks[] = "• Pack {$pk['pack_size']} → {$currency} {$unitPrice} × {$pk['pack_size']} = {$currency} {$totalPrice}";
+                            $totalPrice = (float)$pk['price_digital'];
+                            $digitalPacks[] = "• Pack {$pk['pack_size']} → {$currency} {$totalPrice}";
                         }
                     }
                 }
@@ -156,9 +159,8 @@ class TelegramBot {
                 if ($priceType === 'physical' || $priceType === 'both') {
                     foreach ($packs as $pk) {
                         if ($pk['price_physical'] > 0) {
-                            $unitPrice = number_format($pk['price_physical'] / $pk['pack_size'], 2);
-                            $totalPrice = number_format($pk['price_physical'], 2);
-                            $physicalPacks[] = "• Pack {$pk['pack_size']} → {$currency} {$unitPrice} × {$pk['pack_size']} = {$currency} {$totalPrice}";
+                            $totalPrice = (float)$pk['price_physical'];
+                            $physicalPacks[] = "• Pack {$pk['pack_size']} → {$currency} {$totalPrice}";
                         }
                     }
                 }

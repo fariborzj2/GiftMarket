@@ -157,6 +157,7 @@ foreach ($configs as $c) {
                     <div class="input-label">قالب پیام (Message Template)</div>
                     <textarea name="template" rows="6" style="font-family: monospace; direction: ltr;"><?php echo e($st_template); ?></textarea>
                     <div class="font-size-0-8 color-bright mt-10">
+                        <span class="color-primary">⚠️ در حال حاضر از قالب دسته‌بندی شده پیش‌فرض استفاده می‌شود. این تنظیمات در نسخه‌های بعدی اعمال خواهد شد.</span><br>
                         متغیرهای مجاز: {brand}, {country}, {denomination}, {price}, {currency}, {converted_price}, {target_currency}, {type}, {last_update}
                     </div>
                 </div>
