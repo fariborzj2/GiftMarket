@@ -31,6 +31,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $msg = 'تنظیمات با موفقیت ذخیره شد!';
     }
 
+    if (isset($_POST['reset_templates'])) {
+        updateSetting('telegram_message_template', "{emoji} {brand} {gift_card} – {currency} {denomination}");
+        updateSetting('telegram_pack_row_template', "• {pack} {size} → {currency} {price}");
+        updateSetting('telegram_label_gift_card', 'Gift Card');
+        updateSetting('telegram_label_digital', 'Digital');
+        updateSetting('telegram_label_physical', 'Physical');
+        updateSetting('telegram_label_pack', 'Pack');
+        updateSetting('telegram_label_last_update', '🕒 Last update');
+        updateSetting('telegram_label_separator', '━━━━━━━━━━━━━━');
+        $msg = 'قالب‌ها و برچسب‌ها به حالت پیش‌فرض بازنشانی شدند.';
+        // Reload settings
+        header("Location: ?tab=settings&msg=" . urlencode($msg));
+        exit;
+    }
+
     if (isset($_POST['add_channel'])) {
         $channelId = clean($_POST['channel_id']);
         $channelName = clean($_POST['channel_name']);
@@ -122,10 +137,12 @@ foreach ($configs as $c) {
 
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
-        <?php if ($msg): ?>
-            <div class="<?php echo (strpos($msg, 'خطا') !== false || strpos($msg, 'حذف') !== false) ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30' : 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-2">
-                <iconify-icon icon="<?php echo (strpos($msg, 'خطا') !== false || strpos($msg, 'حذف') !== false) ? 'solar:danger-bold-duotone' : 'solar:check-circle-bold-duotone'; ?>" class="text-xl"></iconify-icon>
-                <?php echo e($msg); ?>
+        <?php
+        $displayMsg = $msg ?: ($_GET['msg'] ?? '');
+        if ($displayMsg): ?>
+            <div class="<?php echo (strpos($displayMsg, 'خطا') !== false || strpos($displayMsg, 'حذف') !== false) ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30' : 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-2">
+                <iconify-icon icon="<?php echo (strpos($displayMsg, 'خطا') !== false || strpos($displayMsg, 'حذف') !== false) ? 'solar:danger-bold-duotone' : 'solar:check-circle-bold-duotone'; ?>" class="text-xl"></iconify-icon>
+                <?php echo e($displayMsg); ?>
             </div>
         <?php endif; ?>
     </div>
@@ -245,12 +262,14 @@ foreach ($configs as $c) {
                     </div>
                 </div>
 
-                <div class="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/20 text-[11px] text-blue-700 dark:text-blue-400 leading-relaxed">
-                    <span class="font-bold">ℹ️ راهنما:</span> مقادیر بالا در ساخت پیام‌های تلگرام استفاده می‌شوند. با تغییر این مقادیر، تمام پیام‌های ارسالی از این پس با ساختار جدید ارسال خواهند شد.
+                <div class="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/20 text-[11px] text-blue-700 dark:text-blue-400 leading-relaxed space-y-2">
+                    <p><span class="font-bold">ℹ️ راهنما:</span> مقادیر بالا در ساخت پیام‌های تلگرام استفاده می‌شوند. با تغییر این مقادیر، تمام پیام‌های ارسالی از این پس با ساختار جدید ارسال خواهند شد.</p>
+                    <p class="opacity-80">برای داشتن خروجی استاندارد، از دکمه <span class="font-bold">بازنشانی به پیش‌فرض</span> استفاده کنید.</p>
                 </div>
 
-                <div class="pt-4">
+                <div class="pt-4 flex flex-wrap gap-4">
                     <button type="submit" name="save_settings" class="btn-primary px-10 py-3 shadow-lg shadow-primary/30">ذخیره تنظیمات</button>
+                    <button type="submit" name="reset_templates" class="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-all text-sm" onclick="return confirm('آیا از بازنشانی قالب‌ها و برچسب‌ها به حالت پیش‌فرض اطمینان دارید؟')">بازنشانی به پیش‌فرض</button>
                 </div>
             </form>
 
