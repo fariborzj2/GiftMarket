@@ -70,6 +70,15 @@ function __($key, $default = null) {
 }
 
 function getBaseUrl() {
+    // Determine Protocol
+    $protocol = 'http';
+    if ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === 1)) ||
+        (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ||
+        (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on') ||
+        (isset($_SERVER['HTTP_FRONT_END_HTTPS']) && $_SERVER['HTTP_FRONT_END_HTTPS'] === 'on')) {
+        $protocol = 'https';
+    }
+
     // For local development or subdirectories
     $script = $_SERVER['SCRIPT_NAME'] ?? '';
     $dir = dirname($script);
@@ -84,9 +93,8 @@ function getBaseUrl() {
 
     // Check if we can determine the host
     if (isset($_SERVER['HTTP_HOST'])) {
-        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'];
-        return $protocol . '://' . $host . $dir . '/';
+        return $protocol . '://' . rtrim($host, '/') . $dir . '/';
     } else {
         // Fallback for CLI or cases without HTTP_HOST
         return ($dir === '' ? '/' : $dir . '/');

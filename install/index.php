@@ -118,7 +118,16 @@ define('DB_PASS', '$db_pass');
 
 // System Configuration
 define('SITE_NAME', '$site_name');
-define('BASE_URL', (isset(\$_SERVER['HTTPS']) && \$_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . \$_SERVER['HTTP_HOST'] . '$basePath');
+
+// BASE_URL detection
+\$protocol = 'http';
+if ((isset(\$_SERVER['HTTPS']) && (\$_SERVER['HTTPS'] === 'on' || \$_SERVER['HTTPS'] === 1)) ||
+    (isset(\$_SERVER['HTTP_X_FORWARDED_PROTO']) && \$_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ||
+    (isset(\$_SERVER['HTTP_X_FORWARDED_SSL']) && \$_SERVER['HTTP_X_FORWARDED_SSL'] === 'on') ||
+    (isset(\$_SERVER['HTTP_FRONT_END_HTTPS']) && \$_SERVER['HTTP_FRONT_END_HTTPS'] === 'on')) {
+    \$protocol = 'https';
+}
+define('BASE_URL', \$protocol . '://' . rtrim(\$_SERVER['HTTP_HOST'], '/') . '$basePath');
 define('INSTALLED', true);
 
 // Error Reporting
