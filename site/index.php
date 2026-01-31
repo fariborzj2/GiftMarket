@@ -76,7 +76,7 @@ $selectedBrandInfo = $brandMap[$defaultBrand] ?? null;
 $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo $currentLang; ?>" dir="<?php echo $currentLang === 'fa' ? 'rtl' : 'ltr'; ?>">
+<html lang="<?php echo $currentLang; ?>" dir="<?php echo $currentLang === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -85,7 +85,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
     <meta name="keywords" content="<?php echo __('site_keywords'); ?>">
 
     <link rel="alternate" hreflang="en" href="<?php echo BASE_URL; ?>en/" />
-    <link rel="alternate" hreflang="fa" href="<?php echo BASE_URL; ?>fa/" />
+    <link rel="alternate" hreflang="ar" href="<?php echo BASE_URL; ?>ar/" />
     <link rel="alternate" hreflang="x-default" href="<?php echo BASE_URL; ?>en/" />
 
     <!-- Open Graph / Facebook -->
@@ -132,9 +132,9 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                     <div class="drop-down">
                         <div class="drop-down-btn d-flex align-center gap-10 pointer">
                             <div class="drop-down-img">
-                                <img class="selected-img" src="<?php echo BASE_URL; ?>assets/images/flag/<?php echo $currentLang === 'fa' ? 'emirates' : 'uk'; ?>.svg" alt="">
+                                <img class="selected-img" src="<?php echo BASE_URL; ?>assets/images/flag/<?php echo $currentLang === 'ar' ? 'emirates' : 'uk'; ?>.svg" alt="">
                             </div>
-                            <div class="selected-text m-hide"><?php echo $currentLang === 'fa' ? __('lang_fa') : __('lang_en'); ?></div>
+                            <div class="selected-text m-hide"><?php echo $currentLang === 'ar' ? __('lang_ar') : __('lang_en'); ?></div>
                             <span class="icon icon-arrow-down icon-size-16"></span>
                         </div>
 
@@ -146,9 +146,9 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                                 <span><?php echo __('lang_en'); ?></span>
                             </div>
 
-                            <div class="drop-option d-flex gap-10 align-center <?php echo $currentLang === 'fa' ? 'active' : ''; ?>" data-url="<?php echo BASE_URL; ?>fa/">
-                                <div class="drop-option-img" data-option="fa"><img src="<?php echo BASE_URL; ?>assets/images/flag/emirates.svg" alt=""></div>
-                                <span><?php echo __('lang_fa'); ?></span>
+                            <div class="drop-option d-flex gap-10 align-center <?php echo $currentLang === 'ar' ? 'active' : ''; ?>" data-url="<?php echo BASE_URL; ?>ar/">
+                                <div class="drop-option-img" data-option="ar"><img src="<?php echo BASE_URL; ?>assets/images/flag/emirates.svg" alt=""></div>
+                                <span><?php echo __('lang_ar'); ?></span>
                             </div>
                         </div>
                     </div>

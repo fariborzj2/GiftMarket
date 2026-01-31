@@ -98,9 +98,9 @@ document.addEventListener('click', (e) => {
                 return;
             }
 
-            if (optionValue === 'fa') {
+            if (optionValue === 'ar') {
                 document.documentElement.setAttribute('dir', 'rtl');
-                document.documentElement.setAttribute('lang', 'fa');
+                document.documentElement.setAttribute('lang', 'ar');
             } else {
                 document.documentElement.setAttribute('dir', 'ltr');
                 document.documentElement.setAttribute('lang', 'en');

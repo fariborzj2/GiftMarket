@@ -71,7 +71,7 @@ return [
     'all_rights' => 'All rights Reserved',
     'no_products' => 'No products found',
     'lang_en' => 'English',
-    'lang_fa' => 'Farsi',
+    'lang_ar' => 'Arabic',
     'brand_apple' => 'Apple iTunes',
     'brand_psn' => 'PlayStation Network',
     'brand_xbox' => 'Xbox',

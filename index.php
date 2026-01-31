@@ -30,7 +30,7 @@ $relativeUri = ltrim($relativeUri, '/');
 $parts = explode('/', $relativeUri);
 
 $lang = null;
-if (isset($parts[0]) && in_array($parts[0], ['en', 'fa'])) {
+if (isset($parts[0]) && in_array($parts[0], ['en', 'ar'])) {
     $lang = $parts[0];
     if (!defined('APP_LANG')) define('APP_LANG', $lang);
 } else {
@@ -38,7 +38,7 @@ if (isset($parts[0]) && in_array($parts[0], ['en', 'fa'])) {
     // But only if we are at the root
     if (empty($relativeUri) || $relativeUri === 'index.php') {
         $cookieLang = $_COOKIE['lang'] ?? 'en';
-        if (!in_array($cookieLang, ['en', 'fa'])) $cookieLang = 'en';
+        if (!in_array($cookieLang, ['en', 'ar'])) $cookieLang = 'en';
 
         $redirectUrl = ($basePath === '' ? '' : $basePath) . '/' . $cookieLang . '/';
         header("Location: $redirectUrl");

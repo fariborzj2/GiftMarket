@@ -21,21 +21,21 @@ function getLanguage() {
 
     $lang = 'en';
 
-    // Check URL path (if using /en/ or /fa/)
+    // Check URL path (if using /en/ or /ar/)
     $uri = $_SERVER['REQUEST_URI'];
-    if (preg_match('/^\/(en|fa)(\/|$)/', $uri, $matches)) {
+    if (preg_match('/^\/(en|ar)(\/|$)/', $uri, $matches)) {
         $lang = $matches[1];
     }
     // Check query parameter
-    elseif (isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'fa'])) {
+    elseif (isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'ar'])) {
         $lang = $_GET['lang'];
     }
     // Check session
-    elseif (isset($_SESSION['lang']) && in_array($_SESSION['lang'], ['en', 'fa'])) {
+    elseif (isset($_SESSION['lang']) && in_array($_SESSION['lang'], ['en', 'ar'])) {
         $lang = $_SESSION['lang'];
     }
     // Check cookie
-    elseif (isset($_COOKIE['lang']) && in_array($_COOKIE['lang'], ['en', 'fa'])) {
+    elseif (isset($_COOKIE['lang']) && in_array($_COOKIE['lang'], ['en', 'ar'])) {
         $lang = $_COOKIE['lang'];
     }
 
