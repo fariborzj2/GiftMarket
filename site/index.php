@@ -356,7 +356,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                         <div class="drop-down-list">
                             <?php foreach ($allCountries as $c): ?>
                             <div class="drop-option d-flex gap-10 align-center <?php echo $c['code'] === $defaultCountry ? 'active' : ''; ?>">
-                                <div class="drop-option-img" data-option="<?php echo e($c['code']); ?>"><img src="<?php echo BASE_URL . e($c['flag']); ?>" alt="<?php echo e($c['name']); ?> Flag" style="width:28px;" loading="lazy"></div>
+                                <div class="drop-option-img" data-option="<?php echo e($c['code']); ?>"><img src="<?php echo BASE_URL . e($c['flag']); ?>" alt="<?php echo e($c['name']); ?> Flag" style="width:28px;" width="28" height="28" loading="lazy"></div>
                                 <span><?php echo e(__("country_{$c['code']}", $c['name'])); ?> (<?php echo e($c['currency']); ?>)</span>
                             </div>
                             <?php endforeach; ?>
