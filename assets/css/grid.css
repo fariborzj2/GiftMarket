@@ -795,22 +795,22 @@
 }
 
 .line20 {
-  line-height: 20px;
+  line-height: 1.2;
 }
 .line24 {
-  line-height: 24px;
+  line-height: 1.4;
 }
 .line28 {
-  line-height: 28px;
+  line-height: 1.6;
 }
 .line40 {
-  line-height: 40px;
+  line-height: 1.3;
 }
 .line50 {
-  line-height: 50px;
+  line-height: 1.4;
 }
 .line60 {
-  line-height: 60px;
+  line-height: 1.3;
 }
 .basis100 {
   flex-basis: 100px;

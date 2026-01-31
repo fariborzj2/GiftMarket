@@ -117,9 +117,11 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
         :root {
             --font-main: 'Zain', sans-serif !important;
         }
-        body {
+        body, input, button, textarea, select {
             font-family: 'Zain', sans-serif !important;
         }
+        [dir="rtl"] .font-size-4 { font-size: 3.5rem; }
+        [dir="rtl"] .font-size-3 { font-size: 2.2rem; }
     </style>
     <?php endif; ?>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style.css">
