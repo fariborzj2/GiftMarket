@@ -142,7 +142,7 @@ foreach ($configs as $c) {
         <?php endif; ?>
     </div>
     <form method="POST">
-        <button type="submit" name="publish_now" class="btn-primary shadow-lg shadow-primary/30" onclick="return confirm('آیا از انتشار دستی قیمت‌ها اطمینان دارید؟')">
+        <button type="submit" name="publish_now" class="btn-primary " onclick="return confirm('آیا از انتشار دستی قیمت‌ها اطمینان دارید؟')">
             <iconify-icon icon="solar:rocket-bold-duotone" class="text-xl"></iconify-icon>
             <span>انتشار همزمان (Publish Now)</span>
         </button>
@@ -293,7 +293,7 @@ foreach ($configs as $c) {
                 </div>
 
                 <div class="pt-4 flex flex-wrap gap-4">
-                    <button type="submit" name="save_settings" class="btn-primary px-10 py-3 shadow-lg shadow-primary/30">ذخیره تنظیمات</button>
+                    <button type="submit" name="save_settings" class="btn-primary px-10 py-3">ذخیره تنظیمات</button>
                     <button type="submit" name="reset_templates" class="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-all text-sm" onclick="return confirm('آیا از بازنشانی قالب‌ها و برچسب‌ها به حالت پیش‌فرض اطمینان دارید؟')">بازنشانی به پیش‌فرض</button>
                 </div>
             </form>

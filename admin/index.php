@@ -52,7 +52,7 @@ $totalCountries = db()->query("SELECT COUNT(*) FROM countries")->fetchColumn();
 
 <div class="admin-card">
     <div class="flex items-center gap-4 mb-6">
-        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+        <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
             <iconify-icon icon="solar:hand-stars-bold-duotone" class="text-2xl"></iconify-icon>
         </div>
         <div>

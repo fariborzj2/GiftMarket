@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
     </div>
-    <a href="products.php?action=add" class="btn-primary shadow-lg shadow-primary/30">
+    <a href="products.php?action=add" class="btn-primary ">
         <iconify-icon icon="solar:add-circle-bold-duotone" class="text-xl"></iconify-icon>
         <span>افزودن محصول جدید</span>
     </a>
@@ -195,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="flex gap-2">
                 <button type="submit" class="btn-primary !px-4 !py-2 text-sm flex-1">اعمال</button>
-                <a href="products.php" class="px-4 py-2 rounded-full border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-sm">حذف</a>
+                <a href="products.php" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-sm">حذف</a>
             </div>
         </form>
     </div>
@@ -229,7 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php if ($brandData['logo']): ?>
                     <img src="../<?php echo e($brandData['logo']); ?>" alt="" class="max-w-full max-h-full object-contain">
                 <?php else: ?>
-                    <div class="w-2 h-2 bg-primary rounded-full"></div>
+                    <div class="w-2 h-2 bg-primary rounded-xl"></div>
                 <?php endif; ?>
             </div>
             <h2 class="text-xl md:text-2xl font-black text-slate-900 dark:text-white"><?php echo e($brandName); ?></h2>
@@ -248,7 +248,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endif; ?>
                         <h3 class="text-sm font-bold text-slate-600 dark:text-slate-400"><?php echo e($countryName); ?></h3>
                     </div>
-                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500">
                         <?php echo count($countryData['products']); ?> محصول
                     </span>
                 </div>
@@ -275,14 +275,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <?php if (empty($p['packs'])): ?>
                                             <span class="text-xs text-slate-400 italic">بدون پک</span>
                                         <?php else: ?>
-                                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-xs">
+                                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-xs">
                                                 <iconify-icon icon="solar:box-bold-duotone" class="text-lg opacity-50"></iconify-icon>
                                                 <span><?php echo count($p['packs']); ?> پک</span>
                                             </div>
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 text-center">
-                                        <a href="products.php?action=toggle_status&id=<?php echo e($p['id']); ?>" class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold transition-all <?php echo $p['status'] == 1 ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'; ?>">
+                                        <a href="products.php?action=toggle_status&id=<?php echo e($p['id']); ?>" class="inline-flex items-center gap-1 px-2 py-1 rounded-xl text-[10px] font-bold transition-all <?php echo $p['status'] == 1 ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'; ?>">
                                             <iconify-icon icon="<?php echo $p['status'] == 1 ? 'solar:check-circle-bold' : 'solar:close-circle-bold'; ?>"></iconify-icon>
                                             <?php echo $p['status'] == 1 ? 'فعال' : 'غیرفعال'; ?>
                                         </a>
@@ -409,7 +409,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl">
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" name="status" class="sr-only peer" <?php echo $editData['status'] == 1 ? 'checked' : ''; ?>>
-                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-xl peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-xl after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
                     </label>
                     <span class="text-sm font-medium text-slate-700 dark:text-slate-300">محصول فعال باشد</span>
                 </div>
@@ -465,8 +465,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="flex items-center gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
-                <button type="submit" class="btn-primary flex-1 py-4 text-lg font-bold shadow-xl shadow-primary/30">ذخیره محصول</button>
-                <a href="products.php" class="px-8 py-4 rounded-full border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-bold">انصراف</a>
+                <button type="submit" class="btn-primary flex-1 py-3">ذخیره محصول</button>
+                <a href="products.php" class="px-8 py-3 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-bold">انصراف</a>
             </div>
         </form>
     </div>
