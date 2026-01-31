@@ -12,11 +12,6 @@ async function fetchData() {
 
         // Initial render to sync table with current filter state (handles case where user clicked before data loaded)
         updatePricingTable();
-
-        // But we need to initialize Swiper
-        if (typeof initSwiper === 'function') {
-            initSwiper();
-        }
     } catch (error) {
         console.error('Error loading page data:', error);
     }
@@ -107,9 +102,7 @@ document.addEventListener('click', (e) => {
             }
 
             // Re-initialize Swiper for RTL/LTR change
-            if (typeof initSwiper === 'function') {
-                initSwiper();
-            }
+            initSwiper();
         }
 
         drop?.querySelector('.drop-down-list')
@@ -289,4 +282,81 @@ function getCurrencySymbol(curr) {
 }
 
 // Initial data fetch
-document.addEventListener('DOMContentLoaded', fetchData);
+document.addEventListener('DOMContentLoaded', () => {
+    fetchData();
+    setupSwiperLazyLoad();
+});
+
+/* =======================
+   SWIPER LAZY LOAD
+======================== */
+let commentsSlider = null;
+let swiperLoaded = false;
+
+function initSwiper() {
+    if (!swiperLoaded || !window.Swiper) return;
+
+    if (commentsSlider) {
+        commentsSlider.destroy(true, true);
+    }
+
+    const sliderEl = document.getElementById('comments-slider');
+    if (!sliderEl) return;
+
+    const isRtl = document.documentElement.getAttribute('dir') === 'rtl';
+
+    commentsSlider = new Swiper('#comments-slider', {
+        loop: true,
+        rtl: isRtl,
+        spaceBetween: 20,
+        navigation: {
+            nextEl: '.com-slide-next',
+            prevEl: '.com-slide-prev'
+        },
+        breakpointsBase: 'container',
+        breakpoints: {
+            0: { slidesPerView: 1 },
+            500: { slidesPerView: 2 }
+        }
+    });
+}
+
+function setupSwiperLazyLoad() {
+    const sliderEl = document.getElementById('comments-slider');
+    if (!sliderEl) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            loadSwiperAssets();
+            observer.disconnect();
+        }
+    }, { rootMargin: '200px' });
+
+    observer.observe(sliderEl);
+}
+
+async function loadSwiperAssets() {
+    if (swiperLoaded) return;
+
+    try {
+        // Load CSS
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = typeof SWIPER_CSS_URL !== 'undefined' ? SWIPER_CSS_URL : 'assets/css/swiper-bundle.min.css';
+        document.head.appendChild(link);
+
+        // Load JS
+        await new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = typeof SWIPER_JS_URL !== 'undefined' ? SWIPER_JS_URL : 'assets/js/swiper-bundle.min.js';
+            script.onload = resolve;
+            script.onerror = reject;
+            document.body.appendChild(script);
+        });
+
+        swiperLoaded = true;
+        initSwiper();
+    } catch (error) {
+        console.error('Error loading Swiper assets:', error);
+    }
+}

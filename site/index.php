@@ -131,7 +131,6 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
     <?php endif; ?>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/grid.css">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/swiper-bundle.min.css"/>
     <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/icon/icon.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
     <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/poppins/Poppins-Medium.woff" as="font" type="font/woff" crossorigin="anonymous" />
     <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/poppins/Poppins-Bold.woff" as="font" type="font/woff" crossorigin="anonymous" />
@@ -717,35 +716,10 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
         // Use api.php instead of static data.json
         const API_URL = '<?php echo BASE_URL; ?>api.php';
         const BASE_URL = '<?php echo BASE_URL; ?>';
+        const SWIPER_JS_URL = '<?php echo BASE_URL; ?>assets/js/swiper-bundle.min.js';
+        const SWIPER_CSS_URL = '<?php echo BASE_URL; ?>assets/css/swiper-bundle.min.css';
     </script>
-    <script src="<?php echo BASE_URL; ?>assets/js/main.js"></script>
-    <script src="<?php echo BASE_URL; ?>assets/js/swiper-bundle.min.js"></script>
-
-    <script>
-        let commentsSlider;
-        function initSwiper() {
-            if (commentsSlider) {
-                commentsSlider.destroy(true, true);
-            }
-
-            const isRtl = document.documentElement.getAttribute('dir') === 'rtl';
-
-            commentsSlider = new Swiper('#comments-slider', {
-                loop: true,
-                rtl: isRtl,
-                spaceBetween: 20,
-                navigation: {
-                    nextEl: '.com-slide-next',
-                    prevEl: '.com-slide-prev'
-                },
-                breakpointsBase: 'container',
-                breakpoints: {
-                    0: { slidesPerView: 1 },
-                    500: { slidesPerView: 2 }
-                }
-            });
-        }
-    </script>
+    <script src="<?php echo BASE_URL; ?>assets/js/main.js" defer></script>
 
 </body>
 </html>
