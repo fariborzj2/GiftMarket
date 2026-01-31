@@ -1,6 +1,11 @@
 RewriteEngine On
 RewriteBase /
 
+# Redirect HTTP to HTTPS and WWW to non-WWW
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteRule ^(.*)$ https://uae.gift/$1 [L,R=301]
+
 # Do not rewrite for real files or directories
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
@@ -29,7 +34,6 @@ RewriteRule ^(en|ar)/?$ index.php?lang=$1 [L,QSA]
     ExpiresByType image/svg+xml "access plus 1 year"
     ExpiresByType image/x-icon "access plus 1 year"
     ExpiresByType image/webp "access plus 1 year"
-     ExpiresByType image/avif "access plus 1 year"
 
     # Webfonts: 1 Year
     ExpiresByType font/ttf "access plus 1 year"
