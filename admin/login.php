@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ورود | پنل مدیریت</title>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zain:wght@200;300;400;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         primary: '#497FFF',
                     },
                     fontFamily: {
-                        vazir: ['Vazirmatn', 'sans-serif'],
+                        zain: ['Zain', 'sans-serif'],
                     }
                 }
             }
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style type="text/tailwindcss">
         @layer base {
             body {
-                @apply font-vazir bg-slate-50 text-slate-600 dark:bg-slate-950 dark:text-slate-400;
+                @apply font-zain bg-slate-50 text-slate-600 dark:bg-slate-950 dark:text-slate-400;
             }
         }
     </style>

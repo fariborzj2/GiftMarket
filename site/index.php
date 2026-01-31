@@ -112,13 +112,13 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
     <meta property="twitter:image" content="<?php echo BASE_URL; ?>assets/images/hero.png">
 
     <?php if ($currentLang === 'ar'): ?>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zain:wght@200;300;400;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --font-main: 'Vazirmatn', sans-serif !important;
+            --font-main: 'Zain', sans-serif !important;
         }
         body {
-            font-family: 'Vazirmatn', sans-serif !important;
+            font-family: 'Zain', sans-serif !important;
         }
     </style>
     <?php endif; ?>
