@@ -2,10 +2,19 @@
 require_once __DIR__ . '/../system/includes/functions.php';
 
 $currentLang = getLanguage();
-$dataFile = __DIR__ . "/../assets/js/data_{$currentLang}.json";
-if (!file_exists($dataFile)) $dataFile = __DIR__ . '/../assets/js/data_en.json';
 
-$appData = json_decode(file_get_contents($dataFile), true);
+// Load base data
+$baseData = json_decode(file_get_contents(__DIR__ . '/../assets/js/data.json'), true);
+
+// Load language-specific data
+$langDataFile = __DIR__ . "/../assets/js/data_{$currentLang}.json";
+$langData = [];
+if (file_exists($langDataFile)) {
+    $langData = json_decode(file_get_contents($langDataFile), true);
+}
+
+// Merge language data into base data
+$appData = array_merge($baseData, $langData);
 
 // Fetch all necessary data from database
 $allBrands = db()->query("SELECT * FROM brands ORDER BY sort_order ASC, name ASC")->fetchAll();
@@ -102,6 +111,17 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
     <meta property="twitter:description" content="<?php echo __('site_description'); ?>">
     <meta property="twitter:image" content="<?php echo BASE_URL; ?>assets/images/hero.png">
 
+    <?php if ($currentLang === 'ar'): ?>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-main: 'Vazirmatn', sans-serif !important;
+        }
+        body {
+            font-family: 'Vazirmatn', sans-serif !important;
+        }
+    </style>
+    <?php endif; ?>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/grid.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/swiper-bundle.min.css"/>
