@@ -197,15 +197,13 @@ input {
 }
 h1,
 h2 {
-
-  line-height: 140%;
+  line-height: 1.3;
   font-weight: 700;
-
 }
 h3,
 h4,
 h5 {
-  line-height: normal;
+  line-height: 1.4;
   font-weight: 600;
 }
 ol {
@@ -426,7 +424,7 @@ a {
   text-decoration: none;
 }
 body {
-  font: 16px/28px "poppins", Tahoma;
+  font: 16px/1.6 "poppins", Tahoma;
   background: var(--color-body);
   color: var(--color-text);
 }
@@ -893,6 +891,22 @@ body.dark-theme .table-wrap tbody tr:hover {
 ========================= */
 [dir="rtl"] {
     text-align: right;
+}
+[dir="rtl"] body {
+    line-height: 1.8;
+}
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6 {
+    line-height: 1.5;
+    font-weight: 800;
+}
+[dir="rtl"] .text-content h2 {
+    font-size: 2.2rem;
+    line-height: 1.6;
 }
 [dir="rtl"] .ml-10 { margin-left: 0; margin-right: 10px; }
 [dir="rtl"] .mr-10 { margin-right: 0; margin-left: 10px; }
