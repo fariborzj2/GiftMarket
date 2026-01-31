@@ -1,7 +1,11 @@
 <?php
 require_once __DIR__ . '/../system/includes/functions.php';
 
-$appData = json_decode(file_get_contents(__DIR__ . '/../assets/js/data.json'), true);
+$lang = getLanguage();
+$dataFile = __DIR__ . "/../assets/js/data_{$lang}.json";
+if (!file_exists($dataFile)) $dataFile = __DIR__ . '/../assets/js/data_en.json';
+
+$appData = json_decode(file_get_contents($dataFile), true);
 
 // Fetch all brands and countries from database for correct naming/logos
 $allBrands = db()->query("SELECT * FROM brands ORDER BY sort_order ASC, name ASC")->fetchAll();
@@ -11,7 +15,7 @@ foreach ($allBrands as $b) $brandMap[$b['code']] = $b;
 $allCountries = db()->query("SELECT * FROM countries ORDER BY sort_order ASC, name ASC")->fetchAll();
 $countryNames = [];
 foreach ($allCountries as $c) {
-    $countryNames[$c['code']] = $c['name'] . ' (' . $c['currency'] . ')';
+    $countryNames[$c['code']] = __("country_{$c['code']}", $c['name']) . ' (' . $c['currency'] . ')';
 }
 
 // Override pricing data with database content
@@ -22,8 +26,8 @@ $pricingData = [];
 foreach ($groupedProducts as $brandCode => $countries) {
     $brandInfo = $brandMap[$brandCode] ?? null;
     $pricingData[$brandCode] = [
-        'name' => $brandInfo['name'] ?? ($appData['pricingData'][$brandCode]['name'] ?? ucfirst($brandCode)),
-        'logo' => $brandInfo['logo'] ?? ($appData['pricingData'][$brandCode]['logo'] ?? 'assets/images/brand/default.png'),
+        'name' => __("brand_{$brandCode}", $brandInfo['name'] ?? ucfirst($brandCode)),
+        'logo' => $brandInfo['logo'] ?? 'assets/images/brand/default.png',
         'options' => []
     ];
     foreach ($countries as $countryCode => $products) {
@@ -45,6 +49,20 @@ foreach ($groupedProducts as $brandCode => $countries) {
 $appData['pricingData'] = $pricingData;
 $appData['countryNames'] = $countryNames;
 $appData['exchangeRates']['USD'] = (float)getSetting('usd_to_aed', $appData['exchangeRates']['USD'] ?? 3.673);
+$appData['translations'] = [
+    'pack_of' => __('pack_of'),
+    'digital' => __('digital'),
+    'physical' => __('physical'),
+    'call_to_order' => __('call_to_order'),
+    'no_packs' => __('no_products'),
+    'brand' => __('brand'),
+    'denomination' => __('denomination'),
+    'country' => __('country'),
+    'qty' => __('qty'),
+    'price_card' => __('price_card'),
+    'total_price' => __('total_price'),
+    'buy' => __('buy'),
+];
 
 header('Content-Type: application/json');
 echo json_encode($appData);

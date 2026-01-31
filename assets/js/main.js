@@ -92,9 +92,15 @@ document.addEventListener('click', (e) => {
 
         // Special case: Language toggle RTL/LTR
         if (hiddenInput?.name === 'lang') {
-            if (optionValue === 'arabic') {
+            const url = option.dataset.url;
+            if (url) {
+                window.location.href = url;
+                return;
+            }
+
+            if (optionValue === 'fa') {
                 document.documentElement.setAttribute('dir', 'rtl');
-                document.documentElement.setAttribute('lang', 'ar');
+                document.documentElement.setAttribute('lang', 'fa');
             } else {
                 document.documentElement.setAttribute('dir', 'ltr');
                 document.documentElement.setAttribute('lang', 'en');
@@ -162,7 +168,7 @@ function updatePackSizeDropdown() {
     const availablePackSizes = [...new Set(options.map(opt => parseInt(opt.pack_size)))].sort((a, b) => a - b);
 
     if (availablePackSizes.length === 0) {
-        packSizeList.innerHTML = '<div class="drop-option pd-10 text-center color-bright">No packs available</div>';
+        packSizeList.innerHTML = `<div class="drop-option pd-10 text-center color-bright">${appData.translations?.no_packs || 'No packs available'}</div>`;
         return;
     }
 
@@ -177,7 +183,7 @@ function updatePackSizeDropdown() {
 
         // Update selected text in button
         const selectedText = packSizeDropdown.querySelector('.selected-text');
-        if (selectedText) selectedText.textContent = `Pack Of ${currentSize}`;
+        if (selectedText) selectedText.textContent = `${appData.translations?.pack_of || 'Pack Of'} ${currentSize}`;
     }
 
     // Re-populate list
@@ -186,7 +192,7 @@ function updatePackSizeDropdown() {
         const item = document.createElement('div');
         item.className = `drop-option d-flex gap-10 align-center ${size === currentSize ? 'active' : ''}`;
         item.dataset.option = size;
-        item.innerHTML = `<span>Pack Of ${size}</span>`;
+        item.innerHTML = `<span>${appData.translations?.pack_of || 'Pack Of'} ${size}</span>`;
         packSizeList.appendChild(item);
     });
 }
@@ -208,22 +214,24 @@ function updatePricingTable() {
     const tableBody = document.getElementById('priceTableBody');
     if (!tableBody) return;
 
+    const t = appData.translations || {};
+
     const brandData = pricingData[brand];
     if (!brandData) {
-        tableBody.innerHTML = '<tr><td colspan="7" class="text-center">No data available for this brand</td></tr>';
+        tableBody.innerHTML = `<tr><td colspan="7" class="text-center">${t.no_packs || 'No data available'}</td></tr>`;
         return;
     }
 
     const options = brandData.options[country];
     if (!options) {
-        tableBody.innerHTML = '<tr><td colspan="7" class="text-center">No data available for this country</td></tr>';
+        tableBody.innerHTML = `<tr><td colspan="7" class="text-center">${t.no_packs || 'No data available'}</td></tr>`;
         return;
     }
 
     const filteredOptions = options.filter(opt => parseInt(opt.pack_size) === packSize);
 
     if (filteredOptions.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="7" class="text-center">No products found for this pack size</td></tr>';
+        tableBody.innerHTML = `<tr><td colspan="7" class="text-center">${t.no_packs || 'No data available'}</td></tr>`;
         return;
     }
 
@@ -239,29 +247,29 @@ function updatePricingTable() {
 
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td data-label="Brand" class="text-center">
+            <td data-label="${t.brand || 'Brand'}" class="text-center">
                 <div class="brand-logo m-auto">
-                    <img src="${brandData.logo}" alt="">
+                    <img src="${BASE_URL}${brandData.logo}" alt="">
                 </div>
             </td>
-            <td data-label="Denomination">
+            <td data-label="${t.denomination || 'Denomination'}">
                 <span>${opt.denomination} ${cardSymbol}</span><br>
-                <span class="color-bright font-size-0-9">${isDigital ? 'Digital' : 'Physical'} · ${opt.currency}</span>
+                <span class="color-bright font-size-0-9">${isDigital ? (t.digital || 'Digital') : (t.physical || 'Physical')} · ${opt.currency}</span>
             </td>
-            <td data-label="Country">${countryNames[country]}</td>
-            <td data-label="Qty">${packSize}</td>
-            <td data-label="Price / Card">
+            <td data-label="${t.country || 'Country'}">${countryNames[country]}</td>
+            <td data-label="${t.qty || 'Qty'}">${packSize}</td>
+            <td data-label="${t.price_card || 'Price / Card'}">
                 <span>$${pricePerCard.toFixed(2)}</span><br>
                 <span class="color-bright font-size-0-9">~ ${priceInAED} AED</span>
             </td>
-            <td data-label="Total Price">
+            <td data-label="${t.total_price || 'Total Price'}">
                 <span>$${totalPrice}</span><br>
                 <span class="color-bright font-size-0-9">~ ${totalInAED} AED</span>
             </td>
-            <td class="text-center" data-label="Buy">
+            <td class="text-center" data-label="${t.buy || 'Buy'}">
                 <a href="tel:+9710506565129" class="btn">
                     <span class="icon icon-calling icon-size-18"></span>
-                    Call To Order
+                    ${t.call_to_order || 'Call To Order'}
                 </a>
             </td>
         `;
