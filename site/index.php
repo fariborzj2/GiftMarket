@@ -100,21 +100,21 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="image" href="<?php echo BASE_URL; ?>assets/images/hero.png" fetchpriority="high">
+    <link rel="preload" as="image" href="<?php echo BASE_URL; ?>assets/images/hero.avif" fetchpriority="high">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="<?php echo BASE_URL . $currentLang; ?>/">
     <meta property="og:title" content="<?php echo __('site_title'); ?>">
     <meta property="og:description" content="<?php echo __('site_description'); ?>">
-    <meta property="og:image" content="<?php echo BASE_URL; ?>assets/images/hero.png">
+    <meta property="og:image" content="<?php echo BASE_URL; ?>assets/images/hero.avif">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="<?php echo BASE_URL . $currentLang; ?>/">
     <meta property="twitter:title" content="<?php echo __('site_title'); ?>">
     <meta property="twitter:description" content="<?php echo __('site_description'); ?>">
-    <meta property="twitter:image" content="<?php echo BASE_URL; ?>assets/images/hero.png">
+    <meta property="twitter:image" content="<?php echo BASE_URL; ?>assets/images/hero.avif">
 
     <?php if ($currentLang === 'ar'): ?>
     <link href="https://fonts.googleapis.com/css2?family=Zain:wght@200;300;400;700;800;900&display=swap" rel="stylesheet">
@@ -146,7 +146,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
       "name": "UAE.GIFT",
-      "image": "<?php echo BASE_URL; ?>assets/images/hero.png",
+      "image": "<?php echo BASE_URL; ?>assets/images/hero.avif",
       "@id": "<?php echo BASE_URL; ?>",
       "url": "<?php echo BASE_URL; ?>",
       "telephone": "+9710506565129",
@@ -279,7 +279,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                 </div>
 
                 <div class="hero-img">
-                    <div class="img"><img src="<?php echo BASE_URL; ?>assets/images/hero.png" alt="Official Gift Card Distributor Dubai" fetchpriority="high" loading="eager"></div>
+                    <div class="img"><img src="<?php echo BASE_URL; ?>assets/images/hero.avif" alt="Official Gift Card Distributor Dubai" fetchpriority="high" loading="eager"></div>
                 </div>
             </div>
         </section>
@@ -305,7 +305,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                             </div>
                         </div>
                     </div>
-                    <div class="basis400 m-hide"><img src="<?php echo BASE_URL; ?>assets/images/why.png" alt="Trustworthy Gift Card Distribution" loading="lazy"></div>
+                    <div class="basis400 m-hide"><img src="<?php echo BASE_URL; ?>assets/images/why.avif" alt="Trustworthy Gift Card Distribution" loading="lazy"></div>
                 </div>
             </div>
         </section>
