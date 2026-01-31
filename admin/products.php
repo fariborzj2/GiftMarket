@@ -253,7 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </span>
                 </div>
 
-                <div class="admin-card !p-0 overflow-hidden border-primary/20">
+                <div class="admin-card !p-0 border-primary/20">
                     <div class="overflow-x-auto">
                         <table class="w-full text-right border-collapse text-sm">
                             <thead>
@@ -272,19 +272,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <div class="text-[10px] text-slate-400 font-mono mt-0.5"><?php echo e($p['currency']); ?></div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="flex flex-wrap justify-center gap-1.5">
-                                            <?php foreach ($p['packs'] as $pk): ?>
-                                                <div class="group relative px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-[11px]">
-                                                    <span class="font-bold text-slate-700 dark:text-slate-300"><?php echo e($pk['pack_size']); ?>x:</span>
-                                                    <span class="text-primary font-bold">$<?php echo e($pk['price_digital']); ?></span>
-                                                    <span class="mx-0.5 text-slate-300">/</span>
-                                                    <span class="text-emerald-500 font-bold">$<?php echo e($pk['price_physical']); ?></span>
+                                        <?php if (empty($p['packs'])): ?>
+                                            <div class="text-center text-xs text-slate-400 italic">بدون پک</div>
+                                        <?php else:
+                                            $packCount = count($p['packs']);
+                                            if ($packCount <= 2):
+                                        ?>
+                                            <div class="flex flex-wrap justify-center gap-2">
+                                                <?php foreach ($p['packs'] as $pk): ?>
+                                                    <div class="flex items-center gap-2 px-2.5 py-1 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-[10px] shadow-sm">
+                                                        <span class="font-bold text-slate-400"><?php echo e($pk['pack_size']); ?>x</span>
+                                                        <div class="h-3 w-px bg-slate-100 dark:bg-slate-800"></div>
+                                                        <div class="flex items-center gap-1.5 font-mono">
+                                                            <span class="text-primary font-bold">$<?php echo number_format($pk['price_digital'], 2); ?></span>
+                                                            <span class="text-emerald-500 font-bold">$<?php echo number_format($pk['price_physical'], 2); ?></span>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        <?php else:
+                                            $minPrice = min(array_column($p['packs'], 'price_digital'));
+                                            $maxPrice = max(array_column($p['packs'], 'price_digital'));
+                                        ?>
+                                            <div class="relative group/packs flex justify-center">
+                                                <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-primary/5 border border-primary/10 text-primary cursor-help transition-all group-hover/packs:bg-primary group-hover/packs:text-white shadow-sm">
+                                                    <iconify-icon icon="solar:box-minimalistic-bold-duotone" class="text-lg"></iconify-icon>
+                                                    <span class="font-bold text-xs"><?php echo $packCount; ?> پک موجود</span>
+                                                    <span class="opacity-40 font-normal">|</span>
+                                                    <span class="text-[10px] font-bold">شروع از $<?php echo number_format($minPrice, 2); ?></span>
                                                 </div>
-                                            <?php endforeach; ?>
-                                            <?php if (empty($p['packs'])): ?>
-                                                <span class="text-xs text-slate-400 italic">بدون پک</span>
-                                            <?php endif; ?>
-                                        </div>
+
+                                                <!-- Popover -->
+                                                <div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl opacity-0 invisible group-hover/packs:opacity-100 group-hover/packs:visible transition-all z-50 pointer-events-none group-hover/packs:pointer-events-auto overflow-hidden">
+                                                    <div class="p-3 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">جزئیات قیمت‌ها</span>
+                                                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-bold"><?php echo $packCount; ?> پک</span>
+                                                    </div>
+                                                    <div class="p-2 max-h-48 overflow-y-auto custom-scrollbar">
+                                                        <table class="w-full text-[11px] text-right">
+                                                            <thead>
+                                                                <tr class="text-slate-400">
+                                                                    <th class="pb-2 font-normal text-right pr-2">تعداد</th>
+                                                                    <th class="pb-2 font-normal text-center">دیجیتال</th>
+                                                                    <th class="pb-2 font-normal text-left pl-2">فیزیکی</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="divide-y divide-slate-50 dark:divide-slate-800">
+                                                                <?php foreach ($p['packs'] as $pk): ?>
+                                                                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                                                                        <td class="py-2 font-bold text-slate-700 dark:text-slate-300 pr-2"><?php echo e($pk['pack_size']); ?>x</td>
+                                                                        <td class="py-2 text-center text-primary font-bold font-mono">$<?php echo number_format($pk['price_digital'], 2); ?></td>
+                                                                        <td class="py-2 text-left text-emerald-500 font-bold font-mono pl-2">$<?php echo number_format($pk['price_physical'], 2); ?></td>
+                                                                    </tr>
+                                                                <?php endforeach; ?>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="h-2 w-2 bg-white dark:bg-slate-900 border-r border-b border-slate-200 dark:border-slate-800 absolute -bottom-1 left-1/2 -translate-x-1/2 rotate-45"></div>
+                                                </div>
+                                            </div>
+                                        <?php endif; ?>
+                                        <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 text-center">
                                         <a href="products.php?action=toggle_status&id=<?php echo e($p['id']); ?>" class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold transition-all <?php echo $p['status'] == 1 ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'; ?>">
@@ -521,5 +569,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     document.querySelectorAll('.remove-pack-btn').forEach(attachRemoveEvent);
     </script>
 <?php endif; ?>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(0,0,0,0.1);
+        border-radius: 10px;
+    }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.1);
+    }
+</style>
 
 <?php require_once 'layout_footer.php'; ?>
