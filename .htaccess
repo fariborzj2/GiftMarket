@@ -1,10 +1,19 @@
 RewriteEngine On
 RewriteBase /
 
+# 1. Force XML content type (این بخش مشکل نمایش متنی را حل می‌کند)
+<Files "sitemap.xml">
+    AddType application/xml .xml
+    Header set Content-Type "application/xml; charset=utf-8"
+</Files>
+
 # Redirect HTTP to HTTPS and WWW to non-WWW
 RewriteCond %{HTTPS} off [OR]
 RewriteCond %{HTTP_HOST} ^www\. [NC]
 RewriteRule ^(.*)$ https://uae.gift/$1 [L,R=301]
+
+# 2. Exclude Sitemap from rewrites (استثنا کردن نقشه سایت قبل از سایر قوانین)
+RewriteRule ^sitemap\.xml$ - [L]
 
 # Do not rewrite for real files or directories
 RewriteCond %{REQUEST_FILENAME} -f [OR]
@@ -25,6 +34,10 @@ RewriteRule ^(en|ar)/?$ index.php?lang=$1 [L,QSA]
 # Browser Caching
 <IfModule mod_expires.c>
     ExpiresActive On
+    
+    # اضافه کردن XML به کش (اختیاری - برای نقشه سایت)
+    ExpiresByType application/xml "access plus 0 seconds"
+    ExpiresByType text/xml "access plus 0 seconds"
 
     # Images: 1 Year
     ExpiresByType image/jpg "access plus 1 year"
