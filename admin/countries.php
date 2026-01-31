@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <iconify-icon icon="solar:reorder-bold-duotone" class="text-xl"></iconify-icon>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="w-10 h-7 mx-auto rounded shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden shrink-0">
+                            <div class="w-7 h-7 mx-auto rounded shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden shrink-0">
                                 <?php if ($c['flag']): ?>
                                     <img src="../<?php echo e($c['flag']); ?>" alt="" class="w-full h-full object-cover">
                                 <?php else: ?>

@@ -144,7 +144,7 @@ foreach ($configs as $c) {
     <form method="POST">
         <button type="submit" name="publish_now" class="btn-primary " onclick="return confirm('آیا از انتشار دستی قیمت‌ها اطمینان دارید؟')">
             <iconify-icon icon="solar:rocket-bold-duotone" class="text-xl"></iconify-icon>
-            <span>انتشار همزمان (Publish Now)</span>
+            <span>ارسال به کانال</span>
         </button>
     </form>
 </div>
