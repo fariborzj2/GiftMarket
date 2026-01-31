@@ -129,8 +129,13 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
         [dir="rtl"] .font-size-3 { font-size: 2.2rem; }
     </style>
     <?php endif; ?>
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style.css">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/grid.css">
+    <style>
+        <?php
+            $style_css = file_get_contents(__DIR__ . '/../assets/css/style.css');
+            echo str_replace('../', BASE_URL . 'assets/', $style_css);
+            echo file_get_contents(__DIR__ . '/../assets/css/grid.css');
+        ?>
+    </style>
     <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/icon/icon.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
     <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/poppins/Poppins-Medium.woff" as="font" type="font/woff" crossorigin="anonymous" />
     <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/poppins/Poppins-Bold.woff" as="font" type="font/woff" crossorigin="anonymous" />
