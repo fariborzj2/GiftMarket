@@ -96,6 +96,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
     <link rel="alternate" hreflang="en" href="<?php echo BASE_URL; ?>en/" />
     <link rel="alternate" hreflang="ar" href="<?php echo BASE_URL; ?>ar/" />
     <link rel="alternate" hreflang="x-default" href="<?php echo BASE_URL; ?>en/" />
+    <link rel="canonical" href="<?php echo BASE_URL . $currentLang; ?>/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -134,21 +135,99 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
     <link rel="icon" type="image/png" sizes="16x16" href="<?php echo BASE_URL; ?>assets/images/favicon-16x16.png">
     <link rel="manifest" href="<?php echo BASE_URL; ?>assets/images/site.webmanifest">
 
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "UAE.GIFT",
+      "image": "<?php echo BASE_URL; ?>assets/images/hero.png",
+      "@id": "<?php echo BASE_URL; ?>",
+      "url": "<?php echo BASE_URL; ?>",
+      "telephone": "+9710506565129",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Flat 1103, 11th Floor, Affini Building, Oud Metha Rd, AI Jaddaf",
+        "addressLocality": "Dubai",
+        "addressRegion": "Dubai",
+        "postalCode": "00000",
+        "addressCountry": "AE"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 25.2285,
+        "longitude": 55.3214
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday"
+        ],
+        "opens": "00:00",
+        "closes": "23:59"
+      },
+      "sameAs": [
+        "https://t.me/UAE_GIFT_PRICE",
+        "https://www.instagram.com/uae.gift"
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "UAE.GIFT",
+      "url": "<?php echo BASE_URL; ?>",
+      "logo": "<?php echo BASE_URL; ?>assets/images/logo.svg"
+    }
+    </script>
+    <?php if (!empty($filteredOptions)):
+        $firstOpt = reset($filteredOptions);
+    ?>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "<?php echo e(__("brand_{$defaultBrand}", $selectedBrandInfo['name'] ?? $defaultBrand)); ?> Gift Card",
+      "image": "<?php echo BASE_URL . e($pricingData[$defaultBrand]['logo']); ?>",
+      "description": "Buy <?php echo e(__("brand_{$defaultBrand}", $selectedBrandInfo['name'] ?? $defaultBrand)); ?> gift cards in Dubai. Authentic digital cards with instant delivery.",
+      "brand": {
+        "@type": "Brand",
+        "name": "<?php echo e($selectedBrandInfo['name'] ?? $defaultBrand); ?>"
+      },
+      "offers": {
+        "@type": "AggregateOffer",
+        "url": "<?php echo BASE_URL . $currentLang; ?>/",
+        "priceCurrency": "USD",
+        "lowPrice": "<?php echo number_format((float)$firstOpt['price_digital'], 2, '.', ''); ?>",
+        "highPrice": "<?php echo number_format((float)end($filteredOptions)['price_digital'], 2, '.', ''); ?>",
+        "offerCount": "<?php echo count($filteredOptions); ?>"
+      }
+    }
+    </script>
+    <?php endif; ?>
+
 </head>
 <body>
-    <div class="grid-line-bg" style="max-width: 1200px; top: 40px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line.svg" alt=""></div>
+    <div class="grid-line-bg" style="max-width: 1200px; top: 40px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line.svg" alt="UAE Gift Card Background Grid" aria-hidden="true"></div>
     <div class="main relative overhide">
 
-        <div class="top-menu">
+        <header class="top-menu">
             <div class="center d-flex just-between align-center">
 
-                <div class="logo"><img src="<?php echo BASE_URL; ?>assets/images/logo.svg" alt=""></div>
-                <div class="menu m-hide">
+                <div class="logo"><img src="<?php echo BASE_URL; ?>assets/images/logo.svg" alt="UAE.GIFT Logo"></div>
+                <nav class="menu m-hide">
                     <a href="#"><?php echo __('home'); ?></a>
                     <a href="#whyus"><?php echo __('why_us'); ?></a>
                     <a href="#pricing"><?php echo __('pricing'); ?></a>
                     <a href="#contact"><?php echo __('contact'); ?></a>
-                </div>
+                </nav>
 
                 <div class="d-flex align-center gap-10">
 
@@ -160,7 +239,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                     <div class="drop-down">
                         <div class="drop-down-btn d-flex align-center gap-10 pointer">
                             <div class="drop-down-img">
-                                <img class="selected-img" src="<?php echo BASE_URL; ?>assets/images/flag/<?php echo $currentLang === 'ar' ? 'emirates' : 'uk'; ?>.svg" alt="">
+                                <img class="selected-img" src="<?php echo BASE_URL; ?>assets/images/flag/<?php echo $currentLang === 'ar' ? 'emirates' : 'uk'; ?>.svg" alt="<?php echo $currentLang === 'ar' ? 'Arabic' : 'English'; ?> Language">
                             </div>
                             <div class="selected-text m-hide"><?php echo $currentLang === 'ar' ? __('lang_ar') : __('lang_en'); ?></div>
                             <span class="icon icon-arrow-down icon-size-16"></span>
@@ -170,12 +249,12 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
 
                         <div class="drop-down-list">
                             <div class="drop-option d-flex gap-10 align-center <?php echo $currentLang === 'en' ? 'active' : ''; ?>" data-url="<?php echo BASE_URL; ?>en/">
-                                <div class="drop-option-img" data-option="en"><img src="<?php echo BASE_URL; ?>assets/images/flag/uk.svg" alt=""></div>
+                                <div class="drop-option-img" data-option="en"><img src="<?php echo BASE_URL; ?>assets/images/flag/uk.svg" alt="English Language"></div>
                                 <span><?php echo __('lang_en'); ?></span>
                             </div>
 
                             <div class="drop-option d-flex gap-10 align-center <?php echo $currentLang === 'ar' ? 'active' : ''; ?>" data-url="<?php echo BASE_URL; ?>ar/">
-                                <div class="drop-option-img" data-option="ar"><img src="<?php echo BASE_URL; ?>assets/images/flag/emirates.svg" alt=""></div>
+                                <div class="drop-option-img" data-option="ar"><img src="<?php echo BASE_URL; ?>assets/images/flag/emirates.svg" alt="Arabic Language"></div>
                                 <span><?php echo __('lang_ar'); ?></span>
                             </div>
                         </div>
@@ -184,9 +263,10 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                 </div>
 
             </div>
-        </div>
+        </header>
 
-        <div class="hero-section">
+        <main>
+        <section class="hero-section">
             <div class="center text-center">
                 <div class="hero-content">
                     <h1 class="font-size-4 color-title line60 mb-20"><?php echo __('hero_title'); ?></h1>
@@ -194,12 +274,12 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                 </div>
 
                 <div class="hero-img">
-                    <div class="img"><img src="<?php echo BASE_URL; ?>assets/images/hero.png" alt=""></div>
+                    <div class="img"><img src="<?php echo BASE_URL; ?>assets/images/hero.png" alt="Official Gift Card Distributor Dubai"></div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div id="whyus" class="section">
+        <section id="whyus" class="section">
             <div class="center">
                 <div class="d-flex-wrap just-around align-center gap-40">
                     <div class="basis400 grow-1">
@@ -220,13 +300,13 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                             </div>
                         </div>
                     </div>
-                    <div class="basis400 m-hide"><img src="<?php echo BASE_URL; ?>assets/images/why.png" alt=""></div>
+                    <div class="basis400 m-hide"><img src="<?php echo BASE_URL; ?>assets/images/why.png" alt="Trustworthy Gift Card Distribution"></div>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- product table section -->
-        <div id="pricing" class="section">
+        <section id="pricing" class="section">
             <div class="center">
 
                 <div class="text-center mb-20">
@@ -239,7 +319,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                     <div class="drop-down grow-1">
                         <div class="drop-down-btn d-flex align-center gap-10 pointer">
                             <div class="drop-down-img">
-                                <img class="selected-img" src="<?php echo BASE_URL . e($selectedBrandInfo['logo'] ?? 'assets/images/brand/default.png'); ?>" alt="" style="width:28px;">
+                                <img class="selected-img" src="<?php echo BASE_URL . e($selectedBrandInfo['logo'] ?? 'assets/images/brand/default.png'); ?>" alt="<?php echo e($selectedBrandInfo['name'] ?? ''); ?> Logo" style="width:28px;">
                             </div>
                             <div class="selected-text"><?php echo e(__("brand_{$defaultBrand}", $selectedBrandInfo['name'] ?? __('select_brand'))); ?></div>
                             <span class="icon icon-arrow-down icon-size-16  lt-auto"></span>
@@ -250,7 +330,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                         <div class="drop-down-list">
                             <?php foreach ($allBrands as $b): ?>
                             <div class="drop-option d-flex gap-10 align-center <?php echo $b['code'] === $defaultBrand ? 'active' : ''; ?>">
-                                <div class="drop-option-img" data-option="<?php echo e($b['code']); ?>"><img src="<?php echo BASE_URL . e($b['logo']); ?>" alt="" style="width:28px;"></div>
+                                <div class="drop-option-img" data-option="<?php echo e($b['code']); ?>"><img src="<?php echo BASE_URL . e($b['logo']); ?>" alt="<?php echo e($b['name']); ?> Logo" style="width:28px;"></div>
                                 <span><?php echo e(__("brand_{$b['code']}", $b['name'])); ?></span>
                             </div>
                             <?php endforeach; ?>
@@ -260,7 +340,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                     <div class="drop-down grow-1">
                         <div class="drop-down-btn d-flex align-center gap-10 pointer">
                             <div class="drop-down-img">
-                                <img class="selected-img" src="<?php echo BASE_URL . e($selectedCountryInfo['flag'] ?? 'assets/images/flag/default.png'); ?>" alt="" style="width:28px;">
+                                <img class="selected-img" src="<?php echo BASE_URL . e($selectedCountryInfo['flag'] ?? 'assets/images/flag/default.png'); ?>" alt="<?php echo e($selectedCountryInfo['name'] ?? ''); ?> Flag" style="width:28px;">
                             </div>
                             <div class="selected-text"><?php echo e($countryNames[$defaultCountry] ?? __('select_country')); ?></div>
                             <span class="icon icon-arrow-down icon-size-16  lt-auto"></span>
@@ -271,7 +351,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                         <div class="drop-down-list">
                             <?php foreach ($allCountries as $c): ?>
                             <div class="drop-option d-flex gap-10 align-center <?php echo $c['code'] === $defaultCountry ? 'active' : ''; ?>">
-                                <div class="drop-option-img" data-option="<?php echo e($c['code']); ?>"><img src="<?php echo BASE_URL . e($c['flag']); ?>" alt="" style="width:28px;"></div>
+                                <div class="drop-option-img" data-option="<?php echo e($c['code']); ?>"><img src="<?php echo BASE_URL . e($c['flag']); ?>" alt="<?php echo e($c['name']); ?> Flag" style="width:28px;"></div>
                                 <span><?php echo e(__("country_{$c['code']}", $c['name'])); ?> (<?php echo e($c['currency']); ?>)</span>
                             </div>
                             <?php endforeach; ?>
@@ -305,9 +385,9 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                     </div>
                 </div>
 
-                <!-- tabel products -->
+                <!-- table products -->
                 <div class="table-wrap">
-                    <table>
+                    <table id="productPricingTable">
                         <thead>
                             <tr>
                                 <th class="text-center"><?php echo __('brand'); ?></th>
@@ -347,7 +427,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                             <tr>
                                 <td data-label="<?php echo __('brand'); ?>" class="text-center">
                                     <div class="brand-logo m-auto">
-                                        <img src="<?php echo BASE_URL . e($pricingData[$defaultBrand]['logo']); ?>" alt="">
+                                        <img src="<?php echo BASE_URL . e($pricingData[$defaultBrand]['logo']); ?>" alt="<?php echo e($pricingData[$defaultBrand]['name']); ?> Logo">
                                     </div>
                                 </td>
                                 <td data-label="<?php echo __('denomination'); ?>">
@@ -378,9 +458,9 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
 
 
             </div>
-        </div>
+        </section>
 
-        <div class="section">
+        <section class="section">
             <div class="center">
                 <div class="text-center mb-20">
                     <h2 class="line60 color-title font-size-3"><?php echo __('advantages_title'); ?></h2>
@@ -389,7 +469,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
 
                 <div class="d-flex-wrap gap-30">
                     <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
-                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" alt=""></div>
+                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" alt="Grid Background" aria-hidden="true"></div>
                         <div class="relative">
                             <div class="mb-10"><span class="icon icon-verify icon-size-48 icon--primary "></span></div>
                             <h3 class="mb-5 color-title"><?php echo __('adv1_title'); ?></h3>
@@ -397,7 +477,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                         </div>
                     </div>
                     <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
-                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" alt=""></div>
+                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" alt="Grid Background" aria-hidden="true"></div>
                         <div class="relative">
                             <div class="mb-10"><span class="icon icon-stopwatch icon-size-48 icon--primary "></span></div>
                             <h3 class="mb-5 color-title"><?php echo __('adv2_title'); ?></h3>
@@ -405,7 +485,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                         </div>
                     </div>
                     <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
-                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" alt=""></div>
+                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" alt="Grid Background" aria-hidden="true"></div>
                         <div class="relative">
                             <div class="mb-10"><span class="icon icon-tag-price icon-size-48 icon--primary "></span></div>
                             <h3 class="mb-5 color-title"><?php echo __('adv3_title'); ?></h3>
@@ -413,7 +493,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                         </div>
                     </div>
                     <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
-                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" alt=""></div>
+                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" alt="Grid Background" aria-hidden="true"></div>
                         <div class="relative">
                             <div class="mb-10"><span class="icon icon-headphone icon-size-48 icon--primary "></span></div>
                             <h3 class="mb-5 color-title"><?php echo __('adv4_title'); ?></h3>
@@ -422,15 +502,15 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
          <!-- comments section -->
-        <div class="section overhide">
+        <section class="section overhide">
             <div class="center">
                 <div class="d-flex-wrap just-around align-center gap-40 overhide">
                     <div class="grow-1 m-hide">
                         <div class="max-w400">
-                            <img src="<?php echo BASE_URL; ?>assets/images/contact-us.png" alt="">
+                            <img src="<?php echo BASE_URL; ?>assets/images/contact-us.png" alt="Contact UAE.GIFT Support">
                         </div>
                     </div>
                     <div class="basis400 grow-8 overhide">
@@ -445,7 +525,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                             <div class="slide-comment">
                                 <div class="d-flex align-center just-between gap-20 mb-10">
                                     <div class="d-flex align-center gap-10">
-                                        <div class="user-img"><img src="<?php echo BASE_URL . e($t['image']); ?>" alt=""></div>
+                                        <div class="user-img"><img src="<?php echo BASE_URL . e($t['image']); ?>" alt="Customer <?php echo e($t['name']); ?>"></div>
                                         <div class="line20">
                                             <div class="color-title font-size-0-9"><?php echo e($t['name']); ?></div>
                                             <div class="color-bright font-size-0-8"><?php echo e($t['date']); ?></div>
@@ -453,7 +533,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                                     </div>
 
                                     <div class="">
-                                        <div class="stars"><img src="<?php echo BASE_URL; ?>assets/images/stars.svg" alt=""></div>
+                                        <div class="stars"><img src="<?php echo BASE_URL; ?>assets/images/stars.svg" alt="5 Stars Rating"></div>
                                         <div class="font-size-0-8 color-green"><span class="icon icon-size-16 icon--success"></span> <?php echo __('verified'); ?></div>
                                     </div>
                                 </div>
@@ -471,20 +551,20 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="section">
+        <article class="section">
             <div class="center text-content">
-                <h2><?php echo __('seo_section_title'); ?></h2>
+                <h2 class="line60 color-title font-size-3"><?php echo __('seo_section_title'); ?></h2>
                 <p><?php echo __('seo_section_p1'); ?></p>
                 <p><?php echo __('seo_section_p2'); ?></p>
                 <p><?php echo __('seo_section_p3'); ?></p>
                 <p><?php echo __('seo_section_p4'); ?></p>
                 <p><?php echo __('seo_section_p5'); ?></p>
             </div>
-        </div>
+        </article>
 
-        <div class="section">
+        <section class="section">
             <div class="center">
                 <div class="text-center mb-20">
                     <h2 class="line60 color-title font-size-3"><?php echo __('faqs_title'); ?></h2>
@@ -506,12 +586,12 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                     <?php endforeach; ?>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div id="contact" class="section">
+        <section id="contact" class="section">
             <div class="center">
                 <div class="contact-box border bg-gr-light radius-20 overhide relative">
-                    <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 300px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" alt=""></div>
+                    <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 300px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" alt="Grid Background" aria-hidden="true"></div>
                     <div class="text-left mb-20 relative">
                         <h2 class="line60 color-primary font-size-3"><?php echo __('get_in_touch'); ?></h2>
                         <span><?php echo __('get_in_touch_subtitle'); ?></span>
@@ -566,7 +646,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                         </div>
 
                         <div class="contact-info basis300 grow-1 relative">
-                            <div class="grid-line-bg" style="top: 50%;transform: translateY(-50%)scale(1.3);"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-2.svg" alt=""></div>
+                            <div class="grid-line-bg" style="top: 50%;transform: translateY(-50%)scale(1.3);"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-2.svg" alt="Grid Background" aria-hidden="true"></div>
                             <div class="max-w400 m-auto relative">
                                 <div class="mb-20">
                                     <div class="d-flex color-title font-size-1-2"><span class="icon icon-location icon-size-24"></span> <span class="ml-10"><?php echo __('address'); ?></span></div>
@@ -604,24 +684,26 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
 
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="footer">
+        </main>
+
+        <footer class="footer">
             <div class="center">
                 <div class="d-flex-wrap just-between align-center gap-20 pd-td-30 border-b border-t">
-                    <div class="logo"><img src="<?php echo BASE_URL; ?>assets/images/logo.svg" alt=""></div>
-                    <div class="menu">
+                    <div class="logo"><img src="<?php echo BASE_URL; ?>assets/images/logo.svg" alt="UAE.GIFT Logo"></div>
+                    <nav class="menu">
                         <a href="#"><?php echo __('home'); ?></a>
                         <a href="#whyus"><?php echo __('why_us'); ?></a>
                         <a href="#pricing"><?php echo __('pricing'); ?></a>
                         <a href="#contact"><?php echo __('contact'); ?></a>
-                    </div>
+                    </nav>
                 </div>
                 <div class="text-center pd-td-20">
                     <?php echo __('all_rights'); ?>
                 </div>
             </div>
-        </div>
+        </footer>
 
     </div>
 
