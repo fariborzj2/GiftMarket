@@ -74,7 +74,13 @@ function getBaseUrl() {
     $script = $_SERVER['SCRIPT_NAME'] ?? '';
     $dir = dirname($script);
     $dir = str_replace('\\', '/', $dir); // Windows fix
-    if ($dir === '/' || $dir === '.') $dir = '';
+
+    // Ensure $dir starts with / and doesn't end with /
+    if ($dir === '/' || $dir === '.') {
+        $dir = '';
+    } else {
+        $dir = '/' . trim($dir, '/');
+    }
 
     // Check if we can determine the host
     if (isset($_SERVER['HTTP_HOST'])) {
@@ -83,7 +89,7 @@ function getBaseUrl() {
         return $protocol . '://' . $host . $dir . '/';
     } else {
         // Fallback for CLI or cases without HTTP_HOST
-        return $dir . '/';
+        return ($dir === '' ? '/' : $dir . '/');
     }
 }
 if (!defined('BASE_URL')) define('BASE_URL', getBaseUrl());
