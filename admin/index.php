@@ -63,7 +63,7 @@ $totalCountries = db()->query("SELECT COUNT(*) FROM countries")->fetchColumn();
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
         <a href="products.php?action=add" class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary dark:hover:border-primary transition-colors group">
-            <div class="text-primary mb-2 group-hover:scale-110 transition-transform">
+            <div class="text-primary mb-2">
                 <iconify-icon icon="solar:add-circle-bold-duotone" class="text-2xl"></iconify-icon>
             </div>
             <div class="font-bold text-slate-900 dark:text-white">افزودن محصول</div>
@@ -71,7 +71,7 @@ $totalCountries = db()->query("SELECT COUNT(*) FROM countries")->fetchColumn();
         </a>
 
         <a href="settings.php" class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary dark:hover:border-primary transition-colors group">
-            <div class="text-primary mb-2 group-hover:scale-110 transition-transform">
+            <div class="text-primary mb-2">
                 <iconify-icon icon="solar:graph-up-bold-duotone" class="text-2xl"></iconify-icon>
             </div>
             <div class="font-bold text-slate-900 dark:text-white">نرخ ارز</div>
@@ -79,7 +79,7 @@ $totalCountries = db()->query("SELECT COUNT(*) FROM countries")->fetchColumn();
         </a>
 
         <a href="telegram_bot.php" class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary dark:hover:border-primary transition-colors group">
-            <div class="text-primary mb-2 group-hover:scale-110 transition-transform">
+            <div class="text-primary mb-2">
                 <iconify-icon icon="solar:plain-2-bold-duotone" class="text-2xl"></iconify-icon>
             </div>
             <div class="font-bold text-slate-900 dark:text-white">ربات تلگرام</div>
