@@ -11,7 +11,7 @@ if (!isLoggedIn()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo (isset($pageTitle) ? $pageTitle . ' | ' : '') . SITE_NAME; ?></title>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zain:wght@200;300;400;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -24,7 +24,7 @@ if (!isLoggedIn()) {
                         primary: '#497FFF',
                     },
                     fontFamily: {
-                        vazir: ['Vazirmatn', 'sans-serif'],
+                        zain: ['Zain', 'sans-serif'],
                     }
                 }
             }
@@ -33,7 +33,7 @@ if (!isLoggedIn()) {
     <style type="text/tailwindcss">
         @layer base {
             body {
-                @apply font-vazir bg-slate-50 text-slate-600 dark:bg-slate-950 dark:text-slate-400;
+                @apply font-zain bg-slate-50 text-slate-600 dark:bg-slate-950 dark:text-slate-400;
             }
             h1, h2, h3, h4, h5, h6 {
                 @apply text-slate-900 dark:text-white font-bold;

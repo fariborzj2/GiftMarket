@@ -94,6 +94,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: ?tab=config&msg=" . urlencode($msg));
         exit;
     }
+
+    if (isset($_POST['clear_logs'])) {
+        db()->exec("DELETE FROM telegram_logs");
+        $msg = 'لاگ‌ها با موفقیت حذف شدند!';
+        header("Location: ?tab=logs&msg=" . urlencode($msg));
+        exit;
+    }
 }
 
 if (isset($_GET['delete_channel'])) {
@@ -401,6 +408,15 @@ foreach ($configs as $c) {
             </form>
 
         <?php elseif ($tab === 'logs'): ?>
+            <div class="flex justify-end mb-4">
+                <form method="POST" onsubmit="return confirm('آیا از حذف تمامی لاگ‌ها اطمینان دارید؟')">
+                    <button type="submit" name="clear_logs" class="flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl transition-all font-bold text-sm">
+                        <iconify-icon icon="solar:trash-bin-trash-bold-duotone" class="text-xl"></iconify-icon>
+                        <span>حذف تمامی لاگ‌ها</span>
+                    </button>
+                </form>
+            </div>
+
             <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
                 <table class="w-full text-right border-collapse text-sm">
                     <thead>
