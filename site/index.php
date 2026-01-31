@@ -437,7 +437,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                             <tr>
                                 <td data-label="<?php echo __('brand'); ?>" class="text-center">
                                     <div class="brand-logo m-auto">
-                                        <img src="<?php echo BASE_URL . e($pricingData[$defaultBrand]['logo']); ?>" alt="<?php echo e($pricingData[$defaultBrand]['name']); ?> Logo" loading="lazy">
+                                        <img src="<?php echo BASE_URL . e($pricingData[$defaultBrand]['logo']); ?>" alt="<?php echo e($pricingData[$defaultBrand]['name']); ?> Logo" width="100" height="100" loading="lazy">
                                     </div>
                                 </td>
                                 <td data-label="<?php echo __('denomination'); ?>">
@@ -520,7 +520,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                 <div class="d-flex-wrap just-around align-center gap-40 overhide">
                     <div class="grow-1 m-hide">
                         <div class="max-w400">
-                            <img src="<?php echo BASE_URL; ?>assets/images/contact-us.png" alt="Contact UAE.GIFT Support" width="453" height="614" loading="lazy">
+                            <img src="<?php echo BASE_URL; ?>assets/images/contact-us.avif" alt="Contact UAE.GIFT Support" width="453" height="614" loading="lazy">
                         </div>
                     </div>
                     <div class="basis400 grow-8 overhide">
