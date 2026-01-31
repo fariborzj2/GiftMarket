@@ -7,6 +7,9 @@ async function fetchData() {
         const response = await fetch(url);
         appData = await response.json();
 
+        // Update pack sizes based on initial brand/country
+        updatePackSizeDropdown();
+
         // Initial render to sync table with current filter state (handles case where user clicked before data loaded)
         updatePricingTable();
 
@@ -107,7 +110,10 @@ document.addEventListener('click', (e) => {
             ?.classList.remove('active');
 
         // Update pricing table if brand or country changed
-        if (hiddenInput?.name === 'brand' || hiddenInput?.name === 'country' || hiddenInput?.name === 'pack_size') {
+        if (hiddenInput?.name === 'brand' || hiddenInput?.name === 'country') {
+            updatePackSizeDropdown();
+            updatePricingTable();
+        } else if (hiddenInput?.name === 'pack_size') {
             updatePricingTable();
         }
 
@@ -135,6 +141,55 @@ document.addEventListener('click', (e) => {
    PRICING TABLE LOGIC
 ======================== */
 let USD_TO_AED = 3.673;
+
+function updatePackSizeDropdown() {
+    if (!appData) return;
+
+    const brand = document.querySelector('input[name="brand"]')?.value;
+    const country = document.querySelector('input[name="country"]')?.value;
+    const packSizeInput = document.querySelector('input[name="pack_size"]');
+    const packSizeDropdown = packSizeInput?.closest('.drop-down');
+    const packSizeList = packSizeDropdown?.querySelector('.drop-down-list');
+
+    if (!brand || !country || !packSizeList) return;
+
+    const brandData = appData.pricingData[brand];
+    if (!brandData) return;
+
+    const options = brandData.options[country] || [];
+
+    // Get unique pack sizes
+    const availablePackSizes = [...new Set(options.map(opt => parseInt(opt.pack_size)))].sort((a, b) => a - b);
+
+    if (availablePackSizes.length === 0) {
+        packSizeList.innerHTML = '<div class="drop-option pd-10 text-center color-bright">No packs available</div>';
+        return;
+    }
+
+    // Current selected pack size
+    let currentSize = parseInt(packSizeInput.value);
+    let sizeFound = availablePackSizes.includes(currentSize);
+
+    // If current size not available, pick the first one
+    if (!sizeFound) {
+        currentSize = availablePackSizes[0];
+        packSizeInput.value = currentSize;
+
+        // Update selected text in button
+        const selectedText = packSizeDropdown.querySelector('.selected-text');
+        if (selectedText) selectedText.textContent = `Pack Of ${currentSize}`;
+    }
+
+    // Re-populate list
+    packSizeList.innerHTML = '';
+    availablePackSizes.forEach(size => {
+        const item = document.createElement('div');
+        item.className = `drop-option d-flex gap-10 align-center ${size === currentSize ? 'active' : ''}`;
+        item.dataset.option = size;
+        item.innerHTML = `<span>Pack Of ${size}</span>`;
+        packSizeList.appendChild(item);
+    });
+}
 
 function updatePricingTable() {
     if (!appData) return;
