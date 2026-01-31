@@ -2,10 +2,19 @@
 require_once __DIR__ . '/../system/includes/functions.php';
 
 $lang = getLanguage();
-$dataFile = __DIR__ . "/../assets/js/data_{$lang}.json";
-if (!file_exists($dataFile)) $dataFile = __DIR__ . '/../assets/js/data_en.json';
 
-$appData = json_decode(file_get_contents($dataFile), true);
+// Load base data
+$baseData = json_decode(file_get_contents(__DIR__ . '/../assets/js/data.json'), true);
+
+// Load language-specific data
+$langDataFile = __DIR__ . "/../assets/js/data_{$lang}.json";
+$langData = [];
+if (file_exists($langDataFile)) {
+    $langData = json_decode(file_get_contents($langDataFile), true);
+}
+
+// Merge language data into base data
+$appData = array_merge($baseData, $langData);
 
 // Fetch all brands and countries from database for correct naming/logos
 $allBrands = db()->query("SELECT * FROM brands ORDER BY sort_order ASC, name ASC")->fetchAll();

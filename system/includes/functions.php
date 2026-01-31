@@ -22,8 +22,19 @@ function getLanguage() {
     $lang = 'en';
 
     // Check URL path (if using /en/ or /ar/)
-    $uri = $_SERVER['REQUEST_URI'];
-    if (preg_match('/^\/(en|ar)(\/|$)/', $uri, $matches)) {
+    $uri = $_SERVER['REQUEST_URI'] ?? '';
+    // Normalize URI by removing base path if it exists
+    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+    $basePath = dirname($scriptName);
+    if ($basePath === '/' || $basePath === '\\' || $basePath === '.') $basePath = '';
+
+    $relativeUri = $uri;
+    if ($basePath !== '' && strpos($uri, $basePath) === 0) {
+        $relativeUri = substr($uri, strlen($basePath));
+    }
+    $relativeUri = ltrim($relativeUri, '/');
+
+    if (preg_match('/^(en|ar)(\/|$)/', $relativeUri, $matches)) {
         $lang = $matches[1];
     }
     // Check query parameter
@@ -59,16 +70,23 @@ function __($key, $default = null) {
 }
 
 function getBaseUrl() {
-    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'];
     // For local development or subdirectories
-    $script = $_SERVER['SCRIPT_NAME'];
+    $script = $_SERVER['SCRIPT_NAME'] ?? '';
     $dir = dirname($script);
     $dir = str_replace('\\', '/', $dir); // Windows fix
     if ($dir === '/' || $dir === '.') $dir = '';
-    return $protocol . '://' . $host . $dir . '/';
+
+    // Check if we can determine the host
+    if (isset($_SERVER['HTTP_HOST'])) {
+        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'];
+        return $protocol . '://' . $host . $dir . '/';
+    } else {
+        // Fallback for CLI or cases without HTTP_HOST
+        return $dir . '/';
+    }
 }
-define('BASE_URL', getBaseUrl());
+if (!defined('BASE_URL')) define('BASE_URL', getBaseUrl());
 
 // Check for auto-update of exchange rate
 if (!is_admin_path()) {
