@@ -1,0 +1,19 @@
+RewriteEngine On
+RewriteBase /
+
+# Do not rewrite for real files or directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Redirect root to /en or /ar based on cookie or default
+RewriteCond %{REQUEST_URI} ^/$
+RewriteCond %{HTTP_COOKIE} lang=(en|ar)
+RewriteRule ^$ /%1/ [R=302,L]
+
+RewriteCond %{REQUEST_URI} ^/$
+RewriteRule ^$ /en/ [R=302,L]
+
+# Route /en and /ar to index.php
+RewriteRule ^(en|ar)/?$ index.php?lang=$1 [L,QSA]
+RewriteRule ^(en|ar)/(.*)$ index.php?lang=$1&path=$2 [L,QSA]

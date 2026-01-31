@@ -15,6 +15,61 @@ require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/../core/Database.php';
 require_once __DIR__ . '/exchange_rate_helper.php';
 
+// Language detection and translation
+function getLanguage() {
+    if (defined('APP_LANG')) return APP_LANG;
+
+    $lang = 'en';
+
+    // Check URL path (if using /en/ or /ar/)
+    $uri = $_SERVER['REQUEST_URI'];
+    if (preg_match('/^\/(en|ar)(\/|$)/', $uri, $matches)) {
+        $lang = $matches[1];
+    }
+    // Check query parameter
+    elseif (isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'ar'])) {
+        $lang = $_GET['lang'];
+    }
+    // Check session
+    elseif (isset($_SESSION['lang']) && in_array($_SESSION['lang'], ['en', 'ar'])) {
+        $lang = $_SESSION['lang'];
+    }
+    // Check cookie
+    elseif (isset($_COOKIE['lang']) && in_array($_COOKIE['lang'], ['en', 'ar'])) {
+        $lang = $_COOKIE['lang'];
+    }
+
+    if (!defined('APP_LANG')) define('APP_LANG', $lang);
+    $_SESSION['lang'] = $lang;
+    setcookie('lang', $lang, time() + (86400 * 30), "/");
+
+    return $lang;
+}
+
+$currentLang = getLanguage();
+$translations = [];
+$langFile = __DIR__ . "/../languages/{$currentLang}.php";
+if (file_exists($langFile)) {
+    $translations = require $langFile;
+}
+
+function __($key, $default = null) {
+    global $translations;
+    return $translations[$key] ?? ($default ?? $key);
+}
+
+function getBaseUrl() {
+    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    // For local development or subdirectories
+    $script = $_SERVER['SCRIPT_NAME'];
+    $dir = dirname($script);
+    $dir = str_replace('\\', '/', $dir); // Windows fix
+    if ($dir === '/' || $dir === '.') $dir = '';
+    return $protocol . '://' . $host . $dir . '/';
+}
+define('BASE_URL', getBaseUrl());
+
 // Check for auto-update of exchange rate
 if (!is_admin_path()) {
     checkAndAutoUpdateRate();
