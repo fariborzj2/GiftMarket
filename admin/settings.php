@@ -93,7 +93,7 @@ $last_update = (int)getSetting('last_rate_update', 0);
         </div>
 
         <div class="pt-6">
-            <button type="submit" class="btn-primary w-full py-4 text-lg font-bold shadow-xl shadow-primary/30">ذخیره تنظیمات</button>
+            <button type="submit" class="btn-primary w-full py-3 ">ذخیره تنظیمات</button>
         </div>
     </form>
 </div>
