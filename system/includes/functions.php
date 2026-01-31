@@ -65,6 +65,7 @@ function getGroupedProducts() {
     $query = "SELECT p.*, pk.id as pack_id, pk.pack_size, pk.price_digital, pk.price_physical
               FROM products p
               LEFT JOIN product_packs pk ON p.id = pk.product_id
+              WHERE p.status = 1
               ORDER BY p.brand, p.country, p.denomination, pk.pack_size";
     $results = db()->query($query)->fetchAll();
 
