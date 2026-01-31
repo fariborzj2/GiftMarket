@@ -58,7 +58,15 @@ $testimonials = $appData['testimonials'];
 // Default view for SSR
 $defaultBrand = !empty($allBrands) ? $allBrands[0]['code'] : 'apple';
 $defaultCountry = !empty($allCountries) ? $allCountries[0]['code'] : 'uae';
-$defaultPackSize = !empty($allPackSizes) ? $allPackSizes[0] : 100;
+
+// Get available pack sizes for the default brand/country for SSR
+$defaultOptionsForPacks = $pricingData[$defaultBrand]['options'][$defaultCountry] ?? [];
+$ssrPackSizes = array_unique(array_map(function($opt) {
+    return (int)$opt['pack_size'];
+}, $defaultOptionsForPacks));
+sort($ssrPackSizes);
+
+$defaultPackSize = !empty($ssrPackSizes) ? $ssrPackSizes[0] : (!empty($allPackSizes) ? $allPackSizes[0] : 100);
 
 $selectedBrandInfo = $brandMap[$defaultBrand] ?? null;
 $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
@@ -244,7 +252,10 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                         <input type="text" class="selected-option" name="pack_size" value="<?php echo e($defaultPackSize); ?>" id="" hidden>
 
                         <div class="drop-down-list">
-                            <?php foreach ($allPackSizes as $size): ?>
+                            <?php
+                            $packsToDisplay = !empty($ssrPackSizes) ? $ssrPackSizes : $allPackSizes;
+                            foreach ($packsToDisplay as $size):
+                            ?>
                             <div class="drop-option d-flex gap-10 align-center <?php echo $size == $defaultPackSize ? 'active' : ''; ?>" data-option="<?php echo e($size); ?>">
                                 <span>Pack Of <?php echo e($size); ?></span>
                             </div>
