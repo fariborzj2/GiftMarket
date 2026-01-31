@@ -149,6 +149,10 @@ class Database {
             $this->pdo->exec("ALTER TABLE countries ADD COLUMN telegram_emoji VARCHAR(100) DEFAULT NULL");
         } catch (PDOException $e) {}
 
+        try {
+            $this->pdo->exec("ALTER TABLE products ADD COLUMN status INT DEFAULT 1");
+        } catch (PDOException $e) {}
+
         // Migration to many-packs per product
         try {
             // Check if product_packs is empty and products has data

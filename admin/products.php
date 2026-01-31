@@ -13,6 +13,14 @@ if ($action === 'delete' && isset($_GET['id'])) {
     $action = 'list';
 }
 
+// Handle Toggle Status
+if ($action === 'toggle_status' && isset($_GET['id'])) {
+    $stmt = db()->prepare("UPDATE products SET status = 1 - status WHERE id = ?");
+    $stmt->execute([$_GET['id']]);
+    $msg = 'وضعیت محصول با موفقیت تغییر کرد!';
+    $action = 'list';
+}
+
 // Handle Add/Edit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = db();
@@ -21,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $brand = clean($_POST['brand']);
         $denomination = clean($_POST['denomination']);
         $country = clean($_POST['country']);
+        $status = isset($_POST['status']) ? 1 : 0;
         $pack_sizes = $_POST['pack_sizes'] ?? [];
         $prices_digital = $_POST['prices_digital'] ?? [];
         $prices_physical = $_POST['prices_physical'] ?? [];
@@ -31,11 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (isset($_POST['id']) && !empty($_POST['id'])) {
             $productId = $_POST['id'];
-            $stmt = $db->prepare("UPDATE products SET brand=?, denomination=?, country=?, currency=? WHERE id=?");
-            $stmt->execute([$brand, $denomination, $country, $currency, $productId]);
+            $stmt = $db->prepare("UPDATE products SET brand=?, denomination=?, country=?, currency=?, status=? WHERE id=?");
+            $stmt->execute([$brand, $denomination, $country, $currency, $status, $productId]);
         } else {
-            $stmt = $db->prepare("INSERT INTO products (brand, denomination, country, currency) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$brand, $denomination, $country, $currency]);
+            $stmt = $db->prepare("INSERT INTO products (brand, denomination, country, currency, status) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$brand, $denomination, $country, $currency, $status]);
             $productId = $db->lastInsertId();
         }
 
@@ -251,12 +260,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <tr class="bg-slate-50/50 dark:bg-slate-800/50 text-slate-400 text-[10px] uppercase tracking-widest font-bold border-b border-slate-100 dark:border-slate-800">
                                     <th class="px-6 py-3 font-bold">محصول (اعتبار)</th>
                                     <th class="px-6 py-3 font-bold text-center">پک‌های موجود</th>
+                                    <th class="px-6 py-3 font-bold text-center">وضعیت</th>
                                     <th class="px-6 py-3 font-bold w-24">عملیات</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                                 <?php foreach ($countryData['products'] as $p): ?>
-                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
+                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors <?php echo $p['status'] == 0 ? 'opacity-60 grayscale-[0.5]' : ''; ?>">
                                     <td class="px-6 py-4">
                                         <div class="font-bold text-slate-900 dark:text-white"><?php echo e($p['denomination']); ?></div>
                                         <div class="text-[10px] text-slate-400 font-mono mt-0.5"><?php echo e($p['currency']); ?></div>
@@ -275,6 +285,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 <span class="text-xs text-slate-400 italic">بدون پک</span>
                                             <?php endif; ?>
                                         </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <a href="products.php?action=toggle_status&id=<?php echo e($p['id']); ?>" class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold transition-all <?php echo $p['status'] == 1 ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'; ?>">
+                                            <iconify-icon icon="<?php echo $p['status'] == 1 ? 'solar:check-circle-bold' : 'solar:close-circle-bold'; ?>"></iconify-icon>
+                                            <?php echo $p['status'] == 1 ? 'فعال' : 'غیرفعال'; ?>
+                                        </a>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-1">
@@ -302,7 +318,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php
     $countries = db()->query("SELECT * FROM countries ORDER BY sort_order ASC, name ASC")->fetchAll();
     $brands = db()->query("SELECT * FROM brands ORDER BY sort_order ASC, name ASC")->fetchAll();
-    $editData = ['id' => '', 'brand' => 'apple', 'denomination' => '', 'country' => '', 'currency' => 'AED', 'packs' => []];
+    $editData = ['id' => '', 'brand' => 'apple', 'denomination' => '', 'country' => '', 'currency' => 'AED', 'status' => 1, 'packs' => []];
     if ($action === 'edit' && isset($_GET['id'])) {
         $stmt = db()->prepare("SELECT * FROM products WHERE id = ?");
         $stmt->execute([$_GET['id']]);
@@ -388,11 +404,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
-            <div class="space-y-2">
-                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">مبلغ اعتبار (نام محصول)</label>
-                <input type="text" name="denomination" value="<?php echo e($editData['denomination']); ?>" required
-                       class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold"
-                       placeholder="مثلاً 100 AED, $50">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+                <div class="space-y-2 md:col-span-3">
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">مبلغ اعتبار (نام محصول)</label>
+                    <input type="text" name="denomination" value="<?php echo e($editData['denomination']); ?>" required
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold"
+                           placeholder="مثلاً 100 AED, $50">
+                </div>
+                <div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="status" class="sr-only peer" <?php echo $editData['status'] == 1 ? 'checked' : ''; ?>>
+                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                    </label>
+                    <span class="text-sm font-medium text-slate-700 dark:text-slate-300">محصول فعال باشد</span>
+                </div>
             </div>
 
             <div class="space-y-4">

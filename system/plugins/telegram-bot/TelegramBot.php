@@ -88,7 +88,7 @@ class TelegramBot {
                       JOIN brands b ON p.brand = b.code
                       JOIN countries c ON p.country = c.code
                       JOIN product_packs pk ON p.id = pk.product_id
-                      WHERE tc.enabled = 1
+                      WHERE tc.enabled = 1 AND p.status = 1
                       ORDER BY b.sort_order ASC, c.sort_order ASC, p.denomination ASC, pk.pack_size ASC";
             return $this->db->query($query)->fetchAll();
         } catch (Exception $e) {
