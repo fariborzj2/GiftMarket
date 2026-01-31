@@ -44,7 +44,7 @@ if (!isLoggedIn()) {
                 @apply bg-white dark:bg-slate-900 p-4 md:p-6 lg:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm;
             }
             .btn-primary {
-                @apply bg-primary hover:bg-blue-600 text-white px-6 py-2 rounded-full transition-all duration-200 flex items-center justify-center gap-2 font-medium;
+                @apply bg-primary hover:bg-blue-600 text-white px-6 py-2 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-medium;
             }
             .sidebar-link {
                 @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary;
@@ -115,7 +115,7 @@ if (!isLoggedIn()) {
                         <span class="text-slate-400">سلام،</span>
                         <span class="font-bold text-slate-900 dark:text-white"><?php echo $_SESSION['username']; ?></span>
                     </div>
-                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold">
                         <?php echo mb_substr($_SESSION['username'], 0, 1); ?>
                     </div>
                 </div>

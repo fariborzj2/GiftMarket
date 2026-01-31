@@ -85,7 +85,7 @@ $last_update = (int)getSetting('last_rate_update', 0);
                 </div>
                 <?php if ($last_update > 0): ?>
                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5 ms-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                        <span class="w-1.5 h-1.5 rounded-xl bg-green-500"></span>
                         آخرین بروزرسانی موفق: <?php echo date('Y-m-d H:i:s', $last_update); ?>
                     </p>
                 <?php endif; ?>

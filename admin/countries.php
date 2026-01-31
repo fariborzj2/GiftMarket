@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
     </div>
-    <a href="countries.php?action=add" class="btn-primary shadow-lg shadow-primary/30">
+    <a href="countries.php?action=add" class="btn-primary ">
         <iconify-icon icon="solar:add-circle-bold-duotone" class="text-xl"></iconify-icon>
         <span>افزودن کشور جدید</span>
     </a>
@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <iconify-icon icon="solar:globus-bold-duotone" class="text-primary text-2xl"></iconify-icon>
                 <span>لیست کشورها</span>
             </h3>
-            <span class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
+            <span class="text-xs font-medium px-2.5 py-0.5 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
                 <?php echo count($countries); ?> کشور
             </span>
         </div>
@@ -223,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="flex items-start gap-4 p-4 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
                         <div class="flex-1 overflow-hidden">
                             <input type="file" name="flag" accept="image/*" <?php echo $action === 'add' ? 'required' : ''; ?>
-                                   class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-blue-600 cursor-pointer">
+                                   class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-blue-600 cursor-pointer">
                         </div>
                         <?php if ($editData['flag']): ?>
                             <div class="w-12 h-8 rounded shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden shrink-0">
@@ -236,7 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="flex items-center gap-3 pt-4">
                 <button type="submit" class="btn-primary flex-1 py-3">ذخیره اطلاعات</button>
-                <a href="countries.php" class="px-6 py-3 rounded-full border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-medium text-center">انصراف</a>
+                <a href="countries.php" class="px-6 py-3 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-medium text-center">انصراف</a>
             </div>
         </form>
     </div>
