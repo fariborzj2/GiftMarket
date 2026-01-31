@@ -242,7 +242,7 @@ function updatePricingTable() {
         row.innerHTML = `
             <td data-label="${t.brand || 'Brand'}" class="text-center">
                 <div class="brand-logo m-auto">
-                    <img src="${BASE_URL}${brandData.logo}" alt="">
+                    <img src="${BASE_URL}${brandData.logo}" width="100" height="100" alt="Brand logo" loading="lazy">
                 </div>
             </td>
             <td data-label="${t.denomination || 'Denomination'}">
