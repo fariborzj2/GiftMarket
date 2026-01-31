@@ -357,7 +357,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="drop-down-list hidden absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-60 overflow-y-auto">
                             <?php foreach ($brands as $b): ?>
                                 <div class="drop-option flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors <?php echo $editData['brand'] == $b['code'] ? 'bg-primary/5 text-primary' : ''; ?>" data-option="<?php echo e($b['code']); ?>">
-                                    <div class="w-6 h-6 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-1 flex items-center justify-center overflow-hidden shrink-0">
+                                    <div class="w-6 h-6 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center overflow-hidden shrink-0">
                                         <img src="../<?php echo e($b['logo']); ?>" alt="" class="max-w-full max-h-full object-contain">
                                     </div>
                                     <span class="text-sm font-medium"><?php echo e($b['name']); ?></span>
