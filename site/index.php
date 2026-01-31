@@ -129,10 +129,10 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/swiper-bundle.min.css"/>
     <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/icon/icon.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
 
-    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-    <link rel="manifest" href="images/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo BASE_URL; ?>assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo BASE_URL; ?>assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?php echo BASE_URL; ?>assets/images/favicon-16x16.png">
+    <link rel="manifest" href="<?php echo BASE_URL; ?>assets/images/site.webmanifest">
 
 </head>
 <body>
@@ -201,7 +201,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
 
         <div id="whyus" class="section">
             <div class="center">
-                <div class="d-flex-wrap just-around gap-40">
+                <div class="d-flex-wrap just-around align-center gap-40">
                     <div class="basis400 grow-1">
                         <h2 class="line60 font-size-3 color-title"><?php echo __('why_trust_title'); ?></h2>
                         <p class="pd-td-30"><?php echo __('why_trust_text'); ?></p>
