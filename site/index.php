@@ -120,6 +120,8 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
     <meta property="twitter:description" content="<?php echo __('site_description'); ?>">
     <meta property="twitter:image" content="<?php echo BASE_URL; ?>assets/images/hero.png">
 
+    <meta name="google-site-verification" content="OCAMf2BjT4UPfyDPVsu8cFrKaDQPUgS48Ni5OUZeiOU" />
+
     <?php if ($currentLang === 'ar'): ?>
     <link href="https://fonts.googleapis.com/css2?family=Zain:wght@200;300;400;700;800;900&display=swap" rel="stylesheet">
     <style>
