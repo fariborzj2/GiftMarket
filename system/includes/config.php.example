@@ -7,7 +7,9 @@ define('DB_PASS', '');
 
 // System Configuration
 define('SITE_NAME', 'UAE.GIFT');
-define('BASE_URL', '');
+// BASE_URL should include protocol and trailing slash (e.g., http://yourdomain.com/)
+// Comment the line below for automatic detection
+define('BASE_URL', 'http://localhost/');
 define('INSTALLED', false);
 
 // Error Reporting

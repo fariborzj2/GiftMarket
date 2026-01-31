@@ -104,6 +104,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db_pass = addslashes($db['pass']);
             $site_name = addslashes($_SESSION['site_name']);
 
+            $basePath = dirname(dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+            $basePath = str_replace('\\', '/', $basePath);
+            if ($basePath === '/' || $basePath === '.') $basePath = '';
+            $basePath .= '/';
+
             $configContent = "<?php
 // Database Configuration
 define('DB_HOST', '$db_host');
@@ -113,7 +118,7 @@ define('DB_PASS', '$db_pass');
 
 // System Configuration
 define('SITE_NAME', '$site_name');
-define('BASE_URL', 'http://' . \$_SERVER['HTTP_HOST']);
+define('BASE_URL', (isset(\$_SERVER['HTTPS']) && \$_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . \$_SERVER['HTTP_HOST'] . '$basePath');
 define('INSTALLED', true);
 
 // Error Reporting
