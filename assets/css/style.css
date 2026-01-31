@@ -711,6 +711,7 @@ body.dark-theme .table-wrap tbody tr:hover {
     .table-wrap {
         border: none;
         background: transparent;
+       direction: ltr !important;
     }
 
     .table-wrap table,
@@ -734,10 +735,11 @@ body.dark-theme .table-wrap tbody tr:hover {
         padding: 15px;
         border: 1px solid var(--color-border);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      
     }
 
     .table-wrap td {
-        border: none;
+        border: none !important;
         padding: 10px 0;
         display: flex;
         justify-content: space-between;
@@ -746,7 +748,9 @@ body.dark-theme .table-wrap tbody tr:hover {
         white-space: normal;
         border-bottom: 1px solid var(--color-border);
     }
-
+    .table-wrap th:first-child , .table-wrap td:first-child {
+      width: 100%;
+    }
     .table-wrap td:last-child {
         border-bottom: none;
         padding-bottom: 5px;
@@ -770,13 +774,10 @@ body.dark-theme .table-wrap tbody tr:hover {
     }
 
     .brand-logo {
+        margin-right: 0 !important;
         margin-left: auto;
     }
 
-    [dir="rtl"] .brand-logo {
-        margin-left: 0;
-        margin-right: auto;
-    }
 
     .btn {
         width: 100%;
