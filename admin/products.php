@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <a href="products.php?action=add" class="btn-primary ">
         <iconify-icon icon="solar:add-circle-bold-duotone" class="text-xl"></iconify-icon>
-        <span>افزودن محصول جدید</span>
+        <span>افزودن محصول</span>
     </a>
 </div>
 
@@ -242,7 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="flex items-center justify-between mb-4 px-2">
                     <div class="flex items-center gap-2">
                         <?php if ($countryData['flag']): ?>
-                            <img src="../<?php echo e($countryData['flag']); ?>" alt="" class="w-6 h-4 rounded shadow-sm">
+                            <img src="../<?php echo e($countryData['flag']); ?>" alt="" class="w-4 h-4 rounded shadow-sm">
                         <?php else: ?>
                             <span class="text-lg">🌍</span>
                         <?php endif; ?>
@@ -329,7 +329,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="admin-card max-w-4xl mx-auto">
         <h3 class="text-xl mb-8 flex items-center gap-2">
             <iconify-icon icon="<?php echo $action === 'add' ? 'solar:add-circle-bold-duotone' : 'solar:pen-new-square-bold-duotone'; ?>" class="text-primary text-2xl"></iconify-icon>
-            <span><?php echo $action === 'add' ? 'افزودن محصول جدید' : 'ویرایش محصول'; ?></span>
+            <span><?php echo $action === 'add' ? 'افزودن محصول' : 'ویرایش محصول'; ?></span>
         </h3>
 
         <form method="POST" class="space-y-8">
@@ -378,7 +378,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                         ?>
                         <button type="button" class="drop-down-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-right transition-all">
-                            <div class="w-6 h-4 rounded shadow-sm overflow-hidden shrink-0">
+                            <div class="w-6 h-6 rounded shadow-sm overflow-hidden shrink-0">
                                 <img class="selected-img w-full h-full object-cover" src="../<?php echo e($selectedCountry['flag'] ?? ''); ?>" alt="" style="<?php echo empty($selectedCountry['flag']) ? 'display:none;' : ''; ?>">
                             </div>
                             <span class="selected-text flex-1 text-sm font-medium"><?php echo e($selectedCountry['name'] ?? 'انتخاب کشور'); ?></span>
@@ -388,7 +388,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="drop-down-list hidden absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-60 overflow-y-auto">
                             <?php foreach ($countries as $c): ?>
                                 <div class="drop-option flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors <?php echo $editData['country'] == $c['code'] ? 'bg-primary/5 text-primary' : ''; ?>" data-option="<?php echo e($c['code']); ?>">
-                                    <div class="w-6 h-4 rounded shadow-sm overflow-hidden shrink-0">
+                                    <div class="w-6 h-6 rounded shadow-sm overflow-hidden shrink-0">
                                         <img src="../<?php echo e($c['flag']); ?>" alt="" class="w-full h-full object-cover">
                                     </div>
                                     <span class="text-sm font-medium"><?php echo e($c['name']); ?></span>
@@ -442,17 +442,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="space-y-1.5">
                                 <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">تعداد (پک)</label>
                                 <input type="number" name="pack_sizes[]" value="<?php echo e($pk['pack_size']); ?>" required min="1"
-                                       class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
+                                       class="w-full px-3 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
                             </div>
                             <div class="space-y-1.5">
                                 <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">قیمت دیجیتال ($)</label>
                                 <input type="number" step="0.01" name="prices_digital[]" value="<?php echo e($pk['price_digital']); ?>" required
-                                       class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
+                                       class="w-full px-3 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
                             </div>
                             <div class="space-y-1.5">
                                 <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">قیمت فیزیکی ($)</label>
                                 <input type="number" step="0.01" name="prices_physical[]" value="<?php echo e($pk['price_physical']); ?>" required
-                                       class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
+                                       class="w-full px-3 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
                             </div>
                             <div class="flex items-end">
                                 <button type="button" class="remove-pack-btn w-full py-2 rounded-xl border border-red-100 dark:border-red-900/30 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs font-bold transition-all">
@@ -480,17 +480,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="space-y-1.5">
                 <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">تعداد (پک)</label>
                 <input type="number" name="pack_sizes[]" value="1" required min="1"
-                       class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
+                       class="w-full px-3 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
             </div>
             <div class="space-y-1.5">
                 <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">قیمت دیجیتال ($)</label>
                 <input type="number" step="0.01" name="prices_digital[]" required
-                       class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
+                       class="w-full px-3 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
             </div>
             <div class="space-y-1.5">
                 <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">قیمت فیزیکی ($)</label>
                 <input type="number" step="0.01" name="prices_physical[]" required
-                       class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
+                       class="w-full px-3 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
             </div>
             <div class="flex items-end">
                 <button type="button" class="remove-pack-btn w-full py-2 rounded-xl border border-red-100 dark:border-red-900/30 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs font-bold transition-all">
