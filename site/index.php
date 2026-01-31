@@ -181,7 +181,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
         <div class="hero-section">
             <div class="center text-center">
                 <div class="hero-content">
-                    <h1 class="font-size-4 color-title line60 mb-10"><?php echo __('hero_title'); ?></h1>
+                    <h1 class="font-size-4 color-title line60 mb-20"><?php echo __('hero_title'); ?></h1>
                     <span class="font-size-1-2"><?php echo __('hero_subtitle'); ?></span>
                 </div>
 
