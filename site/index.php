@@ -100,7 +100,11 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="image" href="<?php echo BASE_URL; ?>assets/images/hero.avif" fetchpriority="high">
+
+    <link rel="preload" as="image" href="<?php echo BASE_URL; ?>assets/images/hero.png" fetchpriority="high">
+    <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/icon/icon.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/poppins/Poppins-Medium.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/poppins/Poppins-Bold.woff" as="font" type="font/woff" crossorigin="anonymous" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -129,16 +133,19 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
         [dir="rtl"] .font-size-3 { font-size: 2.2rem; }
     </style>
     <?php endif; ?>
-    <style>
+    <style id="critical-css">
         <?php
-            $style_css = file_get_contents(__DIR__ . '/../assets/css/style.css');
-            echo str_replace('../', BASE_URL . 'assets/', $style_css);
-            echo file_get_contents(__DIR__ . '/../assets/css/grid.css');
+            $style_path = __DIR__ . '/../assets/css/style.css';
+            $grid_path = __DIR__ . '/../assets/css/grid.css';
+            if (file_exists($style_path)) {
+                $style_css = file_get_contents($style_path);
+                echo str_replace('../', BASE_URL . 'assets/', $style_css);
+            }
+            if (file_exists($grid_path)) {
+                echo file_get_contents($grid_path);
+            }
         ?>
     </style>
-    <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/icon/icon.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
-    <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/poppins/Poppins-Medium.woff" as="font" type="font/woff" crossorigin="anonymous" />
-    <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/poppins/Poppins-Bold.woff" as="font" type="font/woff" crossorigin="anonymous" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="<?php echo BASE_URL; ?>assets/images/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="<?php echo BASE_URL; ?>assets/images/favicon-32x32.png">
