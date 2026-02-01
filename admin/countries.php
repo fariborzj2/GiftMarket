@@ -34,56 +34,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Handle Add/Edit
     if (isset($_POST['name'])) {
-    $name = clean($_POST['name']);
-    $code = strtolower(clean($_POST['code']));
-    $currency = strtoupper(clean($_POST['currency']));
-    $id = $_POST['id'] ?? '';
+        $name = clean($_POST['name']);
+        $code = strtolower(clean($_POST['code']));
+        $currency = strtoupper(clean($_POST['currency']));
+        $id = $_POST['id'] ?? '';
 
-    $flag_path = $_POST['old_flag'] ?? '';
+        $flag_path = $_POST['old_flag'] ?? '';
 
-    if (isset($_FILES['flag']) && $_FILES['flag']['error'] === UPLOAD_ERR_OK) {
-        $allowed_exts = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
-        $upload_dir = '../assets/images/flag/';
+        if (isset($_FILES['flag']) && $_FILES['flag']['error'] === UPLOAD_ERR_OK) {
+            $allowed_exts = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
+            $upload_dir = '../assets/images/flag/';
 
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0755, true);
-        }
-
-        $file_ext = strtolower(pathinfo($_FILES['flag']['name'], PATHINFO_EXTENSION));
-
-        if (in_array($file_ext, $allowed_exts)) {
-            $file_name = $code . '_' . time() . '.' . $file_ext;
-
-            if (move_uploaded_file($_FILES['flag']['tmp_name'], $upload_dir . $file_name)) {
-                if ($flag_path && file_exists(__DIR__ . '/../' . $flag_path)) {
-                    unlink(__DIR__ . '/../' . $flag_path);
-                }
-                $flag_path = 'assets/images/flag/' . $file_name;
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
             }
-        } else {
-            $msg = 'خطا: پسوند فایل مجاز نیست. (فقط تصاویر مجاز هستند)';
-        }
-    }
 
-    try {
-        if (!empty($id)) {
-            $stmt = db()->prepare("UPDATE countries SET name=?, code=?, flag=?, currency=? WHERE id=?");
-            $stmt->execute([$name, $code, $flag_path, $currency, $id]);
-            $msg = 'کشور با موفقیت بروزرسانی شد!';
-        } else {
-            $stmt = db()->prepare("INSERT INTO countries (name, code, flag, currency) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$name, $code, $flag_path, $currency]);
-            $msg = 'کشور با موفقیت اضافه شد!';
+            $file_ext = strtolower(pathinfo($_FILES['flag']['name'], PATHINFO_EXTENSION));
+
+            if (in_array($file_ext, $allowed_exts)) {
+                $file_name = $code . '_' . time() . '.' . $file_ext;
+
+                if (move_uploaded_file($_FILES['flag']['tmp_name'], $upload_dir . $file_name)) {
+                    if ($flag_path && file_exists(__DIR__ . '/../' . $flag_path)) {
+                        unlink(__DIR__ . '/../' . $flag_path);
+                    }
+                    $flag_path = 'assets/images/flag/' . $file_name;
+                }
+            } else {
+                $msg = 'خطا: پسوند فایل مجاز نیست. (فقط تصاویر مجاز هستند)';
+            }
         }
-        header("Location: countries.php?msg=" . urlencode($msg));
-        exit;
-    } catch (PDOException $e) {
-        if ($e->getCode() == 23000) {
-            $msg = 'خطا: کد کشور باید یکتا باشد (این کد قبلاً ثبت شده است).';
-        } else {
-            $msg = 'خطا در پایگاه داده: ' . $e->getMessage();
+
+        try {
+            if (!empty($id)) {
+                $stmt = db()->prepare("UPDATE countries SET name=?, code=?, flag=?, currency=? WHERE id=?");
+                $stmt->execute([$name, $code, $flag_path, $currency, $id]);
+                $msg = 'کشور با موفقیت بروزرسانی شد!';
+            } else {
+                $stmt = db()->prepare("INSERT INTO countries (name, code, flag, currency) VALUES (?, ?, ?, ?)");
+                $stmt->execute([$name, $code, $flag_path, $currency]);
+                $msg = 'کشور با موفقیت اضافه شد!';
+            }
+            header("Location: countries.php?msg=" . urlencode($msg));
+            exit;
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                $msg = 'خطا: کد کشور باید یکتا باشد (این کد قبلاً ثبت شده است).';
+            } else {
+                $msg = 'خطا در پایگاه داده: ' . $e->getMessage();
+            }
+            $action = (!empty($id)) ? 'edit' : 'add';
         }
-        $action = (!empty($id)) ? 'edit' : 'add';
     }
 }
 ?>

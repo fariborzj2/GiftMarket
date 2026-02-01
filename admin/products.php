@@ -32,57 +32,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Handle Add/Edit
     if (isset($_POST['brand'])) {
-    $db = db();
-    $db->beginTransaction();
-    try {
-        $brand = clean($_POST['brand']);
-        $denomination = clean($_POST['denomination']);
-        $country = clean($_POST['country']);
-        $status = isset($_POST['status']) ? 1 : 0;
-        $pack_sizes = $_POST['pack_sizes'] ?? [];
-        $prices_digital = $_POST['prices_digital'] ?? [];
-        $prices_physical = $_POST['prices_physical'] ?? [];
+        $db = db();
+        $db->beginTransaction();
+        try {
+            $brand = clean($_POST['brand']);
+            $denomination = clean($_POST['denomination']);
+            $country = clean($_POST['country']);
+            $status = isset($_POST['status']) ? 1 : 0;
+            $pack_sizes = $_POST['pack_sizes'] ?? [];
+            $prices_digital = $_POST['prices_digital'] ?? [];
+            $prices_physical = $_POST['prices_physical'] ?? [];
 
-        $stmt = $db->prepare("SELECT currency FROM countries WHERE code = ?");
-        $stmt->execute([$country]);
-        $currency = $stmt->fetchColumn() ?: 'AED';
+            $stmt = $db->prepare("SELECT currency FROM countries WHERE code = ?");
+            $stmt->execute([$country]);
+            $currency = $stmt->fetchColumn() ?: 'AED';
 
-        if (isset($_POST['id']) && !empty($_POST['id'])) {
-            $productId = $_POST['id'];
-            $stmt = $db->prepare("UPDATE products SET brand=?, denomination=?, country=?, currency=?, status=? WHERE id=?");
-            $stmt->execute([$brand, $denomination, $country, $currency, $status, $productId]);
-        } else {
-            $stmt = $db->prepare("INSERT INTO products (brand, denomination, country, currency, status) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$brand, $denomination, $country, $currency, $status]);
-            $productId = $db->lastInsertId();
+            if (isset($_POST['id']) && !empty($_POST['id'])) {
+                $productId = $_POST['id'];
+                $stmt = $db->prepare("UPDATE products SET brand=?, denomination=?, country=?, currency=?, status=? WHERE id=?");
+                $stmt->execute([$brand, $denomination, $country, $currency, $status, $productId]);
+            } else {
+                $stmt = $db->prepare("INSERT INTO products (brand, denomination, country, currency, status) VALUES (?, ?, ?, ?, ?)");
+                $stmt->execute([$brand, $denomination, $country, $currency, $status]);
+                $productId = $db->lastInsertId();
+            }
+
+            $stmt = $db->prepare("DELETE FROM product_packs WHERE product_id = ?");
+            $stmt->execute([$productId]);
+
+            $stmt = $db->prepare("INSERT INTO product_packs (product_id, pack_size, price_digital, price_physical) VALUES (?, ?, ?, ?)");
+            foreach ($pack_sizes as $i => $size) {
+                $stmt->execute([$productId, (int)$size, (float)$prices_digital[$i], (float)$prices_physical[$i]]);
+            }
+
+            $db->commit();
+            $msg = 'محصول با موفقیت ذخیره شد!';
+            header("Location: products.php?msg=" . urlencode($msg));
+            exit;
+        } catch (Exception $e) {
+            $db->rollBack();
+            $msg = 'خطا در ذخیره محصول: ' . $e->getMessage();
         }
-
-        $stmt = $db->prepare("DELETE FROM product_packs WHERE product_id = ?");
-        $stmt->execute([$productId]);
-
-        $stmt = $db->prepare("INSERT INTO product_packs (product_id, pack_size, price_digital, price_physical) VALUES (?, ?, ?, ?)");
-        foreach ($pack_sizes as $i => $size) {
-            $stmt->execute([$productId, (int)$size, (float)$prices_digital[$i], (float)$prices_physical[$i]]);
-        }
-
-        $db->commit();
-        $msg = 'محصول با موفقیت ذخیره شد!';
-        header("Location: products.php?msg=" . urlencode($msg));
-        exit;
-    } catch (Exception $e) {
-        $db->rollBack();
-        $msg = 'خطا در ذخیره محصول: ' . $e->getMessage();
-    }
     }
 }
+
+$displayMsg = $msg ?: ($_GET['msg'] ?? '');
 ?>
 
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
-        <?php
-        $displayMsg = $msg ?: ($_GET['msg'] ?? '');
-        if ($displayMsg): ?>
-            <div class="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900/30'; ?> px-6 py-3 rounded-xl text-sm flex items-center gap-2">
+        <?php if ($displayMsg): ?>
+            <div class="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30 px-6 py-3 rounded-xl text-sm flex items-center gap-2' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900/30 px-6 py-3 rounded-xl text-sm flex items-center gap-2'; ?>">
                 <iconify-icon icon="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'solar:check-circle-bold-duotone' : 'solar:danger-bold-duotone'; ?>" class="text-xl"></iconify-icon>
                 <?php echo e($displayMsg); ?>
             </div>
@@ -94,7 +94,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </a>
 </div>
 
-<?php if ($action === 'list'):
+<?php if ($action === 'list'): ?>
+<?php
     $search = clean($_GET['search'] ?? '');
     $f_brand = clean($_GET['brand'] ?? '');
     $f_country = clean($_GET['country'] ?? '');
@@ -152,8 +153,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $brands = db()->query("SELECT * FROM brands ORDER BY sort_order ASC, name ASC")->fetchAll();
     $countries = db()->query("SELECT * FROM countries ORDER BY sort_order ASC, name ASC")->fetchAll();
     $pack_sizes = db()->query("SELECT DISTINCT pack_size FROM product_packs ORDER BY pack_size ASC")->fetchAll(PDO::FETCH_COLUMN);
-?>
 
+    $grouped = [];
+    foreach ($products as $p) {
+        $brandName = $p['brand_name'] ?? strtoupper($p['brand']);
+        $countryName = $p['country_name'] ?? strtoupper($p['country']);
+
+        if (!isset($grouped[$brandName])) {
+            $grouped[$brandName] = ['logo' => $p['brand_logo'], 'countries' => []];
+        }
+        if (!isset($grouped[$brandName]['countries'][$countryName])) {
+            $grouped[$brandName]['countries'][$countryName] = ['flag' => $p['country_flag'], 'products' => []];
+        }
+        $grouped[$brandName]['countries'][$countryName]['products'][] = $p;
+    }
+?>
     <!-- Filters -->
     <div class="admin-card mb-8 !p-6">
         <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
@@ -213,21 +227,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 
-<?php
-    $grouped = [];
-    foreach ($products as $p) {
-        $brandName = $p['brand_name'] ?? strtoupper($p['brand']);
-        $countryName = $p['country_name'] ?? strtoupper($p['country']);
-
-        if (!isset($grouped[$brandName])) {
-            $grouped[$brandName] = ['logo' => $p['brand_logo'], 'countries' => []];
-        }
-        if (!isset($grouped[$brandName]['countries'][$countryName])) {
-            $grouped[$brandName]['countries'][$countryName] = ['flag' => $p['country_flag'], 'products' => []];
-        }
-        $grouped[$brandName]['countries'][$countryName]['products'][] = $p;
-    }
-?>
     <?php if (empty($products)): ?>
         <div class="admin-card text-center py-20 text-slate-400">
             <iconify-icon icon="solar:magnifer-bold-duotone" class="text-6xl mb-4 opacity-20"></iconify-icon>

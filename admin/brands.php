@@ -34,55 +34,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Handle Add/Edit
     if (isset($_POST['name'])) {
-    $name = clean($_POST['name']);
-    $code = strtolower(clean($_POST['code']));
-    $id = $_POST['id'] ?? '';
+        $name = clean($_POST['name']);
+        $code = strtolower(clean($_POST['code']));
+        $id = $_POST['id'] ?? '';
 
-    $logo_path = $_POST['old_logo'] ?? '';
+        $logo_path = $_POST['old_logo'] ?? '';
 
-    if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
-        $allowed_exts = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
-        $upload_dir = '../assets/images/brand/';
+        if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
+            $allowed_exts = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
+            $upload_dir = '../assets/images/brand/';
 
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0755, true);
-        }
-
-        $file_ext = strtolower(pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION));
-
-        if (in_array($file_ext, $allowed_exts)) {
-            $file_name = $code . '_' . time() . '.' . $file_ext;
-
-            if (move_uploaded_file($_FILES['logo']['tmp_name'], $upload_dir . $file_name)) {
-                if ($logo_path && file_exists(__DIR__ . '/../' . $logo_path)) {
-                    unlink(__DIR__ . '/../' . $logo_path);
-                }
-                $logo_path = 'assets/images/brand/' . $file_name;
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
             }
-        } else {
-            $msg = 'خطا: پسوند فایل مجاز نیست. (فقط تصاویر مجاز هستند)';
-        }
-    }
 
-    try {
-        if (!empty($id)) {
-            $stmt = db()->prepare("UPDATE brands SET name=?, code=?, logo=? WHERE id=?");
-            $stmt->execute([$name, $code, $logo_path, $id]);
-            $msg = 'برند با موفقیت بروزرسانی شد!';
-        } else {
-            $stmt = db()->prepare("INSERT INTO brands (name, code, logo) VALUES (?, ?, ?)");
-            $stmt->execute([$name, $code, $logo_path]);
-            $msg = 'برند با موفقیت اضافه شد!';
+            $file_ext = strtolower(pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION));
+
+            if (in_array($file_ext, $allowed_exts)) {
+                $file_name = $code . '_' . time() . '.' . $file_ext;
+
+                if (move_uploaded_file($_FILES['logo']['tmp_name'], $upload_dir . $file_name)) {
+                    if ($logo_path && file_exists(__DIR__ . '/../' . $logo_path)) {
+                        unlink(__DIR__ . '/../' . $logo_path);
+                    }
+                    $logo_path = 'assets/images/brand/' . $file_name;
+                }
+            } else {
+                $msg = 'خطا: پسوند فایل مجاز نیست. (فقط تصاویر مجاز هستند)';
+            }
         }
-        header("Location: brands.php?msg=" . urlencode($msg));
-        exit;
-    } catch (PDOException $e) {
-        if ($e->getCode() == 23000) {
-            $msg = 'خطا: کد برند باید یکتا باشد (این کد قبلاً ثبت شده است).';
-        } else {
-            $msg = 'خطا در پایگاه داده: ' . $e->getMessage();
+
+        try {
+            if (!empty($id)) {
+                $stmt = db()->prepare("UPDATE brands SET name=?, code=?, logo=? WHERE id=?");
+                $stmt->execute([$name, $code, $logo_path, $id]);
+                $msg = 'برند با موفقیت بروزرسانی شد!';
+            } else {
+                $stmt = db()->prepare("INSERT INTO brands (name, code, logo) VALUES (?, ?, ?)");
+                $stmt->execute([$name, $code, $logo_path]);
+                $msg = 'برند با موفقیت اضافه شد!';
+            }
+            header("Location: brands.php?msg=" . urlencode($msg));
+            exit;
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                $msg = 'خطا: کد برند باید یکتا باشد (این کد قبلاً ثبت شده است).';
+            } else {
+                $msg = 'خطا در پایگاه داده: ' . $e->getMessage();
+            }
+            $action = (!empty($id)) ? 'edit' : 'add';
         }
-        $action = (!empty($id)) ? 'edit' : 'add';
     }
 }
 ?>
