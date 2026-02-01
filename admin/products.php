@@ -4,25 +4,34 @@ require_once 'layout_header.php';
 
 $action = $_GET['action'] ?? 'list';
 $msg = '';
+$csrfToken = generateCsrfToken();
 
-// Handle Delete
-if ($action === 'delete' && isset($_GET['id'])) {
-    $stmt = db()->prepare("DELETE FROM products WHERE id = ?");
-    $stmt->execute([$_GET['id']]);
-    $msg = 'محصول با موفقیت حذف شد!';
-    $action = 'list';
-}
-
-// Handle Toggle Status
-if ($action === 'toggle_status' && isset($_GET['id'])) {
-    $stmt = db()->prepare("UPDATE products SET status = 1 - status WHERE id = ?");
-    $stmt->execute([$_GET['id']]);
-    $msg = 'وضعیت محصول با موفقیت تغییر کرد!';
-    $action = 'list';
-}
-
-// Handle Add/Edit
+// Handle Actions (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verifyCsrfToken($_POST['csrf_token'] ?? '')) {
+        die('CSRF token validation failed.');
+    }
+
+    // Handle Delete
+    if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id'])) {
+        $stmt = db()->prepare("DELETE FROM products WHERE id = ?");
+        $stmt->execute([$_POST['id']]);
+        $msg = 'محصول با موفقیت حذف شد!';
+        header("Location: products.php?msg=" . urlencode($msg));
+        exit;
+    }
+
+    // Handle Toggle Status
+    if (isset($_POST['action']) && $_POST['action'] === 'toggle_status' && isset($_POST['id'])) {
+        $stmt = db()->prepare("UPDATE products SET status = 1 - status WHERE id = ?");
+        $stmt->execute([$_POST['id']]);
+        $msg = 'وضعیت محصول با موفقیت تغییر کرد!';
+        header("Location: products.php?msg=" . urlencode($msg));
+        exit;
+    }
+
+    // Handle Add/Edit
+    if (isset($_POST['brand'])) {
     $db = db();
     $db->beginTransaction();
     try {
@@ -58,20 +67,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $db->commit();
         $msg = 'محصول با موفقیت ذخیره شد!';
+        header("Location: products.php?msg=" . urlencode($msg));
+        exit;
     } catch (Exception $e) {
         $db->rollBack();
         $msg = 'خطا در ذخیره محصول: ' . $e->getMessage();
     }
-    $action = 'list';
+    }
 }
 ?>
 
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
-        <?php if ($msg): ?>
-            <div class="bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30 px-6 py-3 rounded-xl text-sm flex items-center gap-2">
-                <iconify-icon icon="solar:check-circle-bold-duotone" class="text-xl"></iconify-icon>
-                <?php echo e($msg); ?>
+        <?php
+        $displayMsg = $msg ?: ($_GET['msg'] ?? '');
+        if ($displayMsg): ?>
+            <div class="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900/30'; ?> px-6 py-3 rounded-xl text-sm flex items-center gap-2">
+                <iconify-icon icon="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'solar:check-circle-bold-duotone' : 'solar:danger-bold-duotone'; ?>" class="text-xl"></iconify-icon>
+                <?php echo e($displayMsg); ?>
             </div>
         <?php endif; ?>
     </div>
@@ -282,19 +295,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-6 py-4 text-center">
-                                        <a href="products.php?action=toggle_status&id=<?php echo e($p['id']); ?>" class="inline-flex items-center gap-1 px-2 py-1 rounded-xl text-[10px] font-bold transition-all <?php echo $p['status'] == 1 ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'; ?>">
-                                            <iconify-icon icon="<?php echo $p['status'] == 1 ? 'solar:check-circle-bold' : 'solar:close-circle-bold'; ?>"></iconify-icon>
-                                            <?php echo $p['status'] == 1 ? 'فعال' : 'غیرفعال'; ?>
-                                        </a>
+                                        <form method="POST" class="inline">
+                                            <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
+                                            <input type="hidden" name="action" value="toggle_status">
+                                            <input type="hidden" name="id" value="<?php echo $p['id']; ?>">
+                                            <button type="submit" class="inline-flex items-center gap-1 px-2 py-1 rounded-xl text-[10px] font-bold transition-all <?php echo $p['status'] == 1 ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'; ?>">
+                                                <iconify-icon icon="<?php echo $p['status'] == 1 ? 'solar:check-circle-bold' : 'solar:close-circle-bold'; ?>"></iconify-icon>
+                                                <?php echo $p['status'] == 1 ? 'فعال' : 'غیرفعال'; ?>
+                                            </button>
+                                        </form>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-1">
                                             <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors" title="ویرایش">
                                                 <iconify-icon icon="solar:pen-new-square-bold-duotone" class="text-xl"></iconify-icon>
                                             </a>
-                                            <a href="products.php?action=delete&id=<?php echo e($p['id']); ?>" class="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" onclick="return confirm('حذف محصول؟')" title="حذف">
-                                                <iconify-icon icon="solar:trash-bin-trash-bold-duotone" class="text-xl"></iconify-icon>
-                                            </a>
+                                            <form method="POST" class="inline" onsubmit="return confirm('حذف محصول؟')">
+                                                <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="id" value="<?php echo $p['id']; ?>">
+                                                <button type="submit" class="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="حذف">
+                                                    <iconify-icon icon="solar:trash-bin-trash-bold-duotone" class="text-xl"></iconify-icon>
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -333,6 +356,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </h3>
 
         <form method="POST" class="space-y-8">
+            <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
             <input type="hidden" name="id" value="<?php echo e($editData['id']); ?>">
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

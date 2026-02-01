@@ -3,8 +3,13 @@ $pageTitle = 'تنظیمات سیستم';
 require_once 'layout_header.php';
 
 $msg = '';
+$csrfToken = generateCsrfToken();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verifyCsrfToken($_POST['csrf_token'] ?? '')) {
+        die('CSRF token validation failed.');
+    }
+
     $usd_to_aed = clean($_POST['usd_to_aed']);
     $auto_update_rate = isset($_POST['auto_update_rate']) ? '1' : '0';
     $update_interval_hours = (int)$_POST['update_interval_hours'];
@@ -14,6 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         updateSetting('auto_update_rate', $auto_update_rate);
         updateSetting('update_interval_hours', (string)$update_interval_hours);
         $msg = 'تنظیمات با موفقیت ذخیره شد!';
+        header("Location: settings.php?msg=" . urlencode($msg));
+        exit;
     } else {
         $msg = 'خطا: مقدار وارد شده برای نرخ ارز معتبر نیست.';
     }
@@ -27,10 +34,12 @@ $last_update = (int)getSetting('last_rate_update', 0);
 
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
-        <?php if ($msg): ?>
-            <div class="<?php echo strpos($msg, 'خطا') === false ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-2">
-                <iconify-icon icon="<?php echo strpos($msg, 'خطا') === false ? 'solar:check-circle-bold-duotone' : 'solar:danger-bold-duotone'; ?>" class="text-xl"></iconify-icon>
-                <?php echo e($msg); ?>
+        <?php
+        $displayMsg = $msg ?: ($_GET['msg'] ?? '');
+        if ($displayMsg): ?>
+            <div class="<?php echo strpos($displayMsg, 'خطا') === false ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-2">
+                <iconify-icon icon="<?php echo strpos($displayMsg, 'خطا') === false ? 'solar:check-circle-bold-duotone' : 'solar:danger-bold-duotone'; ?>" class="text-xl"></iconify-icon>
+                <?php echo e($displayMsg); ?>
             </div>
         <?php endif; ?>
     </div>
@@ -45,6 +54,7 @@ $last_update = (int)getSetting('last_rate_update', 0);
     </div>
 
     <form method="POST" class="space-y-8">
+        <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
         <div class="space-y-4">
             <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">نرخ تبدیل ۱ دلار به درهم (USD to AED)</label>
             <div class="flex flex-col md:flex-row gap-3">

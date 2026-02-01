@@ -25,6 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         updateSetting('telegram_currency_symbols', clean($_POST['currency_symbols']));
 
         $msg = 'تنظیمات با موفقیت ذخیره شد!';
+        header("Location: ?tab=settings&msg=" . urlencode($msg));
+        exit;
     }
 
     if (isset($_POST['reset_templates'])) {
