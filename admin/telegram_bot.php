@@ -6,9 +6,14 @@ require_once __DIR__ . '/../system/plugins/telegram-bot/TelegramBot.php';
 $bot = new TelegramBot();
 $msg = '';
 $tab = $_GET['tab'] ?? 'settings';
+$csrfToken = generateCsrfToken();
 
 // Handle Actions BEFORE any output
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verifyCsrfToken($_POST['csrf_token'] ?? '')) {
+        die('CSRF token validation failed.');
+    }
+
     if (isset($_POST['save_settings'])) {
         updateSetting('telegram_bot_enabled', isset($_POST['enabled']) ? '1' : '0');
         updateSetting('telegram_bot_token', clean($_POST['token']));
@@ -101,14 +106,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: ?tab=logs&msg=" . urlencode($msg));
         exit;
     }
-}
 
-if (isset($_GET['delete_channel'])) {
-    $stmt = db()->prepare("DELETE FROM telegram_channels WHERE id = ?");
-    $stmt->execute([$_GET['delete_channel']]);
-    $msg = 'کانال حذف شد!';
-    header("Location: ?tab=channels&msg=" . urlencode($msg));
-    exit;
+    if (isset($_POST['delete_channel'])) {
+        $stmt = db()->prepare("DELETE FROM telegram_channels WHERE id = ?");
+        $stmt->execute([$_POST['channel_db_id']]);
+        $msg = 'کانال حذف شد!';
+        header("Location: ?tab=channels&msg=" . urlencode($msg));
+        exit;
+    }
 }
 
 $pageTitle = 'مدیریت ربات تلگرام';
@@ -149,6 +154,7 @@ foreach ($configs as $c) {
         <?php endif; ?>
     </div>
     <form method="POST">
+        <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
         <button type="submit" name="publish_now" class="btn-primary " onclick="return confirm('آیا از انتشار دستی قیمت‌ها اطمینان دارید؟')">
             <iconify-icon icon="solar:rocket-bold-duotone" class="text-xl"></iconify-icon>
             <span>ارسال به کانال</span>
@@ -168,6 +174,7 @@ foreach ($configs as $c) {
     <div class="p-6 md:p-8 lg:p-10">
         <?php if ($tab === 'settings'): ?>
             <form method="POST" class="space-y-8 max-w-3xl">
+                <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
                 <div class="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
                     <label class="flex items-center gap-3 cursor-pointer group">
                         <input type="checkbox" name="enabled" value="1" <?php echo $st_enabled === '1' ? 'checked' : ''; ?>
@@ -312,6 +319,7 @@ foreach ($configs as $c) {
                     <span>افزودن کانال جدید</span>
                 </h4>
                 <form method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                    <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
                     <div class="space-y-1.5">
                         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ms-1">Channel ID</label>
                         <input type="text" name="channel_id" placeholder="مثلاً -100123456789" required dir="ltr"
@@ -343,9 +351,12 @@ foreach ($configs as $c) {
                             <td class="px-6 py-4 font-bold text-slate-900 dark:text-white"><?php echo e($c['name']); ?></td>
                             <td class="px-6 py-4 text-slate-500"><?php echo date('Y-m-d H:i', strtotime($c['created_at'])); ?></td>
                             <td class="px-6 py-4">
-                                <a href="?tab=channels&delete_channel=<?php echo $c['id']; ?>"
-                                   class="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-1.5 rounded-lg transition-all font-bold"
-                                   onclick="return confirm('آیا از حذف این کانال اطمینان دارید؟')">حذف</a>
+                                <form method="POST" class="inline" onsubmit="return confirm('آیا از حذف این کانال اطمینان دارید؟')">
+                                    <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
+                                    <input type="hidden" name="delete_channel" value="1">
+                                    <input type="hidden" name="channel_db_id" value="<?php echo $c['id']; ?>">
+                                    <button type="submit" class="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-1.5 rounded-lg transition-all font-bold">حذف</button>
+                                </form>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -358,6 +369,7 @@ foreach ($configs as $c) {
 
         <?php elseif ($tab === 'config'): ?>
             <form method="POST" class="space-y-12">
+                <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
                 <div>
                     <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
                         <iconify-icon icon="solar:flag-bold-duotone" class="text-primary text-2xl"></iconify-icon>
@@ -410,6 +422,7 @@ foreach ($configs as $c) {
         <?php elseif ($tab === 'logs'): ?>
             <div class="flex justify-end mb-4">
                 <form method="POST" onsubmit="return confirm('آیا از حذف تمامی لاگ‌ها اطمینان دارید؟')">
+                    <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
                     <button type="submit" name="clear_logs" class="flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl transition-all font-bold text-sm">
                         <iconify-icon icon="solar:trash-bin-trash-bold-duotone" class="text-xl"></iconify-icon>
                         <span>حذف تمامی لاگ‌ها</span>

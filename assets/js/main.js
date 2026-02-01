@@ -137,6 +137,120 @@ document.addEventListener('click', (e) => {
 });
 
 /* =======================
+   CONTACT FORM SUBMISSION
+======================== */
+document.addEventListener('submit', async (e) => {
+    const contactForm = e.target.closest('#contactForm');
+    if (contactForm) {
+        e.preventDefault();
+
+        const btn = contactForm.querySelector('button[type="submit"]');
+        const btnContent = btn.innerHTML;
+        const formData = new FormData(contactForm);
+        formData.append('action', 'contact');
+
+        // Loading state
+        btn.disabled = true;
+        btn.innerHTML = '<span class="icon icon-size-22 icon--white animate-spin"></span> Sending...';
+
+        const url = typeof API_URL !== 'undefined' ? API_URL : 'api.php';
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                showToast(result.message, 'success');
+                contactForm.reset();
+            } else {
+                showToast(result.message, 'error');
+            }
+        } catch (error) {
+            showToast('An error occurred. Please try again.', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = btnContent;
+        }
+    }
+});
+
+function showToast(message, type = 'success') {
+    // Create toast container if not exists
+    let toastContainer = document.querySelector('.toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.className = 'toast-container';
+        document.body.appendChild(toastContainer);
+
+        // Add CSS for toast
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .toast-container {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 9999;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .toast {
+                background: white;
+                color: #333;
+                padding: 12px 24px;
+                border-radius: 12px;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                display: flex;
+                align-center: center;
+                gap: 10px;
+                transform: translateX(120%);
+                transition: transform 0.3s ease-out;
+                border-left: 4px solid #497FFF;
+            }
+            .toast.show {
+                transform: translateX(0);
+            }
+            .toast.error {
+                border-left-color: #ef4444;
+            }
+            .toast.success {
+                border-left-color: #22c55e;
+            }
+            @keyframes animate-spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+            .animate-spin {
+                animation: animate-spin 1s linear infinite;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <span class="icon icon-size-22" style="color: ${type === 'success' ? '#22c55e' : '#ef4444'}">${type === 'success' ? '' : ''}</span>
+        <span>${message}</span>
+    `;
+
+    toastContainer.appendChild(toast);
+
+    // Trigger animation
+    setTimeout(() => toast.classList.add('show'), 100);
+
+    // Remove toast after 5 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
+}
+
+/* =======================
    PRICING TABLE LOGIC
 ======================== */
 let USD_TO_AED = 3.673;

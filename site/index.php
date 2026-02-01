@@ -633,7 +633,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                     <div class="d-flex-wrap align-center gap-40 relative">
 
                         <div class="contact-form basis300 grow-1 border radius-20 pd-20 relative z-1">
-                            <form action="#" method="POST">
+                            <form action="#" method="POST" id="contactForm">
                                 <div class="d-flex-wrap gap-20">
                                     <div class="input-item basis200 grow-1">
                                         <div class="input-label"><?php echo __('name'); ?></div>

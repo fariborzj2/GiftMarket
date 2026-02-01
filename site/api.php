@@ -1,6 +1,37 @@
 <?php
 require_once __DIR__ . '/../system/includes/functions.php';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? '';
+
+    if ($action === 'contact') {
+        $name = clean($_POST['name'] ?? '');
+        $email = clean($_POST['email'] ?? '');
+        $mobile = clean($_POST['mobile'] ?? '');
+        $subject = clean($_POST['subject'] ?? '');
+        $message = clean($_POST['message'] ?? '');
+
+        if (empty($name) || empty($email) || empty($mobile) || empty($message)) {
+            header('Content-Type: application/json');
+            echo json_encode(['status' => 'error', 'message' => __('fill_all_fields', 'Please fill all required fields.')]);
+            exit;
+        }
+
+        try {
+            $stmt = db()->prepare("INSERT INTO contact_messages (name, email, mobile, subject, message) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$name, $email, $mobile, $subject, $message]);
+
+            header('Content-Type: application/json');
+            echo json_encode(['status' => 'success', 'message' => __('message_sent_success', 'Your message has been sent successfully!')]);
+            exit;
+        } catch (Exception $e) {
+            header('Content-Type: application/json');
+            echo json_encode(['status' => 'error', 'message' => __('message_sent_error', 'An error occurred while sending your message.')]);
+            exit;
+        }
+    }
+}
+
 $lang = getLanguage();
 
 // Load base data

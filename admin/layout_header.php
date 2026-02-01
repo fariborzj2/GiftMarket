@@ -88,6 +88,16 @@ if (!isLoggedIn()) {
                     <iconify-icon icon="solar:box-bold-duotone" class="text-2xl"></iconify-icon>
                     <span>محصولات</span>
                 </a>
+                <a href="messages.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'messages.php' ? 'active' : ''; ?>">
+                    <iconify-icon icon="solar:letter-bold-duotone" class="text-2xl"></iconify-icon>
+                    <span class="flex-1">پیام‌ها</span>
+                    <?php
+                    $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status = 'unread'")->fetchColumn();
+                    if ($unreadCount > 0):
+                    ?>
+                        <span class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full"><?php echo $unreadCount; ?></span>
+                    <?php endif; ?>
+                </a>
                 <a href="settings.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">
                     <iconify-icon icon="solar:settings-bold-duotone" class="text-2xl"></iconify-icon>
                     <span>تنظیمات</span>
