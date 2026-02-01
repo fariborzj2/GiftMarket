@@ -101,8 +101,8 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="preload" as="image" href="<?php echo BASE_URL; ?>assets/images/hero-mobile.avif" media="(max-width: 600px)" fetchpriority="high">
-    <link rel="preload" as="image" href="<?php echo BASE_URL; ?>assets/images/hero.avif" media="(min-width: 601px)" fetchpriority="high">
+    <link rel="preload" as="image" href="<?php echo BASE_URL; ?>assets/images/hero-mobile.avif" type="image/avif" media="(max-width: 600px)" fetchpriority="high">
+    <link rel="preload" as="image" href="<?php echo BASE_URL; ?>assets/images/hero.avif" type="image/avif" media="(min-width: 601px)" fetchpriority="high">
     <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/icon/icon.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
     <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/poppins/Poppins-Medium.woff" as="font" type="font/woff" crossorigin="anonymous" />
     <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/poppins/Poppins-Bold.woff" as="font" type="font/woff" crossorigin="anonymous" />
