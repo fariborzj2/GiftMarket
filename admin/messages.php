@@ -22,6 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         } catch (PDOException $e) {
             $msg = 'خطا در حذف پیام: ' . $e->getMessage();
         }
+        header("Location: messages.php?msg=" . urlencode($msg));
+        exit;
     }
 
     if ($action === 'status' && $id && isset($_POST['to'])) {
@@ -41,6 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             }
             $msg = 'خطا در بروزرسانی وضعیت: ' . $e->getMessage();
         }
+        header("Location: messages.php?msg=" . urlencode($msg));
+        exit;
     }
 
     if ($action === 'mark_all_read') {
@@ -50,6 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         } catch (PDOException $e) {
             $msg = 'خطا: ' . $e->getMessage();
         }
+        header("Location: messages.php?msg=" . urlencode($msg));
+        exit;
     }
 }
 
@@ -58,10 +64,12 @@ $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status =
 
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
-        <?php if ($msg): ?>
-            <div class="<?php echo (strpos($msg, 'خطا') === false) ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-3 transition-all duration-300">
-                <iconify-icon icon="<?php echo (strpos($msg, 'خطا') === false) ? 'solar:check-circle-bold-duotone' : 'solar:danger-bold-duotone'; ?>" class="text-xl"></iconify-icon>
-                <?php echo e($msg); ?>
+        <?php
+        $displayMsg = $msg ?: ($_GET['msg'] ?? '');
+        if ($displayMsg): ?>
+            <div class="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-3 transition-all duration-300">
+                <iconify-icon icon="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'solar:check-circle-bold-duotone' : 'solar:danger-bold-duotone'; ?>" class="text-xl"></iconify-icon>
+                <?php echo e($displayMsg); ?>
             </div>
         <?php endif; ?>
     </div>
@@ -266,7 +274,7 @@ $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status =
             content.classList.add('translate-x-full');
             setTimeout(() => {
                 modal.classList.add('hidden');
-                window.location.reload();
+                window.location.href = 'messages.php';
             }, 300);
         }
 

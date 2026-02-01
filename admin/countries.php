@@ -4,28 +4,36 @@ require_once 'layout_header.php';
 
 $action = $_GET['action'] ?? 'list';
 $msg = '';
+$csrfToken = generateCsrfToken();
 
-// Handle Delete
-if ($action === 'delete' && isset($_GET['id'])) {
-    try {
-        $stmt = db()->prepare("SELECT flag FROM countries WHERE id = ?");
-        $stmt->execute([$_GET['id']]);
-        $flag = $stmt->fetchColumn();
-        if ($flag && file_exists(__DIR__ . '/../' . $flag)) {
-            unlink(__DIR__ . '/../' . $flag);
-        }
-
-        $stmt = db()->prepare("DELETE FROM countries WHERE id = ?");
-        $stmt->execute([$_GET['id']]);
-        $msg = 'کشور با موفقیت حذف شد!';
-    } catch (PDOException $e) {
-        $msg = 'خطا: امکان حذف کشور وجود ندارد. ممکن است در حال استفاده باشد.';
-    }
-    $action = 'list';
-}
-
-// Handle Add/Edit
+// Handle Actions (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verifyCsrfToken($_POST['csrf_token'] ?? '')) {
+        die('CSRF token validation failed.');
+    }
+
+    // Handle Delete
+    if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id'])) {
+        try {
+            $stmt = db()->prepare("SELECT flag FROM countries WHERE id = ?");
+            $stmt->execute([$_POST['id']]);
+            $flag = $stmt->fetchColumn();
+            if ($flag && file_exists(__DIR__ . '/../' . $flag)) {
+                unlink(__DIR__ . '/../' . $flag);
+            }
+
+            $stmt = db()->prepare("DELETE FROM countries WHERE id = ?");
+            $stmt->execute([$_POST['id']]);
+            $msg = 'کشور با موفقیت حذف شد!';
+        } catch (PDOException $e) {
+            $msg = 'خطا: امکان حذف کشور وجود ندارد. ممکن است در حال استفاده باشد.';
+        }
+        header("Location: countries.php?msg=" . urlencode($msg));
+        exit;
+    }
+
+    // Handle Add/Edit
+    if (isset($_POST['name'])) {
     $name = clean($_POST['name']);
     $code = strtolower(clean($_POST['code']));
     $currency = strtoupper(clean($_POST['currency']));
@@ -67,7 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$name, $code, $flag_path, $currency]);
             $msg = 'کشور با موفقیت اضافه شد!';
         }
-        $action = 'list';
+        header("Location: countries.php?msg=" . urlencode($msg));
+        exit;
     } catch (PDOException $e) {
         if ($e->getCode() == 23000) {
             $msg = 'خطا: کد کشور باید یکتا باشد (این کد قبلاً ثبت شده است).';
@@ -81,10 +90,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
-        <?php if ($msg): ?>
-            <div class="<?php echo (strpos($msg, 'خطا') === false) ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-3">
-                <iconify-icon icon="<?php echo (strpos($msg, 'خطا') === false) ? 'solar:check-circle-bold-duotone' : 'solar:danger-bold-duotone'; ?>" class="text-xl"></iconify-icon>
-                <?php echo e($msg); ?>
+        <?php
+        $displayMsg = $msg ?: ($_GET['msg'] ?? '');
+        if ($displayMsg): ?>
+            <div class="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-3">
+                <iconify-icon icon="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'solar:check-circle-bold-duotone' : 'solar:danger-bold-duotone'; ?>" class="text-xl"></iconify-icon>
+                <?php echo e($displayMsg); ?>
             </div>
         <?php endif; ?>
     </div>
@@ -156,9 +167,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <a href="countries.php?action=edit&id=<?php echo e($c['id']); ?>" class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors" title="ویرایش">
                                     <iconify-icon icon="solar:pen-new-square-bold-duotone" class="text-xl"></iconify-icon>
                                 </a>
-                                <a href="countries.php?action=delete&id=<?php echo e($c['id']); ?>" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" onclick="return confirm('آیا از حذف این کشور اطمینان دارید؟')" title="حذف">
-                                    <iconify-icon icon="solar:trash-bin-trash-bold-duotone" class="text-xl"></iconify-icon>
-                                </a>
+                                <form method="POST" class="inline" onsubmit="return confirm('آیا از حذف این کشور اطمینان دارید؟')">
+                                    <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="<?php echo $c['id']; ?>">
+                                    <button type="submit" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="حذف">
+                                        <iconify-icon icon="solar:trash-bin-trash-bold-duotone" class="text-xl"></iconify-icon>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -191,6 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </h3>
 
         <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
             <input type="hidden" name="id" value="<?php echo e($editData['id']); ?>">
             <input type="hidden" name="old_flag" value="<?php echo e($editData['flag']); ?>">
 

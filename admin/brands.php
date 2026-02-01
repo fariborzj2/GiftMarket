@@ -28,7 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } catch (PDOException $e) {
             $msg = 'خطا: امکان حذف برند وجود ندارد. ممکن است در حال استفاده باشد.';
         }
-        $action = 'list';
+        header("Location: brands.php?msg=" . urlencode($msg));
+        exit;
     }
 
     // Handle Add/Edit
@@ -73,7 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$name, $code, $logo_path]);
             $msg = 'برند با موفقیت اضافه شد!';
         }
-        $action = 'list';
+        header("Location: brands.php?msg=" . urlencode($msg));
+        exit;
     } catch (PDOException $e) {
         if ($e->getCode() == 23000) {
             $msg = 'خطا: کد برند باید یکتا باشد (این کد قبلاً ثبت شده است).';
@@ -87,10 +89,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
-        <?php if ($msg): ?>
-            <div class="<?php echo (strpos($msg, 'خطا') === false) ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-3">
-                <iconify-icon icon="<?php echo (strpos($msg, 'خطا') === false) ? 'solar:check-circle-bold-duotone' : 'solar:danger-bold-duotone'; ?>" class="text-xl"></iconify-icon>
-                <?php echo e($msg); ?>
+        <?php
+        $displayMsg = $msg ?: ($_GET['msg'] ?? '');
+        if ($displayMsg): ?>
+            <div class="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-3">
+                <iconify-icon icon="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'solar:check-circle-bold-duotone' : 'solar:danger-bold-duotone'; ?>" class="text-xl"></iconify-icon>
+                <?php echo e($displayMsg); ?>
             </div>
         <?php endif; ?>
     </div>
