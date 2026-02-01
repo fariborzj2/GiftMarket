@@ -1,0 +1,7 @@
+[Sun Feb  1 08:01:44 2026] PHP 8.3.6 Development Server (http://localhost:8000) started
+[Sun Feb  1 08:01:47 2026] [::1]:50146 Accepted
+[Sun Feb  1 08:01:47 2026] [::1]:50146 [200]: GET /site/test_responsive.php
+[Sun Feb  1 08:01:47 2026] [::1]:50146 Closing
+[Sun Feb  1 08:01:47 2026] [::1]:50158 Accepted
+[Sun Feb  1 08:01:47 2026] [::1]:50158 [200]: GET /assets/images/hero-mobile.webp
+[Sun Feb  1 08:01:47 2026] [::1]:50158 Closing

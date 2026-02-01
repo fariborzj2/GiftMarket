@@ -101,7 +101,8 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="preload" as="image" href="<?php echo BASE_URL; ?>assets/images/hero.avif" fetchpriority="high">
+    <link rel="preload" as="image" href="<?php echo BASE_URL; ?>assets/images/hero-mobile.webp" media="(max-width: 600px)" fetchpriority="high">
+    <link rel="preload" as="image" href="<?php echo BASE_URL; ?>assets/images/hero.avif" media="(min-width: 601px)" fetchpriority="high">
     <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/icon/icon.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
     <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/poppins/Poppins-Medium.woff" as="font" type="font/woff" crossorigin="anonymous" />
     <link rel="preload" href="<?php echo BASE_URL; ?>assets/fonts/poppins/Poppins-Bold.woff" as="font" type="font/woff" crossorigin="anonymous" />
@@ -293,7 +294,12 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                 </div>
 
                 <div class="hero-img">
-                    <div class="img"><img src="<?php echo BASE_URL; ?>assets/images/hero.avif" width="650" height="414" alt="Official Gift Card Distributor Dubai" fetchpriority="high" loading="eager"></div>
+                    <div class="img">
+                        <picture>
+                            <source media="(max-width: 600px)" srcset="<?php echo BASE_URL; ?>assets/images/hero-mobile.webp" type="image/webp">
+                            <img src="<?php echo BASE_URL; ?>assets/images/hero.avif" width="650" height="414" alt="Official Gift Card Distributor Dubai" fetchpriority="high" loading="eager">
+                        </picture>
+                    </div>
                 </div>
             </div>
         </section>
