@@ -239,7 +239,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
 
 </head>
 <body>
-    <div class="grid-line-bg" style="max-width: 1200px; top: 40px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line.svg" alt="UAE Gift Card Background Grid" width="1200" height="681" aria-hidden="true" fetchpriority="high" loading="eager"></div>
+    <div class="grid-line-bg" style="max-width: 1200px; top: 40px; aspect-ratio: 1200 / 681;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line.svg" alt="UAE Gift Card Background Grid" width="1200" height="681" aria-hidden="true" fetchpriority="high" loading="eager"></div>
     <div class="main relative overhide">
 
         <header class="top-menu">
@@ -506,7 +506,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
 
                 <div class="d-flex-wrap gap-30">
                     <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
-                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" width="195" height="180" alt="Grid Background" aria-hidden="true"></div>
+                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px; aspect-ratio: 195/180;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" width="195" height="180" alt="Grid Background" aria-hidden="true" loading="lazy"></div>
                         <div class="relative">
                             <div class="mb-10"><span class="icon icon-verify icon-size-48 icon--primary "></span></div>
                             <h3 class="mb-5 color-title"><?php echo __('adv1_title'); ?></h3>
@@ -514,7 +514,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                         </div>
                     </div>
                     <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
-                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" width="195" height="180" alt="Grid Background" aria-hidden="true"></div>
+                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px; aspect-ratio: 195/180;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" width="195" height="180" alt="Grid Background" aria-hidden="true" loading="lazy"></div>
                         <div class="relative">
                             <div class="mb-10"><span class="icon icon-stopwatch icon-size-48 icon--primary "></span></div>
                             <h3 class="mb-5 color-title"><?php echo __('adv2_title'); ?></h3>
@@ -522,7 +522,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                         </div>
                     </div>
                     <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
-                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" width="195" height="180" alt="Grid Background" aria-hidden="true"></div>
+                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px; aspect-ratio: 195/180;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" width="195" height="180" alt="Grid Background" aria-hidden="true" loading="lazy"></div>
                         <div class="relative">
                             <div class="mb-10"><span class="icon icon-tag-price icon-size-48 icon--primary "></span></div>
                             <h3 class="mb-5 color-title"><?php echo __('adv3_title'); ?></h3>
@@ -530,7 +530,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                         </div>
                     </div>
                     <div class="basis200 bg-gr-light border pd-20 grow-1 radius-20 overhide relative">
-                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" width="195" height="180" alt="Grid Background" aria-hidden="true"></div>
+                        <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 200px; aspect-ratio: 195/180;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" width="195" height="180" alt="Grid Background" aria-hidden="true" loading="lazy"></div>
                         <div class="relative">
                             <div class="mb-10"><span class="icon icon-headphone icon-size-48 icon--primary "></span></div>
                             <h3 class="mb-5 color-title"><?php echo __('adv4_title'); ?></h3>
@@ -628,7 +628,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
         <section id="contact" class="section">
             <div class="center">
                 <div class="contact-box border bg-gr-light radius-20 overhide relative">
-                    <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 300px;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" width="195" height="180" alt="Grid Background" aria-hidden="true"></div>
+                    <div class="grid-line-bg" style="top: 0; margin: unset; max-width: 300px; aspect-ratio: 195/180;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-3.svg" width="195" height="180" alt="Grid Background" aria-hidden="true" loading="lazy"></div>
                     <div class="text-left mb-20 relative">
                         <h2 class="line60 color-primary font-size-3"><?php echo __('get_in_touch'); ?></h2>
                         <span><?php echo __('get_in_touch_subtitle'); ?></span>
@@ -683,7 +683,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                         </div>
 
                         <div class="contact-info basis300 grow-1 relative">
-                            <div class="grid-line-bg" style="top: 50%;transform: translateY(-50%)scale(1.3);"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-2.svg" width="631" height="631" alt="Grid Background" aria-hidden="true"></div>
+                            <div class="grid-line-bg" style="top: 50%;transform: translateY(-50%)scale(1.3); aspect-ratio: 1/1;"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-2.svg" width="631" height="631" alt="Grid Background" aria-hidden="true" loading="lazy"></div>
                             <div class="max-w400 m-auto relative">
                                 <div class="mb-20">
                                     <div class="d-flex align-center color-title font-size-1-2"><span class="icon icon-location icon-size-24"></span> <span class="ml-10"><?php echo __('address'); ?></span></div>
