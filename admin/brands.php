@@ -4,28 +4,35 @@ require_once 'layout_header.php';
 
 $action = $_GET['action'] ?? 'list';
 $msg = '';
+$csrfToken = generateCsrfToken();
 
-// Handle Delete
-if ($action === 'delete' && isset($_GET['id'])) {
-    try {
-        $stmt = db()->prepare("SELECT logo FROM brands WHERE id = ?");
-        $stmt->execute([$_GET['id']]);
-        $logo = $stmt->fetchColumn();
-        if ($logo && file_exists(__DIR__ . '/../' . $logo)) {
-            unlink(__DIR__ . '/../' . $logo);
-        }
-
-        $stmt = db()->prepare("DELETE FROM brands WHERE id = ?");
-        $stmt->execute([$_GET['id']]);
-        $msg = 'برند با موفقیت حذف شد!';
-    } catch (PDOException $e) {
-        $msg = 'خطا: امکان حذف برند وجود ندارد. ممکن است در حال استفاده باشد.';
-    }
-    $action = 'list';
-}
-
-// Handle Add/Edit
+// Handle Actions (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verifyCsrfToken($_POST['csrf_token'] ?? '')) {
+        die('CSRF token validation failed.');
+    }
+
+    // Handle Delete
+    if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id'])) {
+        try {
+            $stmt = db()->prepare("SELECT logo FROM brands WHERE id = ?");
+            $stmt->execute([$_POST['id']]);
+            $logo = $stmt->fetchColumn();
+            if ($logo && file_exists(__DIR__ . '/../' . $logo)) {
+                unlink(__DIR__ . '/../' . $logo);
+            }
+
+            $stmt = db()->prepare("DELETE FROM brands WHERE id = ?");
+            $stmt->execute([$_POST['id']]);
+            $msg = 'برند با موفقیت حذف شد!';
+        } catch (PDOException $e) {
+            $msg = 'خطا: امکان حذف برند وجود ندارد. ممکن است در حال استفاده باشد.';
+        }
+        $action = 'list';
+    }
+
+    // Handle Add/Edit
+    if (isset($_POST['name'])) {
     $name = clean($_POST['name']);
     $code = strtolower(clean($_POST['code']));
     $id = $_POST['id'] ?? '';
@@ -153,9 +160,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <a href="brands.php?action=edit&id=<?php echo e($b['id']); ?>" class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors" title="ویرایش">
                                     <iconify-icon icon="solar:pen-new-square-bold-duotone" class="text-xl"></iconify-icon>
                                 </a>
-                                <a href="brands.php?action=delete&id=<?php echo e($b['id']); ?>" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" onclick="return confirm('آیا از حذف این برند اطمینان دارید؟')" title="حذف">
-                                    <iconify-icon icon="solar:trash-bin-trash-bold-duotone" class="text-xl"></iconify-icon>
-                                </a>
+                                <form method="POST" class="inline" onsubmit="return confirm('آیا از حذف این برند اطمینان دارید؟')">
+                                    <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="<?php echo $b['id']; ?>">
+                                    <button type="submit" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="حذف">
+                                        <iconify-icon icon="solar:trash-bin-trash-bold-duotone" class="text-xl"></iconify-icon>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -188,6 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </h3>
 
         <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
             <input type="hidden" name="id" value="<?php echo e($editData['id']); ?>">
             <input type="hidden" name="old_logo" value="<?php echo e($editData['logo']); ?>">
 

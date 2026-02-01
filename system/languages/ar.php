@@ -80,4 +80,7 @@ return [
     'country_usa' => 'الولايات المتحدة',
     'country_uk' => 'المملكة المتحدة',
     'country_turkey' => 'تركيا',
+    'fill_all_fields' => 'يرجى ملء جميع الحقول المطلوبة.',
+    'message_sent_success' => 'تم إرسال رسالتك بنجاح!',
+    'message_sent_error' => 'حدث خطأ أثناء إرسال رسالتك.',
 ];
