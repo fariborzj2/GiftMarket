@@ -7,10 +7,8 @@ async function fetchData() {
         const response = await fetch(url);
         appData = await response.json();
 
-        // Update pack sizes based on initial brand/country
+        // Initial sync once data is loaded
         updatePackSizeDropdown();
-
-        // Initial render to sync table with current filter state (handles case where user clicked before data loaded)
         updatePricingTable();
     } catch (error) {
         console.error('Error loading page data:', error);
@@ -255,7 +253,18 @@ function showToast(message, type = 'success') {
 ======================== */
 let USD_TO_AED = 3.673;
 
+let updatePackSizeDropdownPending = false;
 function updatePackSizeDropdown() {
+    if (updatePackSizeDropdownPending) return;
+    updatePackSizeDropdownPending = true;
+
+    requestAnimationFrame(() => {
+        _updatePackSizeDropdown();
+        updatePackSizeDropdownPending = false;
+    });
+}
+
+function _updatePackSizeDropdown() {
     if (!appData) return;
 
     const brand = document.querySelector('input[name="brand"]')?.value;
@@ -304,7 +313,18 @@ function updatePackSizeDropdown() {
     });
 }
 
+let updatePricingTablePending = false;
 function updatePricingTable() {
+    if (updatePricingTablePending) return;
+    updatePricingTablePending = true;
+
+    requestAnimationFrame(() => {
+        _updatePricingTable();
+        updatePricingTablePending = false;
+    });
+}
+
+function _updatePricingTable() {
     if (!appData) return;
 
     if (appData.exchangeRates && appData.exchangeRates.USD) {
