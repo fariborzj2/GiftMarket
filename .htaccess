@@ -47,6 +47,7 @@ RewriteRule ^(en|ar)/?$ index.php?lang=$1 [L,QSA]
     ExpiresByType image/svg+xml "access plus 1 year"
     ExpiresByType image/x-icon "access plus 1 year"
     ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/avif "access plus 1 year"
 
     # Webfonts: 1 Year
     ExpiresByType font/ttf "access plus 1 year"
