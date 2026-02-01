@@ -296,7 +296,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                 <div class="hero-img">
                     <div class="img">
                         <picture>
-                            <source media="(max-width: 600px)" srcset="<?php echo BASE_URL; ?>assets/images/hero-mobile.webp" type="image/webp">
+                            <source media="(max-width: 600px)" srcset="<?php echo BASE_URL; ?>assets/images/hero-mobile.webp" type="image/webp" width="382" height="243">
                             <img src="<?php echo BASE_URL; ?>assets/images/hero.avif" width="650" height="414" alt="Official Gift Card Distributor Dubai" fetchpriority="high" loading="eager">
                         </picture>
                     </div>
