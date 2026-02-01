@@ -697,11 +697,11 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                                 <div class="d-flex-wrap gap-20 mb-20">
                                     <div>
                                         <div class="d-flex align-center color-title font-size-1-2"><span class="icon"></span> <span class="ml-10"><?php echo __('phone'); ?></span></div>
-                                        <p>+971 050 656 5129</p>
+                                        <p dir="ltr">+971 050 656 5129</p>
                                     </div>
                                     <div>
                                         <div class="d-flex align-center color-title font-size-1-2"><span class="icon"></span> <span class="ml-10"><?php echo __('whatsapp'); ?></span></div>
-                                        <p>+971 056 380 3107</p>
+                                        <p dir="ltr">+971 056 380 3107</p>
                                     </div>
                                 </div>
 
