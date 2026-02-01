@@ -682,27 +682,27 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                             <div class="grid-line-bg" style="top: 50%;transform: translateY(-50%)scale(1.3);"><img src="<?php echo BASE_URL; ?>assets/images/grid-line-2.svg" width="631" height="631" alt="Grid Background" aria-hidden="true"></div>
                             <div class="max-w400 m-auto relative">
                                 <div class="mb-20">
-                                    <div class="d-flex color-title font-size-1-2"><span class="icon icon-location icon-size-24"></span> <span class="ml-10"><?php echo __('address'); ?></span></div>
+                                    <div class="d-flex align-center color-title font-size-1-2"><span class="icon icon-location icon-size-24"></span> <span class="ml-10"><?php echo __('address'); ?></span></div>
                                     <p>Flat 1103, 11th Floor, Affini Building, Oud Metha Rd, AI Jaddaf, Dubai, United Arab Emirates</p>
                                 </div>
                                 <div class="mb-20">
-                                    <div class="d-flex color-title font-size-1-2"><span class="icon icon-mail icon-size-24"></span> <span class="ml-10"><?php echo __('email'); ?></span></div>
+                                    <div class="d-flex align-center color-title font-size-1-2"><span class="icon icon-mail icon-size-24"></span> <span class="ml-10"><?php echo __('email'); ?></span></div>
                                     <p>info@uea.gift</p>
                                 </div>
 
                                 <div class="d-flex-wrap gap-20 mb-20">
                                     <div>
-                                        <div class="d-flex color-title font-size-1-2"><span class="icon"></span> <span class="ml-10"><?php echo __('phone'); ?></span></div>
+                                        <div class="d-flex align-center color-title font-size-1-2"><span class="icon"></span> <span class="ml-10"><?php echo __('phone'); ?></span></div>
                                         <p>+971 050 656 5129</p>
                                     </div>
                                     <div>
-                                        <div class="d-flex color-title font-size-1-2"><span class="icon"></span> <span class="ml-10"><?php echo __('whatsapp'); ?></span></div>
+                                        <div class="d-flex align-center color-title font-size-1-2"><span class="icon"></span> <span class="ml-10"><?php echo __('whatsapp'); ?></span></div>
                                         <p>+971 056 380 3107</p>
                                     </div>
                                 </div>
 
                                 <div>
-                                    <div class="d-flex color-title font-size-1-2 mb-10"><span class="icon"></span> <span class="ml-10"><?php echo __('follow_us'); ?></span></div>
+                                    <div class="d-flex align-center color-title font-size-1-2 mb-10"><span class="icon"></span> <span class="ml-10"><?php echo __('follow_us'); ?></span></div>
                                     <div class="d-flex gap-10">
                                         <a href="" class="social-btn"><span class="icon icon-telegram icon-size-22 icon--primary "></span></a>
                                         <a href="" class="social-btn"><span class="icon icon-instagram icon-size-22 icon--primary "></span></a>
