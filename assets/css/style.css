@@ -18,11 +18,11 @@
     --color-text: #596486;
     --color-title: #1C274C;
     --color-border: #eeeeee;
-    --color-primary: #497FFF;
-    --color-green: #179364;
+    --color-primary: #2563EB;
+    --color-green: #15803D;
     --color-white: #ffffff;
     --color-surface: #ffffff;
-    --color-bright: #f5f5f5
+    --color-bright: #6B7280;
 
 }
 body.dark-theme {
@@ -31,7 +31,9 @@ body.dark-theme {
     --color-title: #ffffff;
     --color-border: #2d3748;
     --color-surface: #1a202c;
-    --color-bright: #0b0f1a;
+    --color-bright: #94A3B8;
+    --color-primary: #60A5FA;
+    --color-green: #34D399;
 }
 .color-primary {
     color: var(--color-primary);
@@ -93,12 +95,22 @@ body.dark-theme {
 
 @font-palette-values --icon-primary {
     font-family: "icon";
-    override-colors: 0 #007aff;
+    override-colors: 0 #2563EB;
 }
 
 @font-palette-values --icon-success {
     font-family: "icon";
-    override-colors: 0 #179364;
+    override-colors: 0 #15803D;
+}
+
+@font-palette-values --icon-primary-dark {
+    font-family: "icon";
+    override-colors: 0 #60A5FA;
+}
+
+@font-palette-values --icon-success-dark {
+    font-family: "icon";
+    override-colors: 0 #34D399;
 }
 
 /* ==============================
@@ -132,8 +144,16 @@ body.dark-theme {
     font-palette: --icon-primary;
 }
 
+.dark-theme .icon--primary {
+    font-palette: --icon-primary-dark;
+}
+
 .icon--success {
     font-palette: --icon-success;
+}
+
+.dark-theme .icon--success {
+    font-palette: --icon-success-dark;
 }
 
 .icon--white {
@@ -524,7 +544,7 @@ body.dark-theme .theme-light-icon {
 }
 .btn-primary {
     background: var(--color-primary);
-    color: #fff;
+    color: #ffffff;
     border: none;
     height: 48px;
     display: inline-flex;
@@ -535,6 +555,9 @@ body.dark-theme .theme-light-icon {
     text-decoration: none;
     white-space: nowrap;
     cursor: pointer
+}
+body.dark-theme .btn-primary {
+    color: #0b0f1a;
 }
 .social-btn {
   height: 48px;
