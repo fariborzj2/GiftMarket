@@ -22,7 +22,7 @@
     --color-green: #15803D;
     --color-white: #ffffff;
     --color-surface: #ffffff;
-    --color-bright: #6B7280;
+    --color-bright: #f9f9f9;
 
 }
 body.dark-theme {
@@ -31,7 +31,7 @@ body.dark-theme {
     --color-title: #ffffff;
     --color-border: #2d3748;
     --color-surface: #1a202c;
-    --color-bright: #94A3B8;
+    --color-bright: #2A3040;
     --color-primary: #60A5FA;
     --color-green: #34D399;
 }
@@ -555,9 +555,6 @@ body.dark-theme .theme-light-icon {
     text-decoration: none;
     white-space: nowrap;
     cursor: pointer
-}
-body.dark-theme .btn-primary {
-    color: #0b0f1a;
 }
 .social-btn {
   height: 48px;
