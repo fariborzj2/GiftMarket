@@ -370,7 +370,7 @@ function _updatePricingTable() {
         const priceInAED = (pricePerCard * USD_TO_AED).toFixed(2);
         const totalInAED = (parseFloat(totalPrice) * USD_TO_AED).toFixed(2);
 
-        const cardSymbol = getCurrencySymbol(opt.currency);
+        const cardSymbol = opt.display_symbol || getCurrencySymbol(opt.currency);
 
         const row = document.createElement('tr');
         row.innerHTML = `

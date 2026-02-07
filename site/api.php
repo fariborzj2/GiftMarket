@@ -79,7 +79,8 @@ foreach ($groupedProducts as $brandCode => $countries) {
                     'price' => $pack['price_digital'],
                     'price_digital' => $pack['price_digital'],
                     'price_physical' => $pack['price_physical'],
-                    'currency' => $product['currency']
+                    'currency' => $product['currency'],
+                    'display_symbol' => $product['display_symbol']
                 ];
             }
         }
