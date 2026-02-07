@@ -145,7 +145,7 @@ class TelegramBot {
 
             foreach ($productGroups as $pid => $packs) {
                 $firstPack = $packs[0];
-                $currency = $this->escapeMarkdown($firstPack['currency']);
+                $currency = $this->escapeMarkdown($firstPack['display_symbol'] ?: $firstPack['currency']);
                 $denomValue = trim(str_replace($currencySymbols, '', $firstPack['denomination']));
 
                 // Format Digital Packs

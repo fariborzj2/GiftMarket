@@ -48,7 +48,8 @@ foreach ($groupedProducts as $brandCode => $countries) {
                     'price' => $pack['price_digital'],
                     'price_digital' => $pack['price_digital'],
                     'price_physical' => $pack['price_physical'],
-                    'currency' => $product['currency']
+                    'currency' => $product['currency'],
+                    'display_symbol' => $product['display_symbol']
                 ];
             }
         }
@@ -459,7 +460,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                                 $totalInAED = number_format($totalPrice * $USD_TO_AED, 2, '.', '');
 
                                 $curr = $opt['currency'];
-                                $cardSymbol = ($curr === 'USD' ? '$' : ($curr === 'GBP' ? '£' : ($curr === 'TRY' ? 'TL' : ($curr === 'AED' ? 'AED' : ($curr === 'EUR' ? '€' : $curr)))));
+                                $cardSymbol = !empty($opt['display_symbol']) ? $opt['display_symbol'] : ($curr === 'USD' ? '$' : ($curr === 'GBP' ? '£' : ($curr === 'TRY' ? 'TL' : ($curr === 'AED' ? 'AED' : ($curr === 'EUR' ? '€' : $curr)))));
                             ?>
                             <tr>
                                 <td data-label="<?php echo __('brand'); ?>" class="text-center">

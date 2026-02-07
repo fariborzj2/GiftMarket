@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $brand = clean($_POST['brand']);
             $denomination = clean($_POST['denomination']);
+            $display_symbol = clean($_POST['display_symbol'] ?? '');
             $country = clean($_POST['country']);
             $status = isset($_POST['status']) ? 1 : 0;
             $pack_sizes = $_POST['pack_sizes'] ?? [];
@@ -49,11 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (isset($_POST['id']) && !empty($_POST['id'])) {
                 $productId = $_POST['id'];
-                $stmt = $db->prepare("UPDATE products SET brand=?, denomination=?, country=?, currency=?, status=? WHERE id=?");
-                $stmt->execute([$brand, $denomination, $country, $currency, $status, $productId]);
+                $stmt = $db->prepare("UPDATE products SET brand=?, denomination=?, display_symbol=?, country=?, currency=?, status=? WHERE id=?");
+                $stmt->execute([$brand, $denomination, $display_symbol, $country, $currency, $status, $productId]);
             } else {
-                $stmt = $db->prepare("INSERT INTO products (brand, denomination, country, currency, status) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute([$brand, $denomination, $country, $currency, $status]);
+                $stmt = $db->prepare("INSERT INTO products (brand, denomination, display_symbol, country, currency, status) VALUES (?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$brand, $denomination, $display_symbol, $country, $currency, $status]);
                 $productId = $db->lastInsertId();
             }
 
@@ -281,7 +282,12 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                                 <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors <?php echo $p['status'] == 0 ? 'opacity-60 grayscale-[0.5]' : ''; ?>">
                                     <td class="px-6 py-4">
                                         <div class="font-bold text-slate-900 dark:text-white"><?php echo e($p['denomination']); ?></div>
-                                        <div class="text-[10px] text-slate-400 font-mono mt-0.5"><?php echo e($p['currency']); ?></div>
+                                        <div class="text-[10px] text-slate-400 font-mono mt-0.5">
+                                            <?php echo e($p['currency']); ?>
+                                            <?php if (!empty($p['display_symbol'])): ?>
+                                                <span class="text-primary ml-1">(نماد: <?php echo e($p['display_symbol']); ?>)</span>
+                                            <?php endif; ?>
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 text-center">
                                         <?php if (empty($p['packs'])): ?>
@@ -423,11 +429,17 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
-                <div class="space-y-2 md:col-span-3">
+                <div class="space-y-2 md:col-span-2">
                     <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">مبلغ اعتبار (نام محصول)</label>
                     <input type="text" name="denomination" value="<?php echo e($editData['denomination']); ?>" required
                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold"
                            placeholder="مثلاً 100 AED, $50">
+                </div>
+                <div class="space-y-2 md:col-span-1">
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">نماد (اختیاری)</label>
+                    <input type="text" name="display_symbol" value="<?php echo e($editData['display_symbol'] ?? ''); ?>"
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                           placeholder="مثلاً $, USD">
                 </div>
                 <div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl">
                     <label class="relative inline-flex items-center cursor-pointer">

@@ -48,6 +48,7 @@ class Database {
                 price_digital DECIMAL(10, 2) NOT NULL DEFAULT 0,
                 price_physical DECIMAL(10, 2) NOT NULL DEFAULT 0,
                 currency VARCHAR(10) NOT NULL,
+                display_symbol VARCHAR(10) DEFAULT NULL,
                 pack_size INT DEFAULT 1,
                 stock INT DEFAULT 0,
                 type VARCHAR(20) DEFAULT 'digital',
@@ -162,6 +163,10 @@ class Database {
 
         try {
             $this->pdo->exec("ALTER TABLE products ADD COLUMN status INT DEFAULT 1");
+        } catch (PDOException $e) {}
+
+        try {
+            $this->pdo->exec("ALTER TABLE products ADD COLUMN display_symbol VARCHAR(10) DEFAULT NULL");
         } catch (PDOException $e) {}
 
         // Migration to many-packs per product
