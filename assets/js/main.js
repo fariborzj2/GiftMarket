@@ -381,7 +381,7 @@ function _updatePricingTable() {
             </td>
             <td data-label="${t.denomination || 'Denomination'}">
                 <span>${opt.denomination} ${cardSymbol}</span><br>
-                <span class="color-bright font-size-0-9">${isDigital ? (t.digital || 'Digital') : (t.physical || 'Physical')} · ${opt.currency}</span>
+                <span class="color-bright font-size-0-9">${isDigital ? (t.digital || 'Digital') : (t.physical || 'Physical')} · ${cardSymbol}</span>
             </td>
             <td data-label="${t.country || 'Country'}">${countryNames[country]}</td>
             <td data-label="${t.qty || 'Qty'}">${packSize}</td>

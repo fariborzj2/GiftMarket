@@ -55,7 +55,7 @@ foreach ($allBrands as $b) $brandMap[$b['code']] = $b;
 $allCountries = db()->query("SELECT * FROM countries ORDER BY sort_order ASC, name ASC")->fetchAll();
 $countryNames = [];
 foreach ($allCountries as $c) {
-    $countryNames[$c['code']] = __("country_{$c['code']}", $c['name']) . ' (' . $c['currency'] . ')';
+    $countryNames[$c['code']] = __("country_{$c['code']}", $c['name']);
 }
 
 // Override pricing data with database content

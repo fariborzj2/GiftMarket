@@ -61,7 +61,7 @@ $pricingData = $dbPricingData;
 // Re-map country names for the UI logic
 $countryNames = [];
 foreach ($allCountries as $c) {
-    $countryNames[$c['code']] = __("country_{$c['code']}", $c['name']) . ' (' . $c['currency'] . ')';
+    $countryNames[$c['code']] = __("country_{$c['code']}", $c['name']);
 }
 
 $exchangeRates = $appData['exchangeRates'];
@@ -390,7 +390,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                             <?php foreach ($allCountries as $c): ?>
                             <div class="drop-option d-flex gap-10 align-center <?php echo $c['code'] === $defaultCountry ? 'active' : ''; ?>">
                                 <div class="drop-option-img" data-option="<?php echo e($c['code']); ?>"><img src="<?php echo BASE_URL . e($c['flag']); ?>" alt="<?php echo e($c['name']); ?> Flag" width="28" height="28" style="width:28px;" loading="lazy"></div>
-                                <span><?php echo e(__("country_{$c['code']}", $c['name'])); ?> (<?php echo e($c['currency']); ?>)</span>
+                                <span><?php echo e(__("country_{$c['code']}", $c['name'])); ?></span>
                             </div>
                             <?php endforeach; ?>
                         </div>
@@ -460,7 +460,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                                 $totalInAED = number_format($totalPrice * $USD_TO_AED, 2, '.', '');
 
                                 $curr = $opt['currency'];
-                                $cardSymbol = !empty($opt['display_symbol']) ? $opt['display_symbol'] : ($curr === 'USD' ? '$' : ($curr === 'GBP' ? '£' : ($curr === 'TRY' ? 'TL' : ($curr === 'AED' ? 'AED' : ($curr === 'EUR' ? '€' : $curr)))));
+                                $cardSymbol = !empty($opt['display_symbol']) ? $opt['display_symbol'] : getCurrencySymbol($curr);
                             ?>
                             <tr>
                                 <td data-label="<?php echo __('brand'); ?>" class="text-center">
@@ -470,7 +470,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                                 </td>
                                 <td data-label="<?php echo __('denomination'); ?>">
                                     <span><?php echo e($opt['denomination']); ?> <?php echo e($cardSymbol); ?></span><br>
-                                    <span class="color-bright font-size-0-9"><?php echo __('digital'); ?> · <?php echo e($opt['currency']); ?></span>
+                                    <span class="color-bright font-size-0-9"><?php echo __('digital'); ?> · <?php echo e($cardSymbol); ?></span>
                                 </td>
                                 <td data-label="<?php echo __('country'); ?>"><?php echo e($countryNames[$defaultCountry] ?? $defaultCountry); ?></td>
                                 <td data-label="<?php echo __('qty'); ?>"><?php echo e($defaultPackSize); ?></td>

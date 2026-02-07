@@ -138,6 +138,17 @@ function e($data) {
     return htmlspecialchars((string)($data ?? ''), ENT_QUOTES, 'UTF-8');
 }
 
+function getCurrencySymbol($curr) {
+    switch ($curr) {
+        case 'USD': return '$';
+        case 'GBP': return '£';
+        case 'TRY': return 'TL';
+        case 'AED': return 'AED';
+        case 'EUR': return '€';
+        default: return $curr;
+    }
+}
+
 function getSetting($key, $default = null) {
     try {
         $stmt = db()->prepare("SELECT key_value FROM settings WHERE key_name = ?");
