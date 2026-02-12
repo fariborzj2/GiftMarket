@@ -70,27 +70,43 @@ $faqs = $appData['faqs'];
 $testimonials = $appData['testimonials'];
 
 // Default view for SSR
-$defaultBrand = !empty($allBrands) ? $allBrands[0]['code'] : 'apple';
 $defaultCountry = 'all';
+
+// Pick the first brand that has products as the default brand
+$defaultBrand = !empty($allBrands) ? $allBrands[0]['code'] : 'apple';
+foreach ($allBrands as $b) {
+    $bCode = $b['code'];
+    if (!empty($pricingData[$bCode]['options'])) {
+        $defaultBrand = $bCode;
+        break;
+    }
+}
 
 // Get available pack sizes for the default brand/country for SSR
 if ($defaultCountry === 'all') {
-    $defaultOptionsForPacks = [];
+    $options = [];
     if (isset($pricingData[$defaultBrand]['options'])) {
-        foreach ($pricingData[$defaultBrand]['options'] as $countryOptions) {
-            $defaultOptionsForPacks = array_merge($defaultOptionsForPacks, $countryOptions);
+        foreach ($pricingData[$defaultBrand]['options'] as $countryCode => $countryOptions) {
+            foreach ($countryOptions as $opt) {
+                $opt['_country_code'] = $countryCode;
+                $options[] = $opt;
+            }
         }
     }
 } else {
-    $defaultOptionsForPacks = $pricingData[$defaultBrand]['options'][$defaultCountry] ?? [];
+    $options = $pricingData[$defaultBrand]['options'][$defaultCountry] ?? [];
 }
 
 $ssrPackSizes = array_unique(array_map(function($opt) {
     return (int)$opt['pack_size'];
-}, $defaultOptionsForPacks));
+}, $options));
 sort($ssrPackSizes);
 
 $defaultPackSize = !empty($ssrPackSizes) ? $ssrPackSizes[0] : (!empty($allPackSizes) ? $allPackSizes[0] : 100);
+
+$filteredOptions = array_filter($options, function($opt) use ($defaultPackSize) {
+    return (int)$opt['pack_size'] === (int)$defaultPackSize;
+});
 
 $selectedBrandInfo = $brandMap[$defaultBrand] ?? null;
 if ($defaultCountry === 'all') {
@@ -462,24 +478,6 @@ if ($defaultCountry === 'all') {
 
                         <tbody id="priceTableBody">
                             <?php
-                            if ($defaultCountry === 'all') {
-                                $options = [];
-                                if (isset($pricingData[$defaultBrand]['options'])) {
-                                    foreach ($pricingData[$defaultBrand]['options'] as $countryCode => $countryOptions) {
-                                        foreach ($countryOptions as $opt) {
-                                            $opt['_country_code'] = $countryCode;
-                                            $options[] = $opt;
-                                        }
-                                    }
-                                }
-                            } else {
-                                $options = $pricingData[$defaultBrand]['options'][$defaultCountry] ?? [];
-                            }
-
-                            $filteredOptions = array_filter($options, function($opt) use ($defaultPackSize) {
-                                return $opt['pack_size'] == $defaultPackSize;
-                            });
-
                             if (empty($filteredOptions)):
                             ?>
                             <tr><td colspan="7" class="text-center"><?php echo __('no_products'); ?></td></tr>
