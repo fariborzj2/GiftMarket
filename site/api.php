@@ -104,6 +104,7 @@ $appData['translations'] = [
     'total_price' => __('total_price'),
     'buy' => __('buy'),
     'all_countries' => __('all_countries'),
+    'all_packs' => __('all_packs'),
 ];
 
 header('Content-Type: application/json');

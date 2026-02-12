@@ -316,24 +316,29 @@ function _updatePackSizeDropdown() {
     }
 
     // Current selected pack size
-    let currentSize = parseInt(packSizeInput.value);
-    let sizeFound = availablePackSizes.includes(currentSize);
+    let currentVal = packSizeInput.value;
+    let currentSize = parseInt(currentVal);
+    let isAll = currentVal === 'all';
+    let sizeFound = isAll || availablePackSizes.includes(currentSize);
 
     // If current size not available, pick the first one
     if (!sizeFound) {
-        currentSize = availablePackSizes[0];
-        packSizeInput.value = currentSize;
+        currentVal = 'all'; // Default to 'all' if not found
+        packSizeInput.value = currentVal;
 
         // Update selected text in button
         const selectedText = packSizeDropdown.querySelector('.selected-text');
-        if (selectedText) selectedText.textContent = `${appData.translations?.pack_of || 'Pack Of'} ${currentSize}`;
+        if (selectedText) selectedText.textContent = appData.translations?.all_packs || 'All Packs';
     }
 
     // Re-populate list
-    packSizeList.innerHTML = '';
+    packSizeList.innerHTML = `<div class="drop-option d-flex gap-10 align-center ${currentVal === 'all' ? 'active' : ''}" data-option="all">
+        <span>${appData.translations?.all_packs || 'All Packs'}</span>
+    </div>`;
+
     availablePackSizes.forEach(size => {
         const item = document.createElement('div');
-        item.className = `drop-option d-flex gap-10 align-center ${size === currentSize ? 'active' : ''}`;
+        item.className = `drop-option d-flex gap-10 align-center ${(currentVal !== 'all' && size === currentSize) ? 'active' : ''}`;
         item.dataset.option = size;
         item.innerHTML = `<span>${appData.translations?.pack_of || 'Pack Of'} ${size}</span>`;
         packSizeList.appendChild(item);
@@ -368,7 +373,9 @@ function _updatePricingTable() {
 
     const brand = brandInput.value;
     const country = countryInput.value;
-    const packSize = parseInt(packSizeInput.value || '100');
+    const packSizeVal = packSizeInput.value;
+    const isAllPacks = packSizeVal === 'all';
+    const packSize = parseInt(packSizeVal || '100');
     const isDigital = document.getElementById('modeDigitalBtn')?.classList.contains('active');
 
     const tableBody = document.getElementById('priceTableBody');
@@ -419,7 +426,7 @@ function _updatePricingTable() {
         return;
     }
 
-    const filteredOptions = options.filter(opt => parseInt(opt.pack_size) === packSize);
+    const filteredOptions = options.filter(opt => isAllPacks || parseInt(opt.pack_size) === packSize);
 
     if (filteredOptions.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="7" class="text-center">${t.no_packs || 'No data available'}</td></tr>`;
@@ -429,7 +436,8 @@ function _updatePricingTable() {
     tableBody.innerHTML = '';
     filteredOptions.forEach(opt => {
         const pricePerCard = parseFloat(isDigital ? opt.price_digital : opt.price_physical);
-        const totalPrice = (pricePerCard * packSize).toFixed(2);
+        const currentOptPackSize = parseInt(opt.pack_size);
+        const totalPrice = (pricePerCard * currentOptPackSize).toFixed(2);
 
         const priceInAED = (pricePerCard * USD_TO_AED).toFixed(2);
         const totalInAED = (parseFloat(totalPrice) * USD_TO_AED).toFixed(2);
@@ -448,7 +456,7 @@ function _updatePricingTable() {
                 <span class="color-bright font-size-0-9">${isDigital ? (t.digital || 'Digital') : (t.physical || 'Physical')} · ${cardSymbol}</span>
             </td>
             <td data-label="${t.country || 'Country'}">${countryNames[opt._country_code] || opt._country_code}</td>
-            <td data-label="${t.qty || 'Qty'}">${packSize}</td>
+            <td data-label="${t.qty || 'Qty'}">${currentOptPackSize}</td>
             <td data-label="${t.price_card || 'Price / Card'}">
                 <span>$${pricePerCard.toFixed(2)}</span><br>
                 <span class="color-bright font-size-0-9">~ ${priceInAED} AED</span>
