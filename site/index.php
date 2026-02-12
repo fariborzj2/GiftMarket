@@ -71,10 +71,20 @@ $testimonials = $appData['testimonials'];
 
 // Default view for SSR
 $defaultBrand = !empty($allBrands) ? $allBrands[0]['code'] : 'apple';
-$defaultCountry = !empty($allCountries) ? $allCountries[0]['code'] : 'uae';
+$defaultCountry = 'all';
 
 // Get available pack sizes for the default brand/country for SSR
-$defaultOptionsForPacks = $pricingData[$defaultBrand]['options'][$defaultCountry] ?? [];
+if ($defaultCountry === 'all') {
+    $defaultOptionsForPacks = [];
+    if (isset($pricingData[$defaultBrand]['options'])) {
+        foreach ($pricingData[$defaultBrand]['options'] as $countryOptions) {
+            $defaultOptionsForPacks = array_merge($defaultOptionsForPacks, $countryOptions);
+        }
+    }
+} else {
+    $defaultOptionsForPacks = $pricingData[$defaultBrand]['options'][$defaultCountry] ?? [];
+}
+
 $ssrPackSizes = array_unique(array_map(function($opt) {
     return (int)$opt['pack_size'];
 }, $defaultOptionsForPacks));
@@ -83,7 +93,15 @@ sort($ssrPackSizes);
 $defaultPackSize = !empty($ssrPackSizes) ? $ssrPackSizes[0] : (!empty($allPackSizes) ? $allPackSizes[0] : 100);
 
 $selectedBrandInfo = $brandMap[$defaultBrand] ?? null;
-$selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
+if ($defaultCountry === 'all') {
+    $selectedCountryInfo = [
+        'code' => 'all',
+        'name' => __('all_countries'),
+        'flag' => 'assets/images/flag/all.svg'
+    ];
+} else {
+    $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $currentLang; ?>" dir="<?php echo $currentLang === 'ar' ? 'rtl' : 'ltr'; ?>">
@@ -380,13 +398,17 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                             <div class="drop-down-img">
                                 <img class="selected-img" src="<?php echo BASE_URL . e($selectedCountryInfo['flag'] ?? 'assets/images/flag/default.png'); ?>" alt="<?php echo e($selectedCountryInfo['name'] ?? ''); ?> Flag" width="28" height="28" style="width:28px;" loading="lazy">
                             </div>
-                            <div class="selected-text"><?php echo e($countryNames[$defaultCountry] ?? __('select_country')); ?></div>
+                            <div class="selected-text"><?php echo e($defaultCountry === 'all' ? __('all_countries') : ($countryNames[$defaultCountry] ?? __('select_country'))); ?></div>
                             <span class="icon icon-arrow-down icon-size-16  lt-auto"></span>
                         </div>
 
                         <input type="text" class="selected-option" name="country" value="<?php echo e($defaultCountry); ?>" id="" hidden>
 
                         <div class="drop-down-list">
+                            <div class="drop-option d-flex gap-10 align-center <?php echo $defaultCountry === 'all' ? 'active' : ''; ?>">
+                                <div class="drop-option-img" data-option="all"><img src="<?php echo BASE_URL; ?>assets/images/flag/all.svg" alt="<?php echo __('all_countries'); ?>" width="28" height="28" style="width:28px;" loading="lazy"></div>
+                                <span><?php echo __('all_countries'); ?></span>
+                            </div>
                             <?php foreach ($allCountries as $c): ?>
                             <div class="drop-option d-flex gap-10 align-center <?php echo $c['code'] === $defaultCountry ? 'active' : ''; ?>">
                                 <div class="drop-option-img" data-option="<?php echo e($c['code']); ?>"><img src="<?php echo BASE_URL . e($c['flag']); ?>" alt="<?php echo e($c['name']); ?> Flag" width="28" height="28" style="width:28px;" loading="lazy"></div>
@@ -440,7 +462,20 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
 
                         <tbody id="priceTableBody">
                             <?php
-                            $options = $pricingData[$defaultBrand]['options'][$defaultCountry] ?? [];
+                            if ($defaultCountry === 'all') {
+                                $options = [];
+                                if (isset($pricingData[$defaultBrand]['options'])) {
+                                    foreach ($pricingData[$defaultBrand]['options'] as $countryCode => $countryOptions) {
+                                        foreach ($countryOptions as $opt) {
+                                            $opt['_country_code'] = $countryCode;
+                                            $options[] = $opt;
+                                        }
+                                    }
+                                }
+                            } else {
+                                $options = $pricingData[$defaultBrand]['options'][$defaultCountry] ?? [];
+                            }
+
                             $filteredOptions = array_filter($options, function($opt) use ($defaultPackSize) {
                                 return $opt['pack_size'] == $defaultPackSize;
                             });
@@ -461,6 +496,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
 
                                 $curr = $opt['currency'];
                                 $cardSymbol = !empty($opt['display_symbol']) ? $opt['display_symbol'] : getCurrencySymbol($curr);
+                                $rowCountryCode = $opt['_country_code'] ?? $defaultCountry;
                             ?>
                             <tr>
                                 <td data-label="<?php echo __('brand'); ?>" class="text-center">
@@ -472,7 +508,7 @@ $selectedCountryInfo = $countryMap[$defaultCountry] ?? null;
                                     <span><?php echo e($opt['denomination']); ?> <?php echo e($cardSymbol); ?></span><br>
                                     <span class="color-bright font-size-0-9"><?php echo __('digital'); ?> · <?php echo e($cardSymbol); ?></span>
                                 </td>
-                                <td data-label="<?php echo __('country'); ?>"><?php echo e($countryNames[$defaultCountry] ?? $defaultCountry); ?></td>
+                                <td data-label="<?php echo __('country'); ?>"><?php echo e($countryNames[$rowCountryCode] ?? $rowCountryCode); ?></td>
                                 <td data-label="<?php echo __('qty'); ?>"><?php echo e($defaultPackSize); ?></td>
                                 <td data-label="<?php echo __('price_card'); ?>">
                                     <span>$<?php echo e(number_format($pricePerCard, 2, '.', '')); ?></span><br>

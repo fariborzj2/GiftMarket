@@ -103,6 +103,7 @@ $appData['translations'] = [
     'price_card' => __('price_card'),
     'total_price' => __('total_price'),
     'buy' => __('buy'),
+    'all_countries' => __('all_countries'),
 ];
 
 header('Content-Type: application/json');
