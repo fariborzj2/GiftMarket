@@ -102,9 +102,10 @@ $ssrPackSizes = array_unique(array_map(function($opt) {
 }, $options));
 sort($ssrPackSizes);
 
-$defaultPackSize = !empty($ssrPackSizes) ? $ssrPackSizes[0] : (!empty($allPackSizes) ? $allPackSizes[0] : 100);
+$defaultPackSize = 'all';
 
 $filteredOptions = array_filter($options, function($opt) use ($defaultPackSize) {
+    if ($defaultPackSize === 'all') return true;
     return (int)$opt['pack_size'] === (int)$defaultPackSize;
 });
 
@@ -437,18 +438,21 @@ if ($defaultCountry === 'all') {
                     <div class="drop-down grow-1">
                         <div class="drop-down-btn d-flex align-center gap-10 pointer">
                             <span class="color-bright"><?php echo __('pack_size'); ?></span>
-                            <div class="selected-text"><?php echo __('pack_of'); ?> <?php echo e($defaultPackSize); ?></div>
+                            <div class="selected-text"><?php echo $defaultPackSize === 'all' ? __('all_packs') : __('pack_of') . ' ' . $defaultPackSize; ?></div>
                             <span class="icon icon-arrow-down icon-size-16 lt-auto"></span>
                         </div>
 
                         <input type="text" class="selected-option" name="pack_size" value="<?php echo e($defaultPackSize); ?>" id="" hidden>
 
                         <div class="drop-down-list">
+                            <div class="drop-option d-flex gap-10 align-center <?php echo $defaultPackSize === 'all' ? 'active' : ''; ?>" data-option="all">
+                                <span><?php echo __('all_packs'); ?></span>
+                            </div>
                             <?php
                             $packsToDisplay = !empty($ssrPackSizes) ? $ssrPackSizes : $allPackSizes;
                             foreach ($packsToDisplay as $size):
                             ?>
-                            <div class="drop-option d-flex gap-10 align-center <?php echo $size == $defaultPackSize ? 'active' : ''; ?>" data-option="<?php echo e($size); ?>">
+                            <div class="drop-option d-flex gap-10 align-center <?php echo (string)$size === (string)$defaultPackSize ? 'active' : ''; ?>" data-option="<?php echo e($size); ?>">
                                 <span><?php echo __('pack_of'); ?> <?php echo e($size); ?></span>
                             </div>
                             <?php endforeach; ?>
@@ -507,7 +511,7 @@ if ($defaultCountry === 'all') {
                                     <span class="color-bright font-size-0-9"><?php echo __('digital'); ?> · <?php echo e($cardSymbol); ?></span>
                                 </td>
                                 <td data-label="<?php echo __('country'); ?>"><?php echo e($countryNames[$rowCountryCode] ?? $rowCountryCode); ?></td>
-                                <td data-label="<?php echo __('qty'); ?>"><?php echo e($defaultPackSize); ?></td>
+                                <td data-label="<?php echo __('qty'); ?>"><?php echo e($opt['pack_size']); ?></td>
                                 <td data-label="<?php echo __('price_card'); ?>">
                                     <span>$<?php echo e(number_format($pricePerCard, 2, '.', '')); ?></span><br>
                                     <span class="color-bright font-size-0-9">~ <?php echo e($priceInAED); ?> AED</span>
