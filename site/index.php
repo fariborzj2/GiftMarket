@@ -491,7 +491,8 @@ if ($defaultCountry === 'all') {
                             foreach ($filteredOptions as $opt):
                                 // Default SSR view is Digital
                                 $pricePerCard = (float)$opt['price_digital'];
-                                $totalPrice = $pricePerCard * $defaultPackSize;
+                                $currentOptPackSize = (int)$opt['pack_size'];
+                                $totalPrice = $pricePerCard * $currentOptPackSize;
 
                                 $priceInAED = number_format($pricePerCard * $USD_TO_AED, 2, '.', '');
                                 $totalInAED = number_format($totalPrice * $USD_TO_AED, 2, '.', '');
