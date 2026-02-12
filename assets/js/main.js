@@ -278,7 +278,14 @@ function _updatePackSizeDropdown() {
     const brandData = appData.pricingData[brand];
     if (!brandData) return;
 
-    const options = brandData.options[country] || [];
+    let options = [];
+    if (country === 'all') {
+        Object.values(brandData.options).forEach(countryOpts => {
+            options = options.concat(countryOpts);
+        });
+    } else {
+        options = brandData.options[country] || [];
+    }
 
     // Get unique pack sizes
     const availablePackSizes = [...new Set(options.map(opt => parseInt(opt.pack_size)))].sort((a, b) => a - b);
@@ -349,8 +356,18 @@ function _updatePricingTable() {
         return;
     }
 
-    const options = brandData.options[country];
-    if (!options) {
+    let options = [];
+    if (country === 'all') {
+        Object.keys(brandData.options).forEach(countryCode => {
+            brandData.options[countryCode].forEach(opt => {
+                options.push({ ...opt, _country_code: countryCode });
+            });
+        });
+    } else {
+        options = (brandData.options[country] || []).map(opt => ({ ...opt, _country_code: country }));
+    }
+
+    if (options.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="7" class="text-center">${t.no_packs || 'No data available'}</td></tr>`;
         return;
     }
@@ -383,7 +400,7 @@ function _updatePricingTable() {
                 <span>${opt.denomination} ${cardSymbol}</span><br>
                 <span class="color-bright font-size-0-9">${isDigital ? (t.digital || 'Digital') : (t.physical || 'Physical')} · ${cardSymbol}</span>
             </td>
-            <td data-label="${t.country || 'Country'}">${countryNames[country]}</td>
+            <td data-label="${t.country || 'Country'}">${countryNames[opt._country_code] || opt._country_code}</td>
             <td data-label="${t.qty || 'Qty'}">${packSize}</td>
             <td data-label="${t.price_card || 'Price / Card'}">
                 <span>$${pricePerCard.toFixed(2)}</span><br>

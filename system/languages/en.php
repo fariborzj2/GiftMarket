@@ -80,6 +80,7 @@ return [
     'country_usa' => 'United States',
     'country_uk' => 'United Kingdom',
     'country_turkey' => 'Turkey',
+    'all_countries' => 'All Countries',
     'fill_all_fields' => 'Please fill all required fields.',
     'message_sent_success' => 'Your message has been sent successfully!',
     'message_sent_error' => 'An error occurred while sending your message.',
