@@ -267,24 +267,44 @@ function updatePackSizeDropdown() {
 function _updatePackSizeDropdown() {
     if (!appData) return;
 
-    const brand = document.querySelector('input[name="brand"]')?.value;
-    const country = document.querySelector('input[name="country"]')?.value;
+    const brandInput = document.querySelector('input[name="brand"]');
+    const countryInput = document.querySelector('input[name="country"]');
     const packSizeInput = document.querySelector('input[name="pack_size"]');
-    const packSizeDropdown = packSizeInput?.closest('.drop-down');
+
+    if (!brandInput || !countryInput || !packSizeInput) return;
+
+    const brand = brandInput.value;
+    const country = countryInput.value;
+    const packSizeDropdown = packSizeInput.closest('.drop-down');
     const packSizeList = packSizeDropdown?.querySelector('.drop-down-list');
 
-    if (!brand || !country || !packSizeList) return;
+    if (!packSizeList) return;
 
-    const brandData = appData.pricingData[brand];
+    // Try exact match first, then case-insensitive
+    let brandData = appData.pricingData[brand];
+    if (!brandData) {
+        const foundBrand = Object.keys(appData.pricingData).find(k => k.toLowerCase() === brand.toLowerCase());
+        if (foundBrand) brandData = appData.pricingData[foundBrand];
+    }
     if (!brandData) return;
 
     let options = [];
     if (country === 'all') {
-        Object.values(brandData.options).forEach(countryOpts => {
-            options = options.concat(countryOpts);
-        });
+        if (brandData.options && typeof brandData.options === 'object') {
+            Object.values(brandData.options).forEach(countryOpts => {
+                if (Array.isArray(countryOpts)) {
+                    options = options.concat(countryOpts);
+                }
+            });
+        }
     } else {
-        options = brandData.options[country] || [];
+        // Try exact country match first, then case-insensitive
+        let countryOptions = brandData.options[country];
+        if (!countryOptions) {
+            const foundCountry = Object.keys(brandData.options).find(k => k.toLowerCase() === country.toLowerCase());
+            if (foundCountry) countryOptions = brandData.options[foundCountry];
+        }
+        options = countryOptions || [];
     }
 
     // Get unique pack sizes
@@ -340,9 +360,15 @@ function _updatePricingTable() {
 
     const { pricingData, countryNames } = appData;
 
-    const brand = document.querySelector('input[name="brand"]')?.value;
-    const country = document.querySelector('input[name="country"]')?.value;
-    const packSize = parseInt(document.querySelector('input[name="pack_size"]')?.value || '100');
+    const brandInput = document.querySelector('input[name="brand"]');
+    const countryInput = document.querySelector('input[name="country"]');
+    const packSizeInput = document.querySelector('input[name="pack_size"]');
+
+    if (!brandInput || !countryInput || !packSizeInput) return;
+
+    const brand = brandInput.value;
+    const country = countryInput.value;
+    const packSize = parseInt(packSizeInput.value || '100');
     const isDigital = document.getElementById('modeDigitalBtn')?.classList.contains('active');
 
     const tableBody = document.getElementById('priceTableBody');
@@ -350,7 +376,13 @@ function _updatePricingTable() {
 
     const t = appData.translations || {};
 
-    const brandData = pricingData[brand];
+    // Try exact match first, then case-insensitive
+    let brandData = pricingData[brand];
+    if (!brandData) {
+        const foundBrand = Object.keys(pricingData).find(k => k.toLowerCase() === brand.toLowerCase());
+        if (foundBrand) brandData = pricingData[foundBrand];
+    }
+
     if (!brandData) {
         tableBody.innerHTML = `<tr><td colspan="7" class="text-center">${t.no_packs || 'No data available'}</td></tr>`;
         return;
@@ -358,13 +390,28 @@ function _updatePricingTable() {
 
     let options = [];
     if (country === 'all') {
-        Object.keys(brandData.options).forEach(countryCode => {
-            brandData.options[countryCode].forEach(opt => {
-                options.push({ ...opt, _country_code: countryCode });
+        if (brandData.options && typeof brandData.options === 'object') {
+            Object.keys(brandData.options).forEach(countryCode => {
+                const countryOpts = brandData.options[countryCode];
+                if (Array.isArray(countryOpts)) {
+                    countryOpts.forEach(opt => {
+                        options.push({ ...opt, _country_code: countryCode });
+                    });
+                }
             });
-        });
+        }
     } else {
-        options = (brandData.options[country] || []).map(opt => ({ ...opt, _country_code: country }));
+        // Try exact country match first, then case-insensitive
+        let countryOptions = brandData.options[country];
+        let actualCountryCode = country;
+        if (!countryOptions) {
+            const foundCountry = Object.keys(brandData.options).find(k => k.toLowerCase() === country.toLowerCase());
+            if (foundCountry) {
+                countryOptions = brandData.options[foundCountry];
+                actualCountryCode = foundCountry;
+            }
+        }
+        options = (countryOptions || []).map(opt => ({ ...opt, _country_code: actualCountryCode }));
     }
 
     if (options.length === 0) {
