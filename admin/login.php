@@ -30,7 +30,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ورود | پنل مدیریت</title>
-    <link href="https://fonts.googleapis.com/css2?family=Zain:wght@200;300;400;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Apply saved theme before first paint to avoid a flash -->
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('admin-theme');
+                if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                if (t === 'dark') document.documentElement.classList.add('dark');
+            } catch (e) {}
+        })();
+    </script>
+    <style>
+        html { background: #f8fafc; }
+        html.dark { background: #020617; }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -41,7 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         primary: '#497FFF',
                     },
                     fontFamily: {
-                        zain: ['Zain', 'sans-serif'],
+                        zain: ['Vazirmatn', 'sans-serif'],
+                        sans: ['Vazirmatn', 'ui-sans-serif', 'system-ui', 'sans-serif'],
                     }
                 }
             }

@@ -12,6 +12,22 @@ if (!isLoggedIn()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo (isset($pageTitle) ? $pageTitle . ' | ' : '') . SITE_NAME; ?></title>
+
+    <!-- Apply saved theme before first paint to avoid a flash -->
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('admin-theme');
+                if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                if (t === 'dark') document.documentElement.classList.add('dark');
+            } catch (e) {}
+        })();
+    </script>
+    <style>
+        html { background: #f8fafc; }
+        html.dark { background: #020617; }
+    </style>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
@@ -28,11 +44,19 @@ if (!isLoggedIn()) {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#497FFF',
+                        primary: {
+                            DEFAULT: '#497FFF',
+                            600: '#3B6BEA',
+                            700: '#2F58C9',
+                        },
                     },
                     fontFamily: {
                         zain: ['Vazirmatn', 'sans-serif'],
-                    }
+                        sans: ['Vazirmatn', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        card: '0 1px 2px rgba(15,23,42,0.04), 0 4px 20px rgba(15,23,42,0.05)',
+                    },
                 }
             }
         }
@@ -40,21 +64,34 @@ if (!isLoggedIn()) {
     <style type="text/tailwindcss">
         @layer base {
             body {
-                @apply font-zain bg-slate-50 text-slate-600 dark:bg-slate-950 dark:text-slate-400;
+                @apply font-zain bg-slate-50 text-slate-600 dark:bg-slate-950 dark:text-slate-300 antialiased;
             }
             h1, h2, h3, h4, h5, h6 {
                 @apply text-slate-900 dark:text-white font-bold;
             }
+            ::selection { @apply bg-primary/20; }
         }
         @layer components {
             .admin-card {
-                @apply bg-white dark:bg-slate-900 p-4 md:p-6 lg:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm;
+                @apply bg-white dark:bg-slate-900 p-4 md:p-6 lg:p-8 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-card;
             }
             .btn-primary {
-                @apply bg-primary hover:bg-blue-600 text-white px-6 py-2 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-medium;
+                @apply bg-primary hover:bg-primary-600 text-white px-6 py-2.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-[.98];
+            }
+            .btn-secondary {
+                @apply bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 px-6 py-2.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-medium active:scale-[.98];
+            }
+            .btn-danger {
+                @apply bg-red-500 hover:bg-red-600 text-white px-6 py-2.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg shadow-red-500/25 active:scale-[.98];
+            }
+            .form-input {
+                @apply w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all;
+            }
+            .icon-tile {
+                @apply flex items-center justify-center rounded-xl shrink-0;
             }
             .sidebar-link {
-                @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary;
+                @apply relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-500 dark:text-slate-400 font-medium hover:bg-primary/10 hover:text-primary;
             }
             .sidebar-link.active {
                 @apply bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primary hover:text-white;
@@ -68,8 +105,9 @@ if (!isLoggedIn()) {
     <div class="flex min-h-screen">
         <!-- Sidebar -->
         <aside class="fixed inset-y-0 right-0 w-64 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 p-6 z-50 transform translate-x-full transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-0" id="sidebar">
-            <div class="mb-10">
-                <img src="../assets/images/logo.svg" alt="Logo" class="h-10 dark:invert dark:hue-rotate-180 dark:brightness-[1.5]">
+            <div class="mb-10 flex items-center justify-between">
+                <img src="../assets/images/logo.svg" alt="Logo" class="h-9 dark:invert dark:hue-rotate-180 dark:brightness-[1.5]">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-lg">پنل</span>
             </div>
 
             <nav class="space-y-1">
@@ -132,13 +170,21 @@ if (!isLoggedIn()) {
                     <h1 class="text-xl md:text-2xl"><?php echo $pageTitle ?? 'Dashboard'; ?></h1>
                 </div>
 
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <button type="button" id="themeToggle" aria-label="تغییر تم روشن/تاریک"
+                            class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        <iconify-icon icon="solar:sun-2-bold-duotone" class="text-xl hidden dark:block"></iconify-icon>
+                        <iconify-icon icon="solar:moon-bold-duotone" class="text-xl block dark:hidden"></iconify-icon>
+                    </button>
+
+                    <div class="w-px h-6 bg-slate-200 dark:bg-slate-800 hidden md:block"></div>
+
                     <div class="hidden md:block text-sm">
                         <span class="text-slate-400">سلام،</span>
-                        <span class="font-bold text-slate-900 dark:text-white"><?php echo $_SESSION['username']; ?></span>
+                        <span class="font-bold text-slate-900 dark:text-white"><?php echo e($_SESSION['username']); ?></span>
                     </div>
                     <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold">
-                        <?php echo mb_substr($_SESSION['username'], 0, 1); ?>
+                        <?php echo e(mb_substr($_SESSION['username'], 0, 1)); ?>
                     </div>
                 </div>
             </header>

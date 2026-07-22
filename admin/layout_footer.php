@@ -71,6 +71,16 @@
         // Close all on outside click
         document.querySelectorAll('.drop-down-list').forEach(list => list.classList.add('hidden'));
     });
+
+    // Theme toggle (light / dark) with persistence
+    (function () {
+        const toggle = document.getElementById('themeToggle');
+        if (!toggle) return;
+        toggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            try { localStorage.setItem('admin-theme', isDark ? 'dark' : 'light'); } catch (e) {}
+        });
+    })();
 </script>
 </body>
 </html>
