@@ -178,7 +178,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                     جستجو
                 </label>
                 <input type="text" name="search" value="<?php echo e($search); ?>"
-                       class="w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm"
+                       class="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm"
                        placeholder="مبلغ اعتبار...">
             </div>
 
@@ -187,7 +187,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                     <iconify-icon icon="lucide:tag"></iconify-icon>
                     برند
                 </label>
-                <select name="brand" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm">
+                <select name="brand" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm">
                     <option value="">همه برندها</option>
                     <?php foreach ($brands as $b): ?>
                         <option value="<?php echo e($b['code']); ?>" <?php echo $f_brand == $b['code'] ? 'selected' : ''; ?>><?php echo e($b['name']); ?></option>
@@ -200,7 +200,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                     <iconify-icon icon="lucide:globe"></iconify-icon>
                     کشور
                 </label>
-                <select name="country" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm">
+                <select name="country" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm">
                     <option value="">همه کشورها</option>
                     <?php foreach ($countries as $c): ?>
                         <option value="<?php echo e($c['code']); ?>" <?php echo $f_country == $c['code'] ? 'selected' : ''; ?>><?php echo e($c['name']); ?></option>
@@ -213,7 +213,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                     <iconify-icon icon="lucide:package"></iconify-icon>
                     سایز پک
                 </label>
-                <select name="pack_size" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm">
+                <select name="pack_size" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm">
                     <option value="">همه سایزها</option>
                     <?php foreach ($pack_sizes as $size): ?>
                         <option value="<?php echo e($size); ?>" <?php echo $f_pack_size == $size ? 'selected' : ''; ?>>Pack Of <?php echo e($size); ?></option>
@@ -223,7 +223,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
 
             <div class="flex gap-2">
                 <button type="submit" class="btn-primary !px-4 !py-2 text-sm flex-1">اعمال</button>
-                <a href="products.php" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-sm">حذف</a>
+                <a href="products.php" class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-sm">حذف</a>
             </div>
         </form>
     </div>
@@ -304,7 +304,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                                             <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
                                             <input type="hidden" name="action" value="toggle_status">
                                             <input type="hidden" name="id" value="<?php echo $p['id']; ?>">
-                                            <button type="submit" class="inline-flex items-center gap-1 px-2 py-1 rounded-xl text-[10px] font-bold transition-all <?php echo $p['status'] == 1 ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'; ?>">
+                                            <button type="submit" class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold transition-all <?php echo $p['status'] == 1 ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'; ?>">
                                                 <iconify-icon icon="<?php echo $p['status'] == 1 ? 'lucide:circle-check' : 'lucide:circle-x'; ?>"></iconify-icon>
                                                 <?php echo $p['status'] == 1 ? 'فعال' : 'غیرفعال'; ?>
                                             </button>
@@ -375,7 +375,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                             if ($b['code'] == $editData['brand']) { $selectedBrand = $b; break; }
                         }
                         ?>
-                        <button type="button" class="drop-down-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-right transition-all">
+                        <button type="button" class="drop-down-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-right transition-all">
                             <div class="w-6 h-6 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center overflow-hidden shrink-0">
                                 <img class="selected-img max-w-full max-h-full object-contain" src="../<?php echo e($selectedBrand['logo'] ?? ''); ?>" alt="" style="<?php echo empty($selectedBrand['logo']) ? 'display:none;' : ''; ?>">
                             </div>
@@ -406,7 +406,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                             if ($c['code'] == $editData['country']) { $selectedCountry = $c; break; }
                         }
                         ?>
-                        <button type="button" class="drop-down-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-right transition-all">
+                        <button type="button" class="drop-down-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-right transition-all">
                             <div class="w-6 h-6 rounded overflow-hidden shrink-0">
                                 <img class="selected-img w-full h-full object-cover" src="../<?php echo e($selectedCountry['flag'] ?? ''); ?>" alt="" style="<?php echo empty($selectedCountry['flag']) ? 'display:none;' : ''; ?>">
                             </div>
@@ -432,13 +432,13 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                 <div class="space-y-2 md:col-span-2">
                     <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">مبلغ اعتبار (نام محصول)</label>
                     <input type="text" name="denomination" value="<?php echo e($editData['denomination']); ?>" required
-                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold"
+                           class="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold"
                            placeholder="مثلاً 100 AED, $50">
                 </div>
                 <div class="space-y-2 md:col-span-1">
                     <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">نماد (اختیاری)</label>
                     <input type="text" name="display_symbol" value="<?php echo e($editData['display_symbol'] ?? ''); ?>"
-                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                           class="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                            placeholder="مثلاً $, USD">
                 </div>
                 <div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl">
@@ -458,7 +458,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                         </div>
                         <h4 class="font-bold text-slate-900 dark:text-white">پک‌های محصول</h4>
                     </div>
-                    <button type="button" id="add-pack-btn" class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all">
+                    <button type="button" id="add-pack-btn" class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all">
                         افزودن پک +
                     </button>
                 </div>
@@ -477,20 +477,20 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                             <div class="space-y-1.5">
                                 <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">تعداد (پک)</label>
                                 <input type="number" name="pack_sizes[]" value="<?php echo e($pk['pack_size']); ?>" required min="1"
-                                       class="w-full px-3 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
+                                       class="w-full px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
                             </div>
                             <div class="space-y-1.5">
                                 <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">قیمت دیجیتال ($)</label>
                                 <input type="number" step="0.01" name="prices_digital[]" value="<?php echo e($pk['price_digital']); ?>" required
-                                       class="w-full px-3 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
+                                       class="w-full px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
                             </div>
                             <div class="space-y-1.5">
                                 <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">قیمت فیزیکی ($)</label>
                                 <input type="number" step="0.01" name="prices_physical[]" value="<?php echo e($pk['price_physical']); ?>" required
-                                       class="w-full px-3 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
+                                       class="w-full px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
                             </div>
                             <div class="flex items-end">
-                                <button type="button" class="remove-pack-btn w-full py-4 rounded-xl border border-red-100 dark:border-red-900/30 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs font-bold transition-all">
+                                <button type="button" class="remove-pack-btn w-full py-4 rounded-lg border border-red-100 dark:border-red-900/30 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs font-bold transition-all">
                                     حذف پک
                                 </button>
                             </div>
@@ -501,7 +501,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
 
             <div class="flex items-center gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
                 <button type="submit" class="btn-primary flex-1 py-3">ذخیره محصول</button>
-                <a href="products.php" class="px-8 py-3 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-bold">انصراف</a>
+                <a href="products.php" class="px-8 py-3 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-bold">انصراف</a>
             </div>
         </form>
     </div>
@@ -515,20 +515,20 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
             <div class="space-y-1.5">
                 <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">تعداد (پک)</label>
                 <input type="number" name="pack_sizes[]" value="1" required min="1"
-                       class="w-full px-3 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
+                       class="w-full px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
             </div>
             <div class="space-y-1.5">
                 <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">قیمت دیجیتال ($)</label>
                 <input type="number" step="0.01" name="prices_digital[]" required
-                       class="w-full px-3 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
+                       class="w-full px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
             </div>
             <div class="space-y-1.5">
                 <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">قیمت فیزیکی ($)</label>
                 <input type="number" step="0.01" name="prices_physical[]" required
-                       class="w-full px-3 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
+                       class="w-full px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
             </div>
             <div class="flex items-end">
-                <button type="button" class="remove-pack-btn w-full py-4 rounded-xl border border-red-100 dark:border-red-900/30 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs font-bold transition-all">
+                <button type="button" class="remove-pack-btn w-full py-4 rounded-lg border border-red-100 dark:border-red-900/30 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs font-bold transition-all">
                     حذف پک
                 </button>
             </div>

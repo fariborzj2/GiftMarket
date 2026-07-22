@@ -60,10 +60,10 @@ $last_update = (int)getSetting('last_rate_update', 0);
             <div class="flex flex-col md:flex-row gap-3">
                 <div class="relative flex-1">
                     <input type="number" step="0.0001" name="usd_to_aed" id="usd_to_aed" value="<?php echo e($current_rate); ?>" required
-                           class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-lg font-bold focus:border-primary outline-none transition-all">
+                           class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-lg font-bold focus:border-primary outline-none transition-all">
                 </div>
                 <button type="button" id="fetch-api-btn"
-                        class="px-6 py-3 rounded-xl border border-primary text-primary hover:bg-primary hover:text-white transition-all font-bold whitespace-nowrap flex items-center justify-center gap-2">
+                        class="px-6 py-3 rounded-lg border border-primary text-primary hover:bg-primary hover:text-white transition-all font-bold whitespace-nowrap flex items-center justify-center gap-2">
                     <iconify-icon icon="lucide:refresh-cw" class="text-xl"></iconify-icon>
                     بروزرسانی از API
                 </button>
@@ -91,7 +91,7 @@ $last_update = (int)getSetting('last_rate_update', 0);
                 <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">فاصله زمانی بروزرسانی (ساعت)</label>
                 <div class="relative max-w-[200px]">
                     <input type="number" name="update_interval_hours" value="<?php echo e($update_interval); ?>" min="1" max="168"
-                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none transition-all">
+                           class="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none transition-all">
                 </div>
                 <?php if ($last_update > 0): ?>
                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5 ms-1">

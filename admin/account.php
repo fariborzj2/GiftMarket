@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="space-y-2">
             <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">رمز عبور فعلی</label>
             <input type="password" name="current_password" required autocomplete="current-password"
-                   class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                   class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                    placeholder="••••••••">
         </div>
 
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="space-y-2">
             <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">رمز عبور جدید</label>
             <input type="password" name="new_password" required minlength="8" autocomplete="new-password"
-                   class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                   class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                    placeholder="حداقل ۸ کاراکتر">
             <p class="text-xs text-slate-400">برای امنیت بیشتر، از ترکیب حروف بزرگ و کوچک، اعداد و نمادها استفاده کنید.</p>
         </div>
@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="space-y-2">
             <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">تکرار رمز عبور جدید</label>
             <input type="password" name="confirm_password" required minlength="8" autocomplete="new-password"
-                   class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                   class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                    placeholder="••••••••">
         </div>
 

@@ -201,14 +201,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="space-y-2">
                     <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">نام برند</label>
                     <input type="text" name="name" value="<?php echo e($editData['name']); ?>" required
-                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                           class="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                            placeholder="مثلاً Apple, PlayStation">
                 </div>
 
                 <div class="space-y-2">
                     <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">کد برند</label>
                     <input type="text" name="code" value="<?php echo e($editData['code']); ?>" required
-                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                           class="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                            placeholder="مثلاً apple, psn">
                 </div>
             </div>
@@ -218,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="flex items-start gap-4 p-4 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
                     <div class="flex-1">
                         <input type="file" name="logo" accept="image/*" <?php echo $action === 'add' ? 'required' : ''; ?>
-                               class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-blue-600 cursor-pointer">
+                               class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-blue-600 cursor-pointer">
                         <p class="text-xs text-slate-400 mt-2">فرمت‌های مجاز: JPG, PNG, SVG, WEBP. حداکثر ۲ مگابایت.</p>
                     </div>
                     <?php if ($editData['logo']): ?>
@@ -231,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="flex items-center gap-3 pt-4">
                 <button type="submit" class="btn-primary flex-1 py-3">ذخیره اطلاعات</button>
-                <a href="brands.php" class="px-6 py-3 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-medium text-center">انصراف</a>
+                <a href="brands.php" class="px-6 py-3 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-medium text-center">انصراف</a>
             </div>
         </form>
     </div>

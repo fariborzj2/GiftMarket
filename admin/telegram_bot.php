@@ -189,12 +189,12 @@ foreach ($configs as $c) {
                     <div class="space-y-2">
                         <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">توکن ربات (Bot Token)</label>
                         <input type="text" name="token" value="<?php echo e($st_token); ?>" placeholder="123456789:ABCDE..."
-                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono">
+                               class="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono">
                     </div>
                     <div class="space-y-2">
                         <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">نام کاربری ربات (@Username)</label>
                         <input type="text" name="username" value="<?php echo e($st_username); ?>" placeholder="@my_price_bot"
-                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono" dir="ltr">
+                               class="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono" dir="ltr">
                     </div>
                 </div>
 
@@ -202,11 +202,11 @@ foreach ($configs as $c) {
                     <div class="space-y-2">
                         <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">زمان انتشار خودکار (روزانه)</label>
                         <input type="time" name="publish_time" value="<?php echo e($st_publish_time); ?>"
-                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none">
+                               class="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none">
                     </div>
                     <div class="space-y-2">
                         <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">نوع قیمت برای انتشار</label>
-                        <select name="price_type" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none">
+                        <select name="price_type" class="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none">
                             <option value="both" <?php echo $st_price_type === 'both' ? 'selected' : ''; ?>>هر دو (دیجیتال و فیزیکی)</option>
                             <option value="digital" <?php echo $st_price_type === 'digital' ? 'selected' : ''; ?>>فقط دیجیتال</option>
                             <option value="physical" <?php echo $st_price_type === 'physical' ? 'selected' : ''; ?>>فقط فیزیکی</option>
@@ -249,7 +249,7 @@ foreach ($configs as $c) {
                             </div>
                         </div>
                         <textarea id="template_textarea" name="template" rows="10"
-                                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono leading-relaxed" dir="ltr"><?php echo e($st_template); ?></textarea>
+                                  class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none font-mono leading-relaxed" dir="ltr"><?php echo e($st_template); ?></textarea>
                     </div>
 
                     <script>
@@ -310,7 +310,7 @@ foreach ($configs as $c) {
 
                 <div class="pt-4 flex flex-wrap gap-4">
                     <button type="submit" name="save_settings" class="btn-primary px-10 py-3">ذخیره تنظیمات</button>
-                    <button type="submit" name="reset_templates" class="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-all text-sm" onclick="return confirm('آیا از بازنشانی قالب‌ها و برچسب‌ها به حالت پیش‌فرض اطمینان دارید؟')">بازنشانی به پیش‌فرض</button>
+                    <button type="submit" name="reset_templates" class="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-6 py-3 rounded-lg font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-all text-sm" onclick="return confirm('آیا از بازنشانی قالب‌ها و برچسب‌ها به حالت پیش‌فرض اطمینان دارید؟')">بازنشانی به پیش‌فرض</button>
                 </div>
             </form>
 
@@ -325,12 +325,12 @@ foreach ($configs as $c) {
                     <div class="space-y-1.5">
                         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ms-1">Channel ID</label>
                         <input type="text" name="channel_id" placeholder="مثلاً -100123456789" required dir="ltr"
-                               class="w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none">
+                               class="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none">
                     </div>
                     <div class="space-y-1.5">
                         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ms-1">نام کانال</label>
                         <input type="text" name="channel_name" placeholder="نام نمایشی..."
-                               class="w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none">
+                               class="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none">
                     </div>
                     <button type="submit" name="add_channel" class="btn-primary !py-2.5 text-sm">افزودن کانال</button>
                 </form>
@@ -425,7 +425,7 @@ foreach ($configs as $c) {
             <div class="flex justify-end mb-4">
                 <form method="POST" onsubmit="return confirm('آیا از حذف تمامی لاگ‌ها اطمینان دارید؟')">
                     <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
-                    <button type="submit" name="clear_logs" class="flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl transition-all font-bold text-sm">
+                    <button type="submit" name="clear_logs" class="flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg transition-all font-bold text-sm">
                         <iconify-icon icon="lucide:trash-2" class="text-xl"></iconify-icon>
                         <span>حذف تمامی لاگ‌ها</span>
                     </button>

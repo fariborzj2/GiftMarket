@@ -78,7 +78,7 @@ $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status =
             <form method="POST">
                 <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
                 <input type="hidden" name="action" value="mark_all_read">
-                <button type="submit" class="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-medium text-sm flex items-center gap-2">
+                <button type="submit" class="px-5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-medium text-sm flex items-center gap-2">
                     <iconify-icon icon="lucide:check-check" class="text-xl"></iconify-icon>
                     <span>خواندن همه</span>
                 </button>
@@ -224,7 +224,7 @@ $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status =
                         <iconify-icon icon="lucide:forward" class="text-xl"></iconify-icon>
                         <span>پاسخ با ایمیل</span>
                     </a>
-                    <button onclick="changeStatus('unread')" id="m-unread-btn" class="px-6 py-3 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-medium">
+                    <button onclick="changeStatus('unread')" id="m-unread-btn" class="px-6 py-3 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-medium">
                         علامت به عنوان نخوانده
                     </button>
                 </div>
