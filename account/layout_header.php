@@ -123,9 +123,8 @@ $nav = [
     <div class="flex min-h-screen">
         <!-- Sidebar -->
         <aside class="fixed inset-y-0 <?php echo $sidePos; ?> w-72 bg-white dark:bg-slate-900 <?php echo $sideBorder; ?> border-slate-200 dark:border-slate-800 p-4 z-50 flex flex-col transform <?php echo $sideHidden; ?> transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-0" id="sidebar">
-            <div class="shrink-0 flex items-center justify-between px-2 py-2 mb-4">
+            <div class="shrink-0 flex items-center px-2 py-2 mb-4">
                 <img src="../assets/images/logo.svg" alt="UAE.GIFT" class="h-8 dark:invert dark:hue-rotate-180 dark:brightness-[1.5]">
-                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-lg"><?php echo e(__('acc_area')); ?></span>
             </div>
 
             <nav class="nav-scroll flex-1 overflow-y-auto -mx-1 px-1 space-y-6">

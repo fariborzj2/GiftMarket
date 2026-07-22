@@ -152,9 +152,8 @@ if (!isLoggedIn()) {
         <!-- Sidebar -->
         <aside class="fixed inset-y-0 right-0 w-72 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 p-4 z-50 flex flex-col transform translate-x-full transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-0" id="sidebar">
             <!-- Brand -->
-            <div class="shrink-0 flex items-center justify-between px-2 py-2 mb-4">
+            <div class="shrink-0 flex items-center px-2 py-2 mb-4">
                 <img src="../assets/images/logo.svg" alt="Logo" class="h-8 dark:invert dark:hue-rotate-180 dark:brightness-[1.5]">
-                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-lg">پنل</span>
             </div>
 
             <!-- Navigation -->
