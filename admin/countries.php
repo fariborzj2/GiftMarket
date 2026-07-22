@@ -42,26 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $flag_path = $_POST['old_flag'] ?? '';
 
         if (isset($_FILES['flag']) && $_FILES['flag']['error'] === UPLOAD_ERR_OK) {
-            $allowed_exts = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
-            $upload_dir = '../assets/images/flag/';
-
-            if (!is_dir($upload_dir)) {
-                mkdir($upload_dir, 0755, true);
-            }
-
-            $file_ext = strtolower(pathinfo($_FILES['flag']['name'], PATHINFO_EXTENSION));
-
-            if (in_array($file_ext, $allowed_exts)) {
-                $file_name = $code . '_' . time() . '.' . $file_ext;
-
-                if (move_uploaded_file($_FILES['flag']['tmp_name'], $upload_dir . $file_name)) {
-                    if ($flag_path && file_exists(__DIR__ . '/../' . $flag_path)) {
-                        unlink(__DIR__ . '/../' . $flag_path);
-                    }
-                    $flag_path = 'assets/images/flag/' . $file_name;
+            $upload = saveUploadedImage($_FILES['flag'], '../assets/images/flag/', 'assets/images/flag/', $code);
+            if ($upload['ok']) {
+                if ($flag_path && file_exists(__DIR__ . '/../' . $flag_path)) {
+                    unlink(__DIR__ . '/../' . $flag_path);
                 }
+                $flag_path = $upload['path'];
             } else {
-                $msg = 'خطا: پسوند فایل مجاز نیست. (فقط تصاویر مجاز هستند)';
+                $msg = $upload['error'];
             }
         }
 

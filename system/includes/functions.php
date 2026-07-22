@@ -197,3 +197,108 @@ function getGroupedProducts() {
     }
     return $groupedProducts;
 }
+
+/**
+ * Remove potentially dangerous content from an SVG string.
+ * Strips <script>/<foreignObject>, inline event handlers, javascript: URIs
+ * and DOCTYPE/ENTITY declarations (XXE). Returns the cleaned SVG, or false
+ * if unsafe content still remains after sanitization.
+ */
+function sanitizeSvg($svg) {
+    if (!is_string($svg) || stripos($svg, '<svg') === false) {
+        return false;
+    }
+    // Remove XXE / entity-expansion vectors
+    $svg = preg_replace('/<!DOCTYPE[^>]*(\[[^\]]*\])?[^>]*>/is', '', $svg);
+    $svg = preg_replace('/<!ENTITY[^>]*>/is', '', $svg);
+    // Remove script and foreignObject blocks
+    $svg = preg_replace('/<script\b[^>]*>.*?<\/script>/is', '', $svg);
+    $svg = preg_replace('/<foreignObject\b[^>]*>.*?<\/foreignObject>/is', '', $svg);
+    // Remove inline event handlers (onload, onclick, ...)
+    $svg = preg_replace('/\son\w+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $svg);
+    // Remove javascript: URIs in href/src attributes
+    $svg = preg_replace('/(href|xlink:href|src)\s*=\s*("|\')\s*javascript:[^"\']*\2/i', '', $svg);
+
+    // Final safety gate: reject if any known vector survived
+    if (preg_match('/<script\b/i', $svg)
+        || preg_match('/javascript:/i', $svg)
+        || preg_match('/\son\w+\s*=/i', $svg)
+        || preg_match('/<!ENTITY/i', $svg)) {
+        return false;
+    }
+    return $svg;
+}
+
+/**
+ * Securely validate and save an uploaded image.
+ * - Enforces a 2MB size limit and an extension whitelist.
+ * - Raster images are verified with getimagesize() and their real MIME type
+ *   must match the extension (defeats disguised-file uploads).
+ * - SVG files are sanitized before being written to disk.
+ *
+ * @param array  $file       An entry from $_FILES.
+ * @param string $uploadDir  Filesystem dir to write to (CWD-relative, e.g. '../assets/images/brand/').
+ * @param string $webDir     Public web path prefix stored in the DB (e.g. 'assets/images/brand/').
+ * @param string $namePrefix Prefix for the generated filename.
+ * @return array ['ok'=>true,'path'=>string] on success, ['ok'=>false,'error'=>string] on failure.
+ */
+function saveUploadedImage($file, $uploadDir, $webDir, $namePrefix) {
+    $allowed = [
+        'jpg'  => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'png'  => 'image/png',
+        'gif'  => 'image/gif',
+        'webp' => 'image/webp',
+        'svg'  => 'image/svg+xml',
+    ];
+
+    if (!isset($file) || !isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
+        return ['ok' => false, 'error' => 'خطا در آپلود فایل.'];
+    }
+    if (($file['size'] ?? 0) > 2 * 1024 * 1024) {
+        return ['ok' => false, 'error' => 'خطا: حجم فایل بیش از حد مجاز (۲ مگابایت) است.'];
+    }
+
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (!isset($allowed[$ext])) {
+        return ['ok' => false, 'error' => 'خطا: پسوند فایل مجاز نیست. (فقط تصاویر مجاز هستند)'];
+    }
+
+    $tmp = $file['tmp_name'];
+    if (!is_uploaded_file($tmp)) {
+        return ['ok' => false, 'error' => 'خطا در آپلود فایل.'];
+    }
+
+    $svgContent = null;
+    if ($ext === 'svg') {
+        $svgContent = @file_get_contents($tmp);
+        $svgContent = sanitizeSvg($svgContent);
+        if ($svgContent === false) {
+            return ['ok' => false, 'error' => 'خطا: فایل SVG حاوی محتوای غیرمجاز است.'];
+        }
+    } else {
+        $info = @getimagesize($tmp);
+        if ($info === false || ($info['mime'] ?? '') !== $allowed[$ext]) {
+            return ['ok' => false, 'error' => 'خطا: فایل یک تصویر معتبر نیست یا نوع آن با پسوند مطابقت ندارد.'];
+        }
+    }
+
+    if (!is_dir($uploadDir) && !mkdir($uploadDir, 0755, true) && !is_dir($uploadDir)) {
+        return ['ok' => false, 'error' => 'خطا: پوشه آپلود قابل ایجاد نیست.'];
+    }
+
+    $fileName = $namePrefix . '_' . time() . '.' . $ext;
+    $destFs = rtrim($uploadDir, '/') . '/' . $fileName;
+
+    if ($ext === 'svg') {
+        if (file_put_contents($destFs, $svgContent) === false) {
+            return ['ok' => false, 'error' => 'خطا در ذخیره فایل.'];
+        }
+    } else {
+        if (!move_uploaded_file($tmp, $destFs)) {
+            return ['ok' => false, 'error' => 'خطا در ذخیره فایل.'];
+        }
+    }
+
+    return ['ok' => true, 'path' => rtrim($webDir, '/') . '/' . $fileName];
+}

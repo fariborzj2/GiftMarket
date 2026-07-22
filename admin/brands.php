@@ -41,26 +41,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $logo_path = $_POST['old_logo'] ?? '';
 
         if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
-            $allowed_exts = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
-            $upload_dir = '../assets/images/brand/';
-
-            if (!is_dir($upload_dir)) {
-                mkdir($upload_dir, 0755, true);
-            }
-
-            $file_ext = strtolower(pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION));
-
-            if (in_array($file_ext, $allowed_exts)) {
-                $file_name = $code . '_' . time() . '.' . $file_ext;
-
-                if (move_uploaded_file($_FILES['logo']['tmp_name'], $upload_dir . $file_name)) {
-                    if ($logo_path && file_exists(__DIR__ . '/../' . $logo_path)) {
-                        unlink(__DIR__ . '/../' . $logo_path);
-                    }
-                    $logo_path = 'assets/images/brand/' . $file_name;
+            $upload = saveUploadedImage($_FILES['logo'], '../assets/images/brand/', 'assets/images/brand/', $code);
+            if ($upload['ok']) {
+                if ($logo_path && file_exists(__DIR__ . '/../' . $logo_path)) {
+                    unlink(__DIR__ . '/../' . $logo_path);
                 }
+                $logo_path = $upload['path'];
             } else {
-                $msg = 'خطا: پسوند فایل مجاز نیست. (فقط تصاویر مجاز هستند)';
+                $msg = $upload['error'];
             }
         }
 
