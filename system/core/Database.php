@@ -223,17 +223,10 @@ class Database {
             $this->pdo->exec("UPDATE products SET price_digital = price, price_physical = price WHERE price_digital = 0 AND price_physical = 0 AND price > 0");
         } catch (PDOException $e) {}
 
-        // Add default admin if not exists (password: admin123)
-        try {
-            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM users WHERE username = 'admin'");
-            $stmt->execute();
-            if ($stmt->fetchColumn() == 0) {
-                $password = password_hash('admin123', PASSWORD_DEFAULT);
-                $this->pdo->exec("INSERT INTO users (username, password) VALUES ('admin', '$password')");
-            }
-        } catch (PDOException $e) {
-            // Ignore if insert fails
-        }
+        // NOTE: The admin account is created by the installation wizard
+        // (install/index.php) with a password chosen by the user.
+        // A hardcoded default admin is intentionally NOT seeded here, to avoid
+        // shipping known credentials in the public codebase.
 
         // Add default settings
         try {

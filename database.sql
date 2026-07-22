@@ -20,12 +20,10 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `users`
--- (Default password: admin123)
+-- No default admin is seeded here for security reasons.
+-- Create the admin account via the installation wizard (install/index.php),
+-- which lets you choose your own password.
 --
-
-INSERT INTO `users` (`username`, `password`, `role`) VALUES
-('admin', '$2y$10$NflJIWzI3Cb17kJbbb6x2Ogy0wkzqjv1cqjenhK4srg7xK3uDQLma', 'admin');
 
 -- --------------------------------------------------------
 

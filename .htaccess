@@ -70,7 +70,23 @@ RewriteRule ^(en|ar)/?$ index.php?lang=$1 [L,QSA]
 
 # Security Headers
 <IfModule mod_headers.c>
-    Header set X-XSS-Protection "1; mode=block"
     Header set X-Content-Type-Options "nosniff"
     Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    # Site already forces HTTPS above; tell browsers to always use it.
+    Header set Strict-Transport-Security "max-age=31536000"
+    # Legacy header kept disabled per modern guidance (relies on CSP/escaping instead).
+    Header set X-XSS-Protection "0"
 </IfModule>
+
+# Block direct web access to sensitive files (works on Apache 2.2 and 2.4)
+<FilesMatch "\.(sql|example|log|md|htaccess|ini)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
