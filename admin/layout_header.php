@@ -108,6 +108,11 @@ if (!isLoggedIn()) {
                     <span>ربات تلگرام</span>
                 </a>
 
+                <a href="account.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'account.php' ? 'active' : ''; ?>">
+                    <iconify-icon icon="solar:lock-password-bold-duotone" class="text-2xl"></iconify-icon>
+                    <span>تغییر رمز عبور</span>
+                </a>
+
                 <div class="pt-10">
                     <a href="logout.php" class="sidebar-link text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600">
                         <iconify-icon icon="solar:logout-bold-duotone" class="text-2xl"></iconify-icon>
