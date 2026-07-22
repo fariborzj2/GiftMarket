@@ -107,7 +107,7 @@ class TelegramBot {
         // Fetch Settings/Defaults
         $currencySymbolsStr = getSetting('telegram_currency_symbols', '$, USD, AED, EUR, GBP, TL');
         $currencySymbols = array_map('trim', explode(',', $currencySymbolsStr));
-        $exchangeRate = (float)getSetting('exchange_rate', 1.0);
+        $exchangeRate = (float)getSetting('usd_to_aed', 3.673);
         $targetCurrency = $this->escapeMarkdown(getSetting('target_currency', 'AED'));
 
         // Extract Block Templates
