@@ -5,7 +5,7 @@ requireCustomer();
 $lang  = getLanguage();
 $isRtl = ($lang === 'ar');
 $dir   = $isRtl ? 'rtl' : 'ltr';
-$fontStack = $isRtl ? "'Zain', sans-serif" : "'Poppins', sans-serif";
+$fontStack = $isRtl ? "'Vazirmatn', sans-serif" : "'Poppins', sans-serif";
 
 $customer     = currentCustomer();
 $currentPage  = basename($_SERVER['PHP_SELF']);
@@ -83,7 +83,7 @@ $nav = [
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Zain:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script>
