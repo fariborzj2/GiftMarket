@@ -170,10 +170,23 @@ $nav = [
                 </div>
 
                 <div class="flex items-center gap-1 md:gap-1.5">
-                    <!-- Language switch -->
-                    <div class="flex items-center rounded-xl bg-slate-100 dark:bg-slate-800 p-0.5 text-xs font-bold">
-                        <a href="?lang=en" class="px-2.5 py-1.5 rounded-lg transition-colors <?php echo !$isRtl ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white' : 'text-slate-500'; ?>">EN</a>
-                        <a href="?lang=ar" class="px-2.5 py-1.5 rounded-lg transition-colors <?php echo $isRtl ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white' : 'text-slate-500'; ?>">ع</a>
+                    <!-- Language switch (flag dropdown, like the public site) -->
+                    <div class="relative" id="langMenu">
+                        <button type="button" id="langMenuBtn" class="flex items-center gap-2 h-10 px-2 md:px-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                            <img src="../assets/images/flag/<?php echo $isRtl ? 'emirates' : 'uk'; ?>.svg" width="22" height="22" class="w-[22px] h-[22px] rounded object-cover shrink-0" alt="">
+                            <span class="text-sm font-medium text-slate-700 dark:text-slate-200 hidden sm:block"><?php echo e($isRtl ? __('lang_ar') : __('lang_en')); ?></span>
+                            <iconify-icon icon="lucide:chevron-down" class="text-base text-slate-400"></iconify-icon>
+                        </button>
+                        <div id="langMenuDropdown" class="absolute <?php echo $isRtl ? 'left-0' : 'right-0'; ?> mt-2 w-44 max-w-[calc(100vw-2rem)] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-1.5 hidden z-50">
+                            <a href="?lang=en" class="menu-item <?php echo !$isRtl ? 'bg-primary/10 !text-primary font-bold' : ''; ?>">
+                                <img src="../assets/images/flag/uk.svg" width="22" height="22" class="w-[22px] h-[22px] rounded object-cover shrink-0" alt="">
+                                <span><?php echo e(__('lang_en')); ?></span>
+                            </a>
+                            <a href="?lang=ar" class="menu-item <?php echo $isRtl ? 'bg-primary/10 !text-primary font-bold' : ''; ?>">
+                                <img src="../assets/images/flag/emirates.svg" width="22" height="22" class="w-[22px] h-[22px] rounded object-cover shrink-0" alt="">
+                                <span><?php echo e(__('lang_ar')); ?></span>
+                            </a>
+                        </div>
                     </div>
 
                     <button type="button" id="themeToggle" class="topbar-btn" aria-label="theme">

@@ -26,16 +26,31 @@
             });
         })();
 
-        // User dropdown
+        // Topbar dropdowns (user menu + language)
         (function () {
-            const btn = document.getElementById('userMenuBtn');
-            const dd  = document.getElementById('userMenuDropdown');
-            if (!btn || !dd) return;
-            btn.addEventListener('click', (e) => { e.stopPropagation(); dd.classList.toggle('hidden'); });
-            document.addEventListener('click', (e) => {
-                if (!dd.classList.contains('hidden') && !dd.contains(e.target) && !btn.contains(e.target)) dd.classList.add('hidden');
+            const menus = [
+                { btn: 'userMenuBtn', dd: 'userMenuDropdown' },
+                { btn: 'langMenuBtn', dd: 'langMenuDropdown' },
+            ].map(m => ({ btn: document.getElementById(m.btn), dd: document.getElementById(m.dd) }))
+             .filter(m => m.btn && m.dd);
+            if (!menus.length) return;
+
+            const closeAll = (except) => menus.forEach(m => { if (m.dd !== except) m.dd.classList.add('hidden'); });
+
+            menus.forEach(m => {
+                m.btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const willOpen = m.dd.classList.contains('hidden');
+                    closeAll(m.dd);
+                    m.dd.classList.toggle('hidden', !willOpen);
+                });
             });
-            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') dd.classList.add('hidden'); });
+            document.addEventListener('click', (e) => {
+                menus.forEach(m => {
+                    if (!m.dd.classList.contains('hidden') && !m.dd.contains(e.target) && !m.btn.contains(e.target)) m.dd.classList.add('hidden');
+                });
+            });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(null); });
         })();
     </script>
 </body>
