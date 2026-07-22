@@ -189,7 +189,7 @@ $nav = [
                             <span class="hidden md:block text-sm font-bold text-slate-900 dark:text-white max-w-[120px] truncate"><?php echo e($customer['name']); ?></span>
                             <iconify-icon icon="lucide:chevron-down" class="text-base text-slate-400 hidden md:block"></iconify-icon>
                         </button>
-                        <div id="userMenuDropdown" class="absolute <?php echo $isRtl ? 'start-0' : 'end-0'; ?> mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-1.5 hidden z-50">
+                        <div id="userMenuDropdown" class="absolute <?php echo $isRtl ? 'left-0' : 'right-0'; ?> mt-2 w-56 max-w-[calc(100vw-2rem)] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-1.5 hidden z-50">
                             <div class="px-3 py-2.5 mb-1 border-b border-slate-100 dark:border-slate-800">
                                 <div class="text-sm font-bold text-slate-900 dark:text-white truncate"><?php echo e($customer['name']); ?></div>
                                 <div class="text-[11px] text-slate-400 truncate"><?php echo e($customer['email']); ?></div>
