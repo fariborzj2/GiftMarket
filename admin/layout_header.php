@@ -70,9 +70,6 @@ if (!isLoggedIn()) {
                         zain: ['Vazirmatn', 'sans-serif'],
                         sans: ['Vazirmatn', 'ui-sans-serif', 'system-ui', 'sans-serif'],
                     },
-                    boxShadow: {
-                        card: '0 1px 2px rgba(15,23,42,0.04), 0 4px 20px rgba(15,23,42,0.05)',
-                    },
                 }
             }
         }
@@ -89,16 +86,16 @@ if (!isLoggedIn()) {
         }
         @layer components {
             .admin-card {
-                @apply bg-white dark:bg-slate-900 p-4 md:p-6 lg:p-8 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-card;
+                @apply bg-white dark:bg-slate-900 p-4 md:p-6 lg:p-8 rounded-2xl border border-slate-200/80 dark:border-slate-800;
             }
             .btn-primary {
-                @apply bg-primary hover:bg-primary-600 text-white px-6 py-2.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-[.98];
+                @apply bg-primary hover:bg-primary-600 text-white px-6 py-2.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-medium active:scale-[.98];
             }
             .btn-secondary {
                 @apply bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 px-6 py-2.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-medium active:scale-[.98];
             }
             .btn-danger {
-                @apply bg-red-500 hover:bg-red-600 text-white px-6 py-2.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg shadow-red-500/25 active:scale-[.98];
+                @apply bg-red-500 hover:bg-red-600 text-white px-6 py-2.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-medium active:scale-[.98];
             }
             .form-input {
                 @apply w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all;
@@ -269,7 +266,7 @@ if (!isLoggedIn()) {
                         </button>
 
                         <div id="userMenuDropdown"
-                             class="absolute left-0 mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-1.5 hidden z-50">
+                             class="absolute left-0 mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-1.5 hidden z-50">
                             <div class="px-3 py-2.5 mb-1 border-b border-slate-100 dark:border-slate-800">
                                 <div class="text-sm font-bold text-slate-900 dark:text-white truncate"><?php echo e($_SESSION['username']); ?></div>
                                 <div class="text-[11px] text-slate-400 mt-0.5">مدیر سیستم</div>

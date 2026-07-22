@@ -178,7 +178,7 @@ $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status =
     <!-- Message Detail Modal -->
     <div id="messageModal" class="fixed inset-0 z-[60] hidden">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModal()"></div>
-        <div class="absolute inset-y-0 left-0 right-0 md:left-auto md:w-[600px] bg-white dark:bg-slate-900 shadow-2xl transform transition-transform duration-300 translate-x-full" id="modalContent">
+        <div class="absolute inset-y-0 left-0 right-0 md:left-auto md:w-[600px] bg-white dark:bg-slate-900 transform transition-transform duration-300 translate-x-full" id="modalContent">
             <div class="h-full flex flex-col">
                 <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                     <h3 class="text-xl flex items-center gap-3">

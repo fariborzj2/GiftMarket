@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <iconify-icon icon="lucide:grip-vertical" class="text-xl"></iconify-icon>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="w-7 h-7 mx-auto rounded shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden shrink-0">
+                            <div class="w-7 h-7 mx-auto rounded border border-slate-200 dark:border-slate-800 overflow-hidden shrink-0">
                                 <?php if ($c['flag']): ?>
                                     <img src="../<?php echo e($c['flag']); ?>" alt="" class="w-full h-full object-cover">
                                 <?php else: ?>
@@ -232,7 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                    class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-blue-600 cursor-pointer">
                         </div>
                         <?php if ($editData['flag']): ?>
-                            <div class="w-12 h-8 rounded shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden shrink-0">
+                            <div class="w-12 h-8 rounded border border-slate-200 dark:border-slate-800 overflow-hidden shrink-0">
                                 <img src="../<?php echo e($editData['flag']); ?>" alt="" class="w-full h-full object-cover">
                             </div>
                         <?php endif; ?>

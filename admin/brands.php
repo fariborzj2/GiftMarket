@@ -222,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p class="text-xs text-slate-400 mt-2">فرمت‌های مجاز: JPG, PNG, SVG, WEBP. حداکثر ۲ مگابایت.</p>
                     </div>
                     <?php if ($editData['logo']): ?>
-                        <div class="w-16 h-16 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2 flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
+                        <div class="w-16 h-16 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2 flex items-center justify-center overflow-hidden shrink-0">
                             <img src="../<?php echo e($editData['logo']); ?>" alt="" class="max-w-full max-h-full object-contain">
                         </div>
                     <?php endif; ?>

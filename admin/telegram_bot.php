@@ -417,7 +417,7 @@ foreach ($configs as $c) {
                 </div>
 
                 <div class="pt-6 border-t border-slate-100 dark:border-slate-800">
-                    <button type="submit" name="save_config" class="btn-primary px-10 py-4 shadow-xl shadow-primary/30">ذخیره پیکربندی</button>
+                    <button type="submit" name="save_config" class="btn-primary px-10 py-4">ذخیره پیکربندی</button>
                 </div>
             </form>
 

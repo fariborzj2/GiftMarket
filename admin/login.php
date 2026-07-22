@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-md">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl p-8 md:p-10">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-8 md:p-10">
             <div class="text-center mb-10">
                 <img src="../assets/images/logo.svg" alt="Logo" class="h-12 mx-auto mb-6 dark:invert dark:hue-rotate-180 dark:brightness-[1.5]">
                 <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">ورود به مدیریت</h2>
@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <button type="submit"
-                        class="w-full bg-primary hover:bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all duration-200 active:transform active:scale-[0.98]">
+                        class="w-full bg-primary hover:bg-blue-600 text-white font-bold py-4 rounded-xl transition-all duration-200 active:transform active:scale-[0.98]">
                     ورود به پنل
                 </button>
             </form>

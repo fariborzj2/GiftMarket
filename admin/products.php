@@ -238,7 +238,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
     <?php foreach ($grouped as $brandName => $brandData): ?>
     <div class="mb-12">
         <div class="flex items-center gap-3 mb-6">
-            <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1.5 flex items-center justify-center shrink-0 shadow-sm">
+            <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1.5 flex items-center justify-center shrink-0">
                 <?php if ($brandData['logo']): ?>
                     <img src="../<?php echo e($brandData['logo']); ?>" alt="" class="max-w-full max-h-full object-contain">
                 <?php else: ?>
@@ -255,7 +255,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                 <div class="flex items-center justify-between mb-4 px-2">
                     <div class="flex items-center gap-2">
                         <?php if ($countryData['flag']): ?>
-                            <img src="../<?php echo e($countryData['flag']); ?>" alt="" class="w-4 h-4 rounded shadow-sm">
+                            <img src="../<?php echo e($countryData['flag']); ?>" alt="" class="w-4 h-4 rounded">
                         <?php else: ?>
                             <span class="text-lg">🌍</span>
                         <?php endif; ?>
@@ -376,14 +376,14 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                         }
                         ?>
                         <button type="button" class="drop-down-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-right transition-all">
-                            <div class="w-6 h-6 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
+                            <div class="w-6 h-6 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center overflow-hidden shrink-0">
                                 <img class="selected-img max-w-full max-h-full object-contain" src="../<?php echo e($selectedBrand['logo'] ?? ''); ?>" alt="" style="<?php echo empty($selectedBrand['logo']) ? 'display:none;' : ''; ?>">
                             </div>
                             <span class="selected-text flex-1 text-sm font-medium"><?php echo e($selectedBrand['name'] ?? 'انتخاب برند'); ?></span>
                             <iconify-icon icon="lucide:chevron-down" class="text-slate-400"></iconify-icon>
                         </button>
                         <input type="hidden" class="selected-option" name="brand" value="<?php echo e($editData['brand']); ?>" required>
-                        <div class="drop-down-list hidden absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-60 overflow-y-auto">
+                        <div class="drop-down-list hidden absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl max-h-60 overflow-y-auto">
                             <?php foreach ($brands as $b): ?>
                                 <div class="drop-option flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors <?php echo $editData['brand'] == $b['code'] ? 'bg-primary/5 text-primary' : ''; ?>" data-option="<?php echo e($b['code']); ?>">
                                     <div class="w-6 h-6 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center overflow-hidden shrink-0">
@@ -407,17 +407,17 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                         }
                         ?>
                         <button type="button" class="drop-down-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-right transition-all">
-                            <div class="w-6 h-6 rounded shadow-sm overflow-hidden shrink-0">
+                            <div class="w-6 h-6 rounded overflow-hidden shrink-0">
                                 <img class="selected-img w-full h-full object-cover" src="../<?php echo e($selectedCountry['flag'] ?? ''); ?>" alt="" style="<?php echo empty($selectedCountry['flag']) ? 'display:none;' : ''; ?>">
                             </div>
                             <span class="selected-text flex-1 text-sm font-medium"><?php echo e($selectedCountry['name'] ?? 'انتخاب کشور'); ?></span>
                             <iconify-icon icon="lucide:chevron-down" class="text-slate-400"></iconify-icon>
                         </button>
                         <input type="hidden" class="selected-option" name="country" value="<?php echo e($editData['country']); ?>" required>
-                        <div class="drop-down-list hidden absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-60 overflow-y-auto">
+                        <div class="drop-down-list hidden absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl max-h-60 overflow-y-auto">
                             <?php foreach ($countries as $c): ?>
                                 <div class="drop-option flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors <?php echo $editData['country'] == $c['code'] ? 'bg-primary/5 text-primary' : ''; ?>" data-option="<?php echo e($c['code']); ?>">
-                                    <div class="w-6 h-6 rounded shadow-sm overflow-hidden shrink-0">
+                                    <div class="w-6 h-6 rounded overflow-hidden shrink-0">
                                         <img src="../<?php echo e($c['flag']); ?>" alt="" class="w-full h-full object-cover">
                                     </div>
                                     <span class="text-sm font-medium"><?php echo e($c['name']); ?></span>
@@ -458,7 +458,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                         </div>
                         <h4 class="font-bold text-slate-900 dark:text-white">پک‌های محصول</h4>
                     </div>
-                    <button type="button" id="add-pack-btn" class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-primary/20">
+                    <button type="button" id="add-pack-btn" class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all">
                         افزودن پک +
                     </button>
                 </div>
@@ -473,7 +473,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                     $packsToShow = !empty($editData['packs']) ? $editData['packs'] : [['pack_size' => 1, 'price_digital' => '', 'price_physical' => '']];
                     foreach ($packsToShow as $pk):
                     ?>
-                        <div class="pack-row grid grid-cols-1 md:grid-cols-4 gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm relative group">
+                        <div class="pack-row grid grid-cols-1 md:grid-cols-4 gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 relative group">
                             <div class="space-y-1.5">
                                 <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">تعداد (پک)</label>
                                 <input type="number" name="pack_sizes[]" value="<?php echo e($pk['pack_size']); ?>" required min="1"
@@ -510,7 +510,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
     document.getElementById('add-pack-btn').addEventListener('click', function() {
         const container = document.getElementById('packs-container');
         const newRow = document.createElement('div');
-        newRow.className = 'pack-row grid grid-cols-1 md:grid-cols-4 gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm relative group';
+        newRow.className = 'pack-row grid grid-cols-1 md:grid-cols-4 gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 relative group';
         newRow.innerHTML = `
             <div class="space-y-1.5">
                 <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">تعداد (پک)</label>
