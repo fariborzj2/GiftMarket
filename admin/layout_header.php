@@ -197,6 +197,10 @@ if (!isLoggedIn()) {
                                 <span class="bg-red-500 text-white text-[10px] font-bold min-w-[20px] h-5 px-1 rounded-full flex items-center justify-center"><?php echo $unreadCount; ?></span>
                             <?php endif; ?>
                         </a>
+                        <a href="customers.php" class="sidebar-link <?php echo $currentPage == 'customers.php' ? 'active' : ''; ?>">
+                            <span class="sidebar-ico"><iconify-icon icon="lucide:users" class="text-xl"></iconify-icon></span>
+                            <span>مشتریان</span>
+                        </a>
                         <a href="customer_requests.php" class="sidebar-link <?php echo $currentPage == 'customer_requests.php' ? 'active' : ''; ?>">
                             <span class="sidebar-ico"><iconify-icon icon="lucide:message-square" class="text-xl"></iconify-icon></span>
                             <span class="flex-1">درخواست‌های مشتریان</span>

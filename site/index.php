@@ -287,10 +287,12 @@ if ($defaultCountry === 'all') {
                     <a href="#whyus"><?php echo __('why_us'); ?></a>
                     <a href="#pricing"><?php echo __('pricing'); ?></a>
                     <a href="#contact"><?php echo __('contact'); ?></a>
-                    <a href="<?php echo BASE_URL; ?>account/login.php"><?php echo __('acc_area'); ?></a>
                 </nav>
 
                 <div class="d-flex align-center gap-10">
+
+                    <a href="<?php echo BASE_URL; ?>account/login.php" class="btn"><?php echo __('acc_area'); ?></a>
+
 
                     <div class="btn-sm toggle-theme">
                         <span class="icon theme-light-icon icon-moon-stars icon-size-22"></span>
@@ -775,6 +777,7 @@ if ($defaultCountry === 'all') {
                         <a href="#whyus"><?php echo __('why_us'); ?></a>
                         <a href="#pricing"><?php echo __('pricing'); ?></a>
                         <a href="#contact"><?php echo __('contact'); ?></a>
+                        <a href="<?php echo BASE_URL; ?>account/login.php"><?php echo __('acc_area'); ?></a>
                     </nav>
                 </div>
                 <div class="text-center pd-td-20">
