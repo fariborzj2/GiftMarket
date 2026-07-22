@@ -60,10 +60,10 @@ $last_update = (int)getSetting('last_rate_update', 0);
             <div class="flex flex-col md:flex-row gap-3">
                 <div class="relative flex-1">
                     <input type="number" step="0.0001" name="usd_to_aed" id="usd_to_aed" value="<?php echo e($current_rate); ?>" required
-                           class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-lg font-bold focus:border-primary outline-none transition-all">
+                           class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 font-bold focus:border-primary outline-none transition-all">
                 </div>
                 <button type="button" id="fetch-api-btn"
-                        class="px-6 py-3 rounded-lg border border-primary text-primary hover:bg-primary hover:text-white transition-all font-bold whitespace-nowrap flex items-center justify-center gap-2">
+                        class="px-6 h-10 text-sm rounded-lg border border-primary text-primary hover:bg-primary hover:text-white transition-all font-bold whitespace-nowrap flex items-center justify-center gap-2">
                     <iconify-icon icon="lucide:refresh-cw" class="text-xl"></iconify-icon>
                     بروزرسانی از API
                 </button>
@@ -103,7 +103,7 @@ $last_update = (int)getSetting('last_rate_update', 0);
         </div>
 
         <div class="pt-6">
-            <button type="submit" class="btn-primary w-full py-3 ">ذخیره تنظیمات</button>
+            <button type="submit" class="btn-primary w-full ">ذخیره تنظیمات</button>
         </div>
     </form>
 </div>

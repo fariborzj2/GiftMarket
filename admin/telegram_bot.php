@@ -309,8 +309,8 @@ foreach ($configs as $c) {
                 </div>
 
                 <div class="pt-4 flex flex-wrap gap-4">
-                    <button type="submit" name="save_settings" class="btn-primary px-10 py-3">ذخیره تنظیمات</button>
-                    <button type="submit" name="reset_templates" class="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-6 py-3 rounded-lg font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-all text-sm" onclick="return confirm('آیا از بازنشانی قالب‌ها و برچسب‌ها به حالت پیش‌فرض اطمینان دارید؟')">بازنشانی به پیش‌فرض</button>
+                    <button type="submit" name="save_settings" class="btn-primary px-10">ذخیره تنظیمات</button>
+                    <button type="submit" name="reset_templates" class="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-6 h-10 inline-flex items-center justify-center rounded-lg font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-all text-sm" onclick="return confirm('آیا از بازنشانی قالب‌ها و برچسب‌ها به حالت پیش‌فرض اطمینان دارید؟')">بازنشانی به پیش‌فرض</button>
                 </div>
             </form>
 
@@ -332,7 +332,7 @@ foreach ($configs as $c) {
                         <input type="text" name="channel_name" placeholder="نام نمایشی..."
                                class="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-sm focus:border-primary outline-none">
                     </div>
-                    <button type="submit" name="add_channel" class="btn-primary !py-2.5 text-sm">افزودن کانال</button>
+                    <button type="submit" name="add_channel" class="btn-primary text-sm">افزودن کانال</button>
                 </form>
             </div>
 
@@ -417,7 +417,7 @@ foreach ($configs as $c) {
                 </div>
 
                 <div class="pt-6 border-t border-slate-100 dark:border-slate-800">
-                    <button type="submit" name="save_config" class="btn-primary px-10 py-4">ذخیره پیکربندی</button>
+                    <button type="submit" name="save_config" class="btn-primary px-10">ذخیره پیکربندی</button>
                 </div>
             </form>
 
@@ -425,7 +425,7 @@ foreach ($configs as $c) {
             <div class="flex justify-end mb-4">
                 <form method="POST" onsubmit="return confirm('آیا از حذف تمامی لاگ‌ها اطمینان دارید؟')">
                     <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
-                    <button type="submit" name="clear_logs" class="flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg transition-all font-bold text-sm">
+                    <button type="submit" name="clear_logs" class="flex items-center gap-2 px-4 h-10 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg transition-all font-bold text-sm">
                         <iconify-icon icon="lucide:trash-2" class="text-xl"></iconify-icon>
                         <span>حذف تمامی لاگ‌ها</span>
                     </button>

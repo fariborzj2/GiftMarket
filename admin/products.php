@@ -222,8 +222,8 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
             </div>
 
             <div class="flex gap-2">
-                <button type="submit" class="btn-primary !px-4 !py-2 text-sm flex-1">اعمال</button>
-                <a href="products.php" class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-sm">حذف</a>
+                <button type="submit" class="btn-primary !px-4 text-sm flex-1">اعمال</button>
+                <a href="products.php" class="px-4 h-10 inline-flex items-center justify-center text-sm rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-sm">حذف</a>
             </div>
         </form>
     </div>
@@ -375,7 +375,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                             if ($b['code'] == $editData['brand']) { $selectedBrand = $b; break; }
                         }
                         ?>
-                        <button type="button" class="drop-down-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-right transition-all">
+                        <button type="button" class="drop-down-btn w-full flex items-center gap-3 px-4 h-10 text-sm rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-right transition-all">
                             <div class="w-6 h-6 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center overflow-hidden shrink-0">
                                 <img class="selected-img max-w-full max-h-full object-contain" src="../<?php echo e($selectedBrand['logo'] ?? ''); ?>" alt="" style="<?php echo empty($selectedBrand['logo']) ? 'display:none;' : ''; ?>">
                             </div>
@@ -406,7 +406,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                             if ($c['code'] == $editData['country']) { $selectedCountry = $c; break; }
                         }
                         ?>
-                        <button type="button" class="drop-down-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-right transition-all">
+                        <button type="button" class="drop-down-btn w-full flex items-center gap-3 px-4 h-10 text-sm rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-right transition-all">
                             <div class="w-6 h-6 rounded overflow-hidden shrink-0">
                                 <img class="selected-img w-full h-full object-cover" src="../<?php echo e($selectedCountry['flag'] ?? ''); ?>" alt="" style="<?php echo empty($selectedCountry['flag']) ? 'display:none;' : ''; ?>">
                             </div>
@@ -490,7 +490,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                                        class="w-full px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
                             </div>
                             <div class="flex items-end">
-                                <button type="button" class="remove-pack-btn w-full py-4 rounded-lg border border-red-100 dark:border-red-900/30 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs font-bold transition-all">
+                                <button type="button" class="remove-pack-btn w-full h-10 text-sm rounded-lg border border-red-100 dark:border-red-900/30 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs font-bold transition-all">
                                     حذف پک
                                 </button>
                             </div>
@@ -500,8 +500,8 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
             </div>
 
             <div class="flex items-center gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
-                <button type="submit" class="btn-primary flex-1 py-3">ذخیره محصول</button>
-                <a href="products.php" class="px-8 py-3 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-bold">انصراف</a>
+                <button type="submit" class="btn-primary flex-1">ذخیره محصول</button>
+                <a href="products.php" class="px-8 h-10 inline-flex items-center justify-center text-sm rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-bold">انصراف</a>
             </div>
         </form>
     </div>
@@ -528,7 +528,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                        class="w-full px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:border-primary outline-none transition-all">
             </div>
             <div class="flex items-end">
-                <button type="button" class="remove-pack-btn w-full py-4 rounded-lg border border-red-100 dark:border-red-900/30 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs font-bold transition-all">
+                <button type="button" class="remove-pack-btn w-full h-10 text-sm rounded-lg border border-red-100 dark:border-red-900/30 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs font-bold transition-all">
                     حذف پک
                 </button>
             </div>

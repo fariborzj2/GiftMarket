@@ -241,8 +241,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="flex items-center gap-3 pt-4">
-                <button type="submit" class="btn-primary flex-1 py-3">ذخیره اطلاعات</button>
-                <a href="countries.php" class="px-6 py-3 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-medium text-center">انصراف</a>
+                <button type="submit" class="btn-primary flex-1">ذخیره اطلاعات</button>
+                <a href="countries.php" class="px-6 h-10 inline-flex items-center justify-center text-sm rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-medium text-center">انصراف</a>
             </div>
         </form>
     </div>

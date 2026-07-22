@@ -42,6 +42,14 @@ if (!isLoggedIn()) {
         .nav-scroll::-webkit-scrollbar { width: 6px; }
         .nav-scroll::-webkit-scrollbar-thumb { background: rgba(100,116,139,.25); border-radius: 9999px; }
         .nav-scroll { scrollbar-width: thin; scrollbar-color: rgba(100,116,139,.25) transparent; }
+        /* Uniform form controls: 40px tall, 14px font */
+        main input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+        main select {
+            height: 2.5rem;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+        main textarea { font-size: 0.875rem; }
     </style>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -89,16 +97,16 @@ if (!isLoggedIn()) {
                 @apply bg-white dark:bg-slate-900 p-4 md:p-6 lg:p-8 rounded-2xl border border-slate-200/80 dark:border-slate-800;
             }
             .btn-primary {
-                @apply bg-primary hover:bg-primary-600 text-white px-6 py-2.5 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium active:scale-[.98];
+                @apply bg-primary hover:bg-primary-600 text-white px-5 h-10 text-sm rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium active:scale-[.98];
             }
             .btn-secondary {
-                @apply bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 px-6 py-2.5 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium active:scale-[.98];
+                @apply bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 px-5 h-10 text-sm rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium active:scale-[.98];
             }
             .btn-danger {
-                @apply bg-red-500 hover:bg-red-600 text-white px-6 py-2.5 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium active:scale-[.98];
+                @apply bg-red-500 hover:bg-red-600 text-white px-5 h-10 text-sm rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium active:scale-[.98];
             }
             .form-input {
-                @apply w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all;
+                @apply w-full px-4 h-10 text-sm rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all;
             }
             .icon-tile {
                 @apply flex items-center justify-center rounded-xl shrink-0;

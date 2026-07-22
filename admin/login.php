@@ -93,19 +93,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div>
                     <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">نام کاربری</label>
                     <input type="text" name="username" required
-                           class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                           class="w-full px-4 h-10 text-sm rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                            placeholder="نام کاربری خود را وارد کنید">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">رمز عبور</label>
                     <input type="password" name="password" required
-                           class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                           class="w-full px-4 h-10 text-sm rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                            placeholder="••••••••">
                 </div>
 
                 <button type="submit"
-                        class="w-full bg-primary hover:bg-blue-600 text-white font-bold py-4 rounded-lg transition-all duration-200 active:transform active:scale-[0.98]">
+                        class="w-full bg-primary hover:bg-blue-600 text-white font-bold h-10 text-sm rounded-lg transition-all duration-200 active:transform active:scale-[0.98]">
                     ورود به پنل
                 </button>
             </form>
