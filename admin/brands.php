@@ -82,13 +82,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $displayMsg = $msg ?: ($_GET['msg'] ?? '');
         if ($displayMsg): ?>
             <div class="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-3">
-                <iconify-icon icon="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'solar:check-circle-bold-duotone' : 'solar:danger-bold-duotone'; ?>" class="text-xl"></iconify-icon>
+                <iconify-icon icon="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'lucide:circle-check' : 'lucide:triangle-alert'; ?>" class="text-xl"></iconify-icon>
                 <?php echo e($displayMsg); ?>
             </div>
         <?php endif; ?>
     </div>
     <a href="brands.php?action=add" class="btn-primary ">
-        <iconify-icon icon="solar:add-circle-bold-duotone" class="text-xl"></iconify-icon>
+        <iconify-icon icon="lucide:circle-plus" class="text-xl"></iconify-icon>
         <span>افزودن برند جدید</span>
     </a>
 </div>
@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="admin-card !p-0 overflow-hidden">
         <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
             <h3 class="text-lg flex items-center gap-2 m-0">
-                <iconify-icon icon="solar:tag-bold-duotone" class="text-primary text-2xl"></iconify-icon>
+                <iconify-icon icon="lucide:tag" class="text-primary text-2xl"></iconify-icon>
                 <span>لیست برندها</span>
             </h3>
             <span class="text-xs font-medium px-2.5 py-0.5 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php if (empty($brands)): ?>
                         <tr>
                             <td colspan="5" class="px-6 py-10 text-center text-slate-400">
-                                <iconify-icon icon="solar:mailbox-bold-duotone" class="text-5xl mb-4 opacity-20"></iconify-icon>
+                                <iconify-icon icon="lucide:inbox" class="text-5xl mb-4 opacity-20"></iconify-icon>
                                 <div>هیچ برندی یافت نشد.</div>
                             </td>
                         </tr>
@@ -131,14 +131,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php foreach ($brands as $b): ?>
                     <tr data-id="<?php echo $b['id']; ?>" class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
                         <td class="px-6 py-4 cursor-move drag-handle text-slate-300 group-hover:text-slate-500 transition-colors">
-                            <iconify-icon icon="solar:reorder-bold-duotone" class="text-xl"></iconify-icon>
+                            <iconify-icon icon="lucide:grip-vertical" class="text-xl"></iconify-icon>
                         </td>
                         <td class="px-6 py-4">
                             <div class="w-12 h-12 mx-auto rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-1.5 flex items-center justify-center overflow-hidden">
                                 <?php if ($b['logo']): ?>
                                     <img src="../<?php echo e($b['logo']); ?>" alt="" class="max-w-full max-h-full object-contain">
                                 <?php else: ?>
-                                    <iconify-icon icon="solar:gallery-bold-duotone" class="text-2xl text-slate-200"></iconify-icon>
+                                    <iconify-icon icon="lucide:image" class="text-2xl text-slate-200"></iconify-icon>
                                 <?php endif; ?>
                             </div>
                         </td>
@@ -151,14 +151,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-2">
                                 <a href="brands.php?action=edit&id=<?php echo e($b['id']); ?>" class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors" title="ویرایش">
-                                    <iconify-icon icon="solar:pen-new-square-bold-duotone" class="text-xl"></iconify-icon>
+                                    <iconify-icon icon="lucide:square-pen" class="text-xl"></iconify-icon>
                                 </a>
                                 <form method="POST" class="inline" onsubmit="return confirm('آیا از حذف این برند اطمینان دارید؟')">
                                     <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="id" value="<?php echo $b['id']; ?>">
                                     <button type="submit" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="حذف">
-                                        <iconify-icon icon="solar:trash-bin-trash-bold-duotone" class="text-xl"></iconify-icon>
+                                        <iconify-icon icon="lucide:trash-2" class="text-xl"></iconify-icon>
                                     </button>
                                 </form>
                             </div>
@@ -188,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
     <div class="admin-card max-w-2xl mx-auto">
         <h3 class="text-xl mb-8 flex items-center gap-2">
-            <iconify-icon icon="<?php echo $action === 'add' ? 'solar:add-circle-bold-duotone' : 'solar:pen-new-square-bold-duotone'; ?>" class="text-primary text-2xl"></iconify-icon>
+            <iconify-icon icon="<?php echo $action === 'add' ? 'lucide:circle-plus' : 'lucide:square-pen'; ?>" class="text-primary text-2xl"></iconify-icon>
             <span><?php echo $action === 'add' ? 'افزودن برند جدید' : 'ویرایش برند'; ?></span>
         </h3>
 

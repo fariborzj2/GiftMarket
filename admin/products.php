@@ -84,13 +84,13 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
     <div>
         <?php if ($displayMsg): ?>
             <div class="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30 px-6 py-3 rounded-xl text-sm flex items-center gap-2' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900/30 px-6 py-3 rounded-xl text-sm flex items-center gap-2'; ?>">
-                <iconify-icon icon="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'solar:check-circle-bold-duotone' : 'solar:danger-bold-duotone'; ?>" class="text-xl"></iconify-icon>
+                <iconify-icon icon="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'lucide:circle-check' : 'lucide:triangle-alert'; ?>" class="text-xl"></iconify-icon>
                 <?php echo e($displayMsg); ?>
             </div>
         <?php endif; ?>
     </div>
     <a href="products.php?action=add" class="btn-primary ">
-        <iconify-icon icon="solar:add-circle-bold-duotone" class="text-xl"></iconify-icon>
+        <iconify-icon icon="lucide:circle-plus" class="text-xl"></iconify-icon>
         <span>افزودن محصول</span>
     </a>
 </div>
@@ -174,7 +174,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
         <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
             <div class="space-y-1.5 lg:col-span-1">
                 <label class="text-xs font-bold text-slate-400 uppercase ms-1 flex items-center gap-1">
-                    <iconify-icon icon="solar:magnifer-bold-duotone"></iconify-icon>
+                    <iconify-icon icon="lucide:search"></iconify-icon>
                     جستجو
                 </label>
                 <input type="text" name="search" value="<?php echo e($search); ?>"
@@ -184,7 +184,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
 
             <div class="space-y-1.5">
                 <label class="text-xs font-bold text-slate-400 uppercase ms-1 flex items-center gap-1">
-                    <iconify-icon icon="solar:tag-bold-duotone"></iconify-icon>
+                    <iconify-icon icon="lucide:tag"></iconify-icon>
                     برند
                 </label>
                 <select name="brand" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm">
@@ -197,7 +197,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
 
             <div class="space-y-1.5">
                 <label class="text-xs font-bold text-slate-400 uppercase ms-1 flex items-center gap-1">
-                    <iconify-icon icon="solar:globus-bold-duotone"></iconify-icon>
+                    <iconify-icon icon="lucide:globe"></iconify-icon>
                     کشور
                 </label>
                 <select name="country" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm">
@@ -210,7 +210,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
 
             <div class="space-y-1.5">
                 <label class="text-xs font-bold text-slate-400 uppercase ms-1 flex items-center gap-1">
-                    <iconify-icon icon="solar:box-bold-duotone"></iconify-icon>
+                    <iconify-icon icon="lucide:package"></iconify-icon>
                     سایز پک
                 </label>
                 <select name="pack_size" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:border-primary outline-none text-sm">
@@ -230,7 +230,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
 
     <?php if (empty($products)): ?>
         <div class="admin-card text-center py-20 text-slate-400">
-            <iconify-icon icon="solar:magnifer-bold-duotone" class="text-6xl mb-4 opacity-20"></iconify-icon>
+            <iconify-icon icon="lucide:search" class="text-6xl mb-4 opacity-20"></iconify-icon>
             <div>هیچ محصولی با این مشخصات یافت نشد.</div>
         </div>
     <?php endif; ?>
@@ -294,7 +294,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                                             <span class="text-xs text-slate-400 italic">بدون پک</span>
                                         <?php else: ?>
                                             <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-xs">
-                                                <iconify-icon icon="solar:box-bold-duotone" class="text-lg opacity-50"></iconify-icon>
+                                                <iconify-icon icon="lucide:package" class="text-lg opacity-50"></iconify-icon>
                                                 <span><?php echo count($p['packs']); ?> پک</span>
                                             </div>
                                         <?php endif; ?>
@@ -305,7 +305,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                                             <input type="hidden" name="action" value="toggle_status">
                                             <input type="hidden" name="id" value="<?php echo $p['id']; ?>">
                                             <button type="submit" class="inline-flex items-center gap-1 px-2 py-1 rounded-xl text-[10px] font-bold transition-all <?php echo $p['status'] == 1 ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'; ?>">
-                                                <iconify-icon icon="<?php echo $p['status'] == 1 ? 'solar:check-circle-bold' : 'solar:close-circle-bold'; ?>"></iconify-icon>
+                                                <iconify-icon icon="<?php echo $p['status'] == 1 ? 'lucide:circle-check' : 'lucide:circle-x'; ?>"></iconify-icon>
                                                 <?php echo $p['status'] == 1 ? 'فعال' : 'غیرفعال'; ?>
                                             </button>
                                         </form>
@@ -313,14 +313,14 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-1">
                                             <a href="products.php?action=edit&id=<?php echo e($p['id']); ?>" class="p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors" title="ویرایش">
-                                                <iconify-icon icon="solar:pen-new-square-bold-duotone" class="text-xl"></iconify-icon>
+                                                <iconify-icon icon="lucide:square-pen" class="text-xl"></iconify-icon>
                                             </a>
                                             <form method="POST" class="inline" onsubmit="return confirm('حذف محصول؟')">
                                                 <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
                                                 <input type="hidden" name="action" value="delete">
                                                 <input type="hidden" name="id" value="<?php echo $p['id']; ?>">
                                                 <button type="submit" class="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="حذف">
-                                                    <iconify-icon icon="solar:trash-bin-trash-bold-duotone" class="text-xl"></iconify-icon>
+                                                    <iconify-icon icon="lucide:trash-2" class="text-xl"></iconify-icon>
                                                 </button>
                                             </form>
                                         </div>
@@ -356,7 +356,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
 ?>
     <div class="admin-card max-w-4xl mx-auto">
         <h3 class="text-xl mb-8 flex items-center gap-2">
-            <iconify-icon icon="<?php echo $action === 'add' ? 'solar:add-circle-bold-duotone' : 'solar:pen-new-square-bold-duotone'; ?>" class="text-primary text-2xl"></iconify-icon>
+            <iconify-icon icon="<?php echo $action === 'add' ? 'lucide:circle-plus' : 'lucide:square-pen'; ?>" class="text-primary text-2xl"></iconify-icon>
             <span><?php echo $action === 'add' ? 'افزودن محصول' : 'ویرایش محصول'; ?></span>
         </h3>
 
@@ -380,7 +380,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                                 <img class="selected-img max-w-full max-h-full object-contain" src="../<?php echo e($selectedBrand['logo'] ?? ''); ?>" alt="" style="<?php echo empty($selectedBrand['logo']) ? 'display:none;' : ''; ?>">
                             </div>
                             <span class="selected-text flex-1 text-sm font-medium"><?php echo e($selectedBrand['name'] ?? 'انتخاب برند'); ?></span>
-                            <iconify-icon icon="solar:alt-arrow-down-bold-duotone" class="text-slate-400"></iconify-icon>
+                            <iconify-icon icon="lucide:chevron-down" class="text-slate-400"></iconify-icon>
                         </button>
                         <input type="hidden" class="selected-option" name="brand" value="<?php echo e($editData['brand']); ?>" required>
                         <div class="drop-down-list hidden absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-60 overflow-y-auto">
@@ -411,7 +411,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                                 <img class="selected-img w-full h-full object-cover" src="../<?php echo e($selectedCountry['flag'] ?? ''); ?>" alt="" style="<?php echo empty($selectedCountry['flag']) ? 'display:none;' : ''; ?>">
                             </div>
                             <span class="selected-text flex-1 text-sm font-medium"><?php echo e($selectedCountry['name'] ?? 'انتخاب کشور'); ?></span>
-                            <iconify-icon icon="solar:alt-arrow-down-bold-duotone" class="text-slate-400"></iconify-icon>
+                            <iconify-icon icon="lucide:chevron-down" class="text-slate-400"></iconify-icon>
                         </button>
                         <input type="hidden" class="selected-option" name="country" value="<?php echo e($editData['country']); ?>" required>
                         <div class="drop-down-list hidden absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-60 overflow-y-auto">
@@ -454,7 +454,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                 <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                            <iconify-icon icon="solar:box-bold-duotone" class="text-xl"></iconify-icon>
+                            <iconify-icon icon="lucide:package" class="text-xl"></iconify-icon>
                         </div>
                         <h4 class="font-bold text-slate-900 dark:text-white">پک‌های محصول</h4>
                     </div>
@@ -464,7 +464,7 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                 </div>
 
                 <div class="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/20 rounded-xl p-4 flex gap-3 text-sm text-blue-700 dark:text-blue-300">
-                    <iconify-icon icon="solar:info-circle-bold-duotone" class="text-xl shrink-0"></iconify-icon>
+                    <iconify-icon icon="lucide:info" class="text-xl shrink-0"></iconify-icon>
                     <p>تمام قیمت‌ها باید به <strong>دلار آمریکا (USD)</strong> وارد شوند. سیستم به صورت خودکار معادل درهم امارات (AED) را با نرخ <strong><?php echo e(getSetting('usd_to_aed', '3.673')); ?></strong> در سایت نمایش می‌دهد.</p>
                 </div>
 

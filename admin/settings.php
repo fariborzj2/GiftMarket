@@ -38,7 +38,7 @@ $last_update = (int)getSetting('last_rate_update', 0);
         $displayMsg = $msg ?: ($_GET['msg'] ?? '');
         if ($displayMsg): ?>
             <div class="<?php echo strpos($displayMsg, 'خطا') === false ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-2">
-                <iconify-icon icon="<?php echo strpos($displayMsg, 'خطا') === false ? 'solar:check-circle-bold-duotone' : 'solar:danger-bold-duotone'; ?>" class="text-xl"></iconify-icon>
+                <iconify-icon icon="<?php echo strpos($displayMsg, 'خطا') === false ? 'lucide:circle-check' : 'lucide:triangle-alert'; ?>" class="text-xl"></iconify-icon>
                 <?php echo e($displayMsg); ?>
             </div>
         <?php endif; ?>
@@ -48,7 +48,7 @@ $last_update = (int)getSetting('last_rate_update', 0);
 <div class="admin-card max-w-2xl mx-auto">
     <div class="flex items-center gap-3 mb-8">
         <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-            <iconify-icon icon="solar:graph-up-bold-duotone" class="text-2xl"></iconify-icon>
+            <iconify-icon icon="lucide:trending-up" class="text-2xl"></iconify-icon>
         </div>
         <h3 class="text-xl">تنظیمات نرخ ارز</h3>
     </div>
@@ -64,7 +64,7 @@ $last_update = (int)getSetting('last_rate_update', 0);
                 </div>
                 <button type="button" id="fetch-api-btn"
                         class="px-6 py-3 rounded-xl border border-primary text-primary hover:bg-primary hover:text-white transition-all font-bold whitespace-nowrap flex items-center justify-center gap-2">
-                    <iconify-icon icon="solar:refresh-bold-duotone" class="text-xl"></iconify-icon>
+                    <iconify-icon icon="lucide:refresh-cw" class="text-xl"></iconify-icon>
                     بروزرسانی از API
                 </button>
             </div>
@@ -77,7 +77,7 @@ $last_update = (int)getSetting('last_rate_update', 0);
 
         <div class="space-y-6">
             <h3 class="text-lg flex items-center gap-2">
-                <iconify-icon icon="solar:refresh-square-bold-duotone" class="text-primary text-2xl"></iconify-icon>
+                <iconify-icon icon="lucide:refresh-cw" class="text-primary text-2xl"></iconify-icon>
                 بروزرسانی خودکار
             </h3>
 

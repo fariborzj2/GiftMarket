@@ -112,23 +112,23 @@ if (!isLoggedIn()) {
 
             <nav class="space-y-1">
                 <a href="index.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">
-                    <iconify-icon icon="solar:chart-2-bold-duotone" class="text-2xl"></iconify-icon>
+                    <iconify-icon icon="lucide:chart-no-axes-combined" class="text-2xl"></iconify-icon>
                     <span>داشبورد</span>
                 </a>
                 <a href="brands.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'brands.php' ? 'active' : ''; ?>">
-                    <iconify-icon icon="solar:tag-bold-duotone" class="text-2xl"></iconify-icon>
+                    <iconify-icon icon="lucide:tag" class="text-2xl"></iconify-icon>
                     <span>برندها</span>
                 </a>
                 <a href="countries.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'countries.php' ? 'active' : ''; ?>">
-                    <iconify-icon icon="solar:globus-bold-duotone" class="text-2xl"></iconify-icon>
+                    <iconify-icon icon="lucide:globe" class="text-2xl"></iconify-icon>
                     <span>کشورها</span>
                 </a>
                 <a href="products.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'products.php' ? 'active' : ''; ?>">
-                    <iconify-icon icon="solar:box-bold-duotone" class="text-2xl"></iconify-icon>
+                    <iconify-icon icon="lucide:package" class="text-2xl"></iconify-icon>
                     <span>محصولات</span>
                 </a>
                 <a href="messages.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'messages.php' ? 'active' : ''; ?>">
-                    <iconify-icon icon="solar:letter-bold-duotone" class="text-2xl"></iconify-icon>
+                    <iconify-icon icon="lucide:mail" class="text-2xl"></iconify-icon>
                     <span class="flex-1">پیام‌ها</span>
                     <?php
                     $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status = 'unread'")->fetchColumn();
@@ -138,22 +138,22 @@ if (!isLoggedIn()) {
                     <?php endif; ?>
                 </a>
                 <a href="settings.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>">
-                    <iconify-icon icon="solar:settings-bold-duotone" class="text-2xl"></iconify-icon>
+                    <iconify-icon icon="lucide:settings" class="text-2xl"></iconify-icon>
                     <span>تنظیمات</span>
                 </a>
                 <a href="telegram_bot.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'telegram_bot.php' ? 'active' : ''; ?>">
-                    <iconify-icon icon="solar:plain-2-bold-duotone" class="text-2xl"></iconify-icon>
+                    <iconify-icon icon="lucide:send" class="text-2xl"></iconify-icon>
                     <span>ربات تلگرام</span>
                 </a>
 
                 <a href="account.php" class="sidebar-link <?php echo basename($_SERVER['PHP_SELF']) == 'account.php' ? 'active' : ''; ?>">
-                    <iconify-icon icon="solar:lock-password-bold-duotone" class="text-2xl"></iconify-icon>
+                    <iconify-icon icon="lucide:lock-keyhole" class="text-2xl"></iconify-icon>
                     <span>تغییر رمز عبور</span>
                 </a>
 
                 <div class="pt-10">
                     <a href="logout.php" class="sidebar-link text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600">
-                        <iconify-icon icon="solar:logout-bold-duotone" class="text-2xl"></iconify-icon>
+                        <iconify-icon icon="lucide:log-out" class="text-2xl"></iconify-icon>
                         <span>خروج</span>
                     </a>
                 </div>
@@ -165,7 +165,7 @@ if (!isLoggedIn()) {
             <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 px-4 md:px-8 py-4 flex items-center justify-between">
                 <div class="flex items-center gap-4">
                     <button class="lg:hidden p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg" id="hamburger">
-                        <iconify-icon icon="solar:hamburger-menu-bold-duotone" class="text-2xl"></iconify-icon>
+                        <iconify-icon icon="lucide:menu" class="text-2xl"></iconify-icon>
                     </button>
                     <h1 class="text-xl md:text-2xl"><?php echo $pageTitle ?? 'Dashboard'; ?></h1>
                 </div>
@@ -173,8 +173,8 @@ if (!isLoggedIn()) {
                 <div class="flex items-center gap-3">
                     <button type="button" id="themeToggle" aria-label="تغییر تم روشن/تاریک"
                             class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                        <iconify-icon icon="solar:sun-2-bold-duotone" class="text-xl hidden dark:block"></iconify-icon>
-                        <iconify-icon icon="solar:moon-bold-duotone" class="text-xl block dark:hidden"></iconify-icon>
+                        <iconify-icon icon="lucide:sun" class="text-xl hidden dark:block"></iconify-icon>
+                        <iconify-icon icon="lucide:moon" class="text-xl block dark:hidden"></iconify-icon>
                     </button>
 
                     <div class="w-px h-6 bg-slate-200 dark:bg-slate-800 hidden md:block"></div>

@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="mb-8">
     <?php if ($msg): ?>
         <div class="<?php echo $isError ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30' : 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-2">
-            <iconify-icon icon="<?php echo $isError ? 'solar:danger-bold-duotone' : 'solar:check-circle-bold-duotone'; ?>" class="text-xl"></iconify-icon>
+            <iconify-icon icon="<?php echo $isError ? 'lucide:triangle-alert' : 'lucide:circle-check'; ?>" class="text-xl"></iconify-icon>
             <?php echo e($msg); ?>
         </div>
     <?php endif; ?>
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="admin-card max-w-2xl mx-auto">
     <div class="flex items-center gap-3 mb-8">
         <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-            <iconify-icon icon="solar:lock-password-bold-duotone" class="text-2xl"></iconify-icon>
+            <iconify-icon icon="lucide:lock-keyhole" class="text-2xl"></iconify-icon>
         </div>
         <div>
             <h3 class="text-xl">تغییر رمز عبور</h3>
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="pt-2">
             <button type="submit" class="btn-primary w-full py-3">
-                <iconify-icon icon="solar:shield-keyhole-bold-duotone" class="text-xl"></iconify-icon>
+                <iconify-icon icon="lucide:shield-check" class="text-xl"></iconify-icon>
                 ذخیره رمز جدید
             </button>
         </div>

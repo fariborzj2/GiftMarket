@@ -150,7 +150,7 @@ foreach ($configs as $c) {
         $displayMsg = $msg ?: ($_GET['msg'] ?? '');
         if ($displayMsg): ?>
             <div class="<?php echo (strpos($displayMsg, 'خطا') !== false || strpos($displayMsg, 'حذف') !== false) ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30' : 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-2">
-                <iconify-icon icon="<?php echo (strpos($displayMsg, 'خطا') !== false || strpos($displayMsg, 'حذف') !== false) ? 'solar:danger-bold-duotone' : 'solar:check-circle-bold-duotone'; ?>" class="text-xl"></iconify-icon>
+                <iconify-icon icon="<?php echo (strpos($displayMsg, 'خطا') !== false || strpos($displayMsg, 'حذف') !== false) ? 'lucide:triangle-alert' : 'lucide:circle-check'; ?>" class="text-xl"></iconify-icon>
                 <?php echo e($displayMsg); ?>
             </div>
         <?php endif; ?>
@@ -158,7 +158,7 @@ foreach ($configs as $c) {
     <form method="POST">
         <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
         <button type="submit" name="publish_now" class="btn-primary " onclick="return confirm('آیا از انتشار دستی قیمت‌ها اطمینان دارید؟')">
-            <iconify-icon icon="solar:rocket-bold-duotone" class="text-xl"></iconify-icon>
+            <iconify-icon icon="lucide:rocket" class="text-xl"></iconify-icon>
             <span>ارسال به کانال</span>
         </button>
     </form>
@@ -235,16 +235,16 @@ foreach ($configs as $c) {
                             <!-- Markdown Toolbar -->
                             <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
                                 <button type="button" onclick="insertMarkdown('*', '*')" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded transition-all text-slate-600 dark:text-slate-400 flex items-center" title="Bold">
-                                    <iconify-icon icon="solar:bold-bold" class="text-lg"></iconify-icon>
+                                    <iconify-icon icon="lucide:bold" class="text-lg"></iconify-icon>
                                 </button>
                                 <button type="button" onclick="insertMarkdown('_', '_')" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded transition-all text-slate-600 dark:text-slate-400 flex items-center" title="Italic">
-                                    <iconify-icon icon="solar:italic-bold" class="text-lg"></iconify-icon>
+                                    <iconify-icon icon="lucide:italic" class="text-lg"></iconify-icon>
                                 </button>
                                 <button type="button" onclick="insertMarkdown('[', '](url)')" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded transition-all text-slate-600 dark:text-slate-400 flex items-center" title="Link">
-                                    <iconify-icon icon="solar:link-bold" class="text-lg"></iconify-icon>
+                                    <iconify-icon icon="lucide:link" class="text-lg"></iconify-icon>
                                 </button>
                                 <button type="button" onclick="insertMarkdown('`', '`')" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded transition-all text-slate-600 dark:text-slate-400 flex items-center" title="Code">
-                                    <iconify-icon icon="solar:code-bold" class="text-lg"></iconify-icon>
+                                    <iconify-icon icon="lucide:code" class="text-lg"></iconify-icon>
                                 </button>
                             </div>
                         </div>
@@ -317,7 +317,7 @@ foreach ($configs as $c) {
         <?php elseif ($tab === 'channels'): ?>
             <div class="bg-slate-50 dark:bg-slate-950/50 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 mb-8">
                 <h4 class="text-sm font-bold mb-4 flex items-center gap-2">
-                    <iconify-icon icon="solar:add-circle-bold-duotone" class="text-primary text-xl"></iconify-icon>
+                    <iconify-icon icon="lucide:circle-plus" class="text-primary text-xl"></iconify-icon>
                     <span>افزودن کانال جدید</span>
                 </h4>
                 <form method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -374,7 +374,7 @@ foreach ($configs as $c) {
                 <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
                 <div>
                     <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
-                        <iconify-icon icon="solar:flag-bold-duotone" class="text-primary text-2xl"></iconify-icon>
+                        <iconify-icon icon="lucide:flag" class="text-primary text-2xl"></iconify-icon>
                         <span>تنظیمات ایموجی کشورها</span>
                     </h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -392,7 +392,7 @@ foreach ($configs as $c) {
 
                 <div>
                     <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
-                        <iconify-icon icon="solar:plain-2-bold-duotone" class="text-primary text-2xl"></iconify-icon>
+                        <iconify-icon icon="lucide:send" class="text-primary text-2xl"></iconify-icon>
                         <span>فعالسازی برند/کشور برای ربات</span>
                     </h3>
                     <div class="space-y-8 max-h-[600px] overflow-y-auto pr-4 scroll-smooth">
@@ -426,7 +426,7 @@ foreach ($configs as $c) {
                 <form method="POST" onsubmit="return confirm('آیا از حذف تمامی لاگ‌ها اطمینان دارید؟')">
                     <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
                     <button type="submit" name="clear_logs" class="flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl transition-all font-bold text-sm">
-                        <iconify-icon icon="solar:trash-bin-trash-bold-duotone" class="text-xl"></iconify-icon>
+                        <iconify-icon icon="lucide:trash-2" class="text-xl"></iconify-icon>
                         <span>حذف تمامی لاگ‌ها</span>
                     </button>
                 </form>

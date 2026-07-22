@@ -68,7 +68,7 @@ $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status =
         $displayMsg = $msg ?: ($_GET['msg'] ?? '');
         if ($displayMsg): ?>
             <div class="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30'; ?> px-6 py-3 rounded-xl border text-sm flex items-center gap-3 transition-all duration-300">
-                <iconify-icon icon="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'solar:check-circle-bold-duotone' : 'solar:danger-bold-duotone'; ?>" class="text-xl"></iconify-icon>
+                <iconify-icon icon="<?php echo (strpos($displayMsg, 'خطا') === false) ? 'lucide:circle-check' : 'lucide:triangle-alert'; ?>" class="text-xl"></iconify-icon>
                 <?php echo e($displayMsg); ?>
             </div>
         <?php endif; ?>
@@ -79,7 +79,7 @@ $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status =
                 <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
                 <input type="hidden" name="action" value="mark_all_read">
                 <button type="submit" class="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-medium text-sm flex items-center gap-2">
-                    <iconify-icon icon="solar:check-read-bold-duotone" class="text-xl"></iconify-icon>
+                    <iconify-icon icon="lucide:check-check" class="text-xl"></iconify-icon>
                     <span>خواندن همه</span>
                 </button>
             </form>
@@ -94,7 +94,7 @@ $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status =
     <div class="admin-card !p-0 overflow-hidden">
         <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
             <h3 class="text-lg flex items-center gap-2 m-0">
-                <iconify-icon icon="solar:letter-bold-duotone" class="text-primary text-2xl"></iconify-icon>
+                <iconify-icon icon="lucide:mail" class="text-primary text-2xl"></iconify-icon>
                 <span>پیام‌های دریافتی</span>
             </h3>
             <div class="flex gap-2">
@@ -122,7 +122,7 @@ $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status =
                     <?php if (empty($messages)): ?>
                         <tr>
                             <td colspan="5" class="px-6 py-10 text-center text-slate-400">
-                                <iconify-icon icon="solar:mailbox-bold-duotone" class="text-5xl mb-4 opacity-20"></iconify-icon>
+                                <iconify-icon icon="lucide:inbox" class="text-5xl mb-4 opacity-20"></iconify-icon>
                                 <div>هیچ پیامی یافت نشد.</div>
                             </td>
                         </tr>
@@ -156,14 +156,14 @@ $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status =
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-2">
                                 <button onclick="viewMessage(<?php echo htmlspecialchars(json_encode($m)); ?>)" class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors" title="مشاهده">
-                                    <iconify-icon icon="solar:eye-bold-duotone" class="text-xl"></iconify-icon>
+                                    <iconify-icon icon="lucide:eye" class="text-xl"></iconify-icon>
                                 </button>
                                 <form method="POST" class="inline" onsubmit="return confirm('آیا از حذف این پیام اطمینان دارید؟')">
                                     <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="id" value="<?php echo $m['id']; ?>">
                                     <button type="submit" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="حذف">
-                                        <iconify-icon icon="solar:trash-bin-trash-bold-duotone" class="text-xl"></iconify-icon>
+                                        <iconify-icon icon="lucide:trash-2" class="text-xl"></iconify-icon>
                                     </button>
                                 </form>
                             </div>
@@ -182,11 +182,11 @@ $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status =
             <div class="h-full flex flex-col">
                 <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                     <h3 class="text-xl flex items-center gap-3">
-                        <iconify-icon icon="solar:letter-opened-bold-duotone" class="text-primary text-2xl"></iconify-icon>
+                        <iconify-icon icon="lucide:mail-open" class="text-primary text-2xl"></iconify-icon>
                         <span>جزئیات پیام</span>
                     </h3>
                     <button onclick="closeModal()" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">
-                        <iconify-icon icon="solar:close-circle-bold-duotone" class="text-2xl text-slate-400"></iconify-icon>
+                        <iconify-icon icon="lucide:circle-x" class="text-2xl text-slate-400"></iconify-icon>
                     </button>
                 </div>
                 <div class="flex-1 overflow-y-auto p-8 space-y-8">
@@ -221,7 +221,7 @@ $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status =
                 </div>
                 <div class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex gap-3">
                     <a href="" id="m-reply-email" class="btn-primary flex-1">
-                        <iconify-icon icon="solar:forward-bold-duotone" class="text-xl"></iconify-icon>
+                        <iconify-icon icon="lucide:forward" class="text-xl"></iconify-icon>
                         <span>پاسخ با ایمیل</span>
                     </a>
                     <button onclick="changeStatus('unread')" id="m-unread-btn" class="px-6 py-3 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-medium">
