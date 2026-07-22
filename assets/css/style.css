@@ -819,6 +819,12 @@ body.dark-theme .table-wrap tbody tr:hover {
         justify-content: center;
         margin-top: 8px;
     }
+
+    /* Header account button stays inline with theme/language controls */
+    .top-menu .btn {
+        width: auto;
+        margin-top: 0;
+    }
 }
 
 /* faq */
