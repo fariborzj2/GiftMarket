@@ -1,6 +1,7 @@
 <?php
 $pageTitle = 'پیام‌های کاربران';
 require_once 'layout_header.php';
+require_once __DIR__ . '/../system/includes/mailer.php';
 
 $msg = '';
 $csrfToken = generateCsrfToken();
@@ -55,6 +56,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $msg = 'خطا: ' . $e->getMessage();
         }
         header("Location: messages.php?msg=" . urlencode($msg));
+        exit;
+    }
+
+    if ($action === 'reply' && $id) {
+        $reply = trim($_POST['reply'] ?? '');
+        if ($reply === '') {
+            header("Location: messages.php?msg=" . urlencode('متن پاسخ خالی است.'));
+            exit;
+        }
+        $stmt = db()->prepare("SELECT * FROM contact_messages WHERE id = ?");
+        $stmt->execute([$id]);
+        $cm = $stmt->fetch();
+
+        if ($cm) {
+            $upd = db()->prepare("UPDATE contact_messages SET reply = ?, status = 'replied', replied_at = NOW() WHERE id = ?");
+            $upd->execute([$reply, $id]);
+
+            $body = '<p>Hello ' . htmlspecialchars($cm['name']) . ',</p>'
+                . '<div style="background:#EFF6FF;border-radius:10px;padding:14px 16px;margin:14px 0;">'
+                . '<div style="font-size:12px;color:#2563EB;font-weight:bold;margin-bottom:6px;">Our reply</div>'
+                . nl2br(htmlspecialchars($reply)) . '</div>'
+                . '<div style="background:#f8fafc;border-radius:10px;padding:14px 16px;margin:14px 0;color:#64748b;font-size:13px;">'
+                . '<div style="font-size:12px;font-weight:bold;margin-bottom:6px;">Your message</div>'
+                . nl2br(htmlspecialchars($cm['message'])) . '</div>';
+            $subject = 'Re: ' . ($cm['subject'] ?: 'Your message') . ' — UAE.GIFT';
+            $res = sendSystemMail($cm['email'], $cm['name'], $subject, buildBrandedEmail('en', 'Reply to your message', $body));
+            $note = $res['ok'] ? ' و ایمیل ارسال شد.' : (' اما ارسال ایمیل ناموفق بود: ' . $res['error']);
+        } else {
+            $note = '';
+        }
+        header("Location: messages.php?msg=" . urlencode('پاسخ ثبت شد' . $note));
         exit;
     }
 }
@@ -144,6 +176,10 @@ $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status =
                                     <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
                                     جدید
                                 </span>
+                            <?php elseif ($m['status'] === 'replied'): ?>
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                                    پاسخ داده شده
+                                </span>
                             <?php else: ?>
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
                                     خوانده شده
@@ -218,15 +254,35 @@ $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status =
                         <div class="text-xs text-slate-400 mb-4 uppercase tracking-wider">متن پیام</div>
                         <div class="text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed" id="m-message"></div>
                     </div>
+
+                    <div id="m-existing-reply-wrap" class="hidden bg-primary/5 p-6 rounded-2xl border border-primary/10">
+                        <div class="text-xs text-primary font-bold mb-3 uppercase tracking-wider">پاسخ ارسال‌شده</div>
+                        <div class="text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed" id="m-existing-reply"></div>
+                    </div>
                 </div>
-                <div class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex gap-3">
-                    <a href="" id="m-reply-email" class="btn-primary flex-1">
-                        <iconify-icon icon="lucide:forward" class="text-xl"></iconify-icon>
-                        <span>پاسخ با ایمیل</span>
-                    </a>
-                    <button onclick="changeStatus('unread')" id="m-unread-btn" class="px-6 h-10 inline-flex items-center justify-center text-sm rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-medium">
-                        علامت به عنوان نخوانده
-                    </button>
+                <div class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+                    <?php if (!mailerReady()): ?>
+                        <div class="text-xs text-amber-600 dark:text-amber-400 mb-3 flex items-center gap-1.5">
+                            <iconify-icon icon="lucide:triangle-alert"></iconify-icon>
+                            ارسال ایمیل تنظیم نشده — <a href="email.php" class="underline font-bold">تنظیمات ایمیل</a>
+                        </div>
+                    <?php endif; ?>
+                    <form method="POST" class="space-y-3">
+                        <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
+                        <input type="hidden" name="action" value="reply">
+                        <input type="hidden" name="id" id="m-reply-id" value="">
+                        <textarea name="reply" id="m-reply-text" rows="3" required placeholder="پاسخ خود را بنویسید؛ به ایمیل مشتری ارسال می‌شود..."
+                            class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-sm"></textarea>
+                        <div class="flex gap-3">
+                            <button type="submit" class="btn-primary flex-1">
+                                <iconify-icon icon="lucide:send" class="text-lg"></iconify-icon>
+                                <span>ارسال پاسخ ایمیلی</span>
+                            </button>
+                            <a href="" id="m-reply-email" title="ایمیل دستی" class="px-4 h-10 inline-flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                <iconify-icon icon="lucide:external-link" class="text-lg"></iconify-icon>
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -245,12 +301,19 @@ $unreadCount = db()->query("SELECT COUNT(*) FROM contact_messages WHERE status =
             document.getElementById('m-message').textContent = m.message;
             document.getElementById('m-date').textContent = m.created_at;
             document.getElementById('m-reply-email').href = 'mailto:' + m.email + '?subject=Re: ' + (m.subject || '');
+            document.getElementById('m-reply-id').value = m.id;
+            document.getElementById('m-reply-text').value = m.reply || '';
 
-            if (m.status === 'read') {
-                document.getElementById('m-unread-btn').style.display = 'block';
+            const replyWrap = document.getElementById('m-existing-reply-wrap');
+            if (m.reply) {
+                document.getElementById('m-existing-reply').textContent = m.reply;
+                replyWrap.classList.remove('hidden');
             } else {
-                document.getElementById('m-unread-btn').style.display = 'none';
-                // Mark as read in DB via background fetch
+                replyWrap.classList.add('hidden');
+            }
+
+            if (m.status === 'unread') {
+                // Mark as read in the background
                 const formData = new FormData();
                 formData.append('action', 'status');
                 formData.append('to', 'read');

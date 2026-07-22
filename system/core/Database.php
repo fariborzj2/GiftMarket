@@ -203,6 +203,14 @@ class Database {
             $this->pdo->exec("ALTER TABLE products ADD COLUMN display_symbol VARCHAR(10) DEFAULT NULL");
         } catch (PDOException $e) {}
 
+        try {
+            $this->pdo->exec("ALTER TABLE contact_messages ADD COLUMN reply TEXT DEFAULT NULL");
+        } catch (PDOException $e) {}
+
+        try {
+            $this->pdo->exec("ALTER TABLE contact_messages ADD COLUMN replied_at TIMESTAMP NULL DEFAULT NULL");
+        } catch (PDOException $e) {}
+
         // Migration to many-packs per product
         try {
             // Check if product_packs is empty and products has data
@@ -282,7 +290,17 @@ class Database {
                 'telegram_last_publish_date' => '',
                 'telegram_message_template' => "*{brand}* {country} ({denomination})\n{type}: {price}{currency} → {converted_price} {target_currency}\nLast update: {last_update}",
                 'telegram_use_emojis' => '1',
-                'telegram_price_type' => 'both'
+                'telegram_price_type' => 'both',
+                // Email / SMTP — the password is entered via the admin panel and
+                // stored here in the DB only (never committed to the repo).
+                'smtp_enabled' => '0',
+                'smtp_host' => '',
+                'smtp_port' => '465',
+                'smtp_secure' => 'ssl',
+                'smtp_user' => '',
+                'smtp_pass' => '',
+                'smtp_from_email' => '',
+                'smtp_from_name' => 'UAE.GIFT'
             ];
 
             foreach ($telegramSettings as $key => $value) {

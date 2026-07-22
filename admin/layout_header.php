@@ -144,6 +144,8 @@ if (!isLoggedIn()) {
     <?php
         $currentPage = basename($_SERVER['PHP_SELF']);
         $unreadCount = (int) db()->query("SELECT COUNT(*) FROM contact_messages WHERE status = 'unread'")->fetchColumn();
+        try { $openRequests = (int) db()->query("SELECT COUNT(*) FROM customer_requests WHERE status = 'open'")->fetchColumn(); }
+        catch (Exception $e) { $openRequests = 0; }
         $userInitial = mb_substr($_SESSION['username'] ?? '?', 0, 1);
     ?>
     <div class="flex min-h-screen">
@@ -195,6 +197,13 @@ if (!isLoggedIn()) {
                                 <span class="bg-red-500 text-white text-[10px] font-bold min-w-[20px] h-5 px-1 rounded-full flex items-center justify-center"><?php echo $unreadCount; ?></span>
                             <?php endif; ?>
                         </a>
+                        <a href="customer_requests.php" class="sidebar-link <?php echo $currentPage == 'customer_requests.php' ? 'active' : ''; ?>">
+                            <span class="sidebar-ico"><iconify-icon icon="lucide:message-square" class="text-xl"></iconify-icon></span>
+                            <span class="flex-1">درخواست‌های مشتریان</span>
+                            <?php if ($openRequests > 0): ?>
+                                <span class="bg-amber-500 text-white text-[10px] font-bold min-w-[20px] h-5 px-1 rounded-full flex items-center justify-center"><?php echo $openRequests; ?></span>
+                            <?php endif; ?>
+                        </a>
                         <a href="telegram_bot.php" class="sidebar-link <?php echo $currentPage == 'telegram_bot.php' ? 'active' : ''; ?>">
                             <span class="sidebar-ico"><iconify-icon icon="lucide:send" class="text-xl"></iconify-icon></span>
                             <span>ربات تلگرام</span>
@@ -208,6 +217,10 @@ if (!isLoggedIn()) {
                         <a href="settings.php" class="sidebar-link <?php echo $currentPage == 'settings.php' ? 'active' : ''; ?>">
                             <span class="sidebar-ico"><iconify-icon icon="lucide:settings" class="text-xl"></iconify-icon></span>
                             <span>تنظیمات</span>
+                        </a>
+                        <a href="email.php" class="sidebar-link <?php echo $currentPage == 'email.php' ? 'active' : ''; ?>">
+                            <span class="sidebar-ico"><iconify-icon icon="lucide:mail-check" class="text-xl"></iconify-icon></span>
+                            <span>تنظیمات ایمیل</span>
                         </a>
                         <a href="account.php" class="sidebar-link <?php echo $currentPage == 'account.php' ? 'active' : ''; ?>">
                             <span class="sidebar-ico"><iconify-icon icon="lucide:lock-keyhole" class="text-xl"></iconify-icon></span>
