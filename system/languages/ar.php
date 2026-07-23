@@ -152,6 +152,18 @@ return [
     'acc_status_answered' => 'تم الرد',
     'acc_status_closed' => 'مغلق',
     'acc_optional' => 'اختياري',
+    // Business accounts
+    'acc_account_type' => 'نوع الحساب',
+    'acc_type_personal' => 'شخصي',
+    'acc_type_personal_sub' => 'للمشترين الأفراد',
+    'acc_type_company' => 'شركة',
+    'acc_type_company_sub' => 'للشركات والموزعين',
+    'acc_contact_name' => 'اسم الشخص المسؤول',
+    'acc_company_details' => 'بيانات الشركة',
+    'acc_company_name' => 'اسم الشركة',
+    'acc_trade_license' => 'رقم الرخصة التجارية',
+    'acc_tax_number' => 'الرقم الضريبي (TRN)',
+    'acc_err_company' => 'يرجى إدخال اسم الشركة.',
     // Messages
     'acc_err_fill' => 'يرجى ملء جميع الحقول المطلوبة.',
     'acc_err_email' => 'يرجى إدخال بريد إلكتروني صحيح.',

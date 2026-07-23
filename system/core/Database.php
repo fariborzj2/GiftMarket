@@ -128,6 +128,10 @@ class Database {
                 email VARCHAR(150) UNIQUE NOT NULL,
                 mobile VARCHAR(30) DEFAULT NULL,
                 password VARCHAR(255) NOT NULL,
+                account_type VARCHAR(20) DEFAULT 'personal',
+                company_name VARCHAR(150) DEFAULT NULL,
+                trade_license VARCHAR(100) DEFAULT NULL,
+                tax_number VARCHAR(100) DEFAULT NULL,
                 lang VARCHAR(5) DEFAULT 'en',
                 status INT DEFAULT 1,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -209,6 +213,23 @@ class Database {
 
         try {
             $this->pdo->exec("ALTER TABLE contact_messages ADD COLUMN replied_at TIMESTAMP NULL DEFAULT NULL");
+        } catch (PDOException $e) {}
+
+        // Business (juridical) customer accounts
+        try {
+            $this->pdo->exec("ALTER TABLE customers ADD COLUMN account_type VARCHAR(20) DEFAULT 'personal'");
+        } catch (PDOException $e) {}
+
+        try {
+            $this->pdo->exec("ALTER TABLE customers ADD COLUMN company_name VARCHAR(150) DEFAULT NULL");
+        } catch (PDOException $e) {}
+
+        try {
+            $this->pdo->exec("ALTER TABLE customers ADD COLUMN trade_license VARCHAR(100) DEFAULT NULL");
+        } catch (PDOException $e) {}
+
+        try {
+            $this->pdo->exec("ALTER TABLE customers ADD COLUMN tax_number VARCHAR(100) DEFAULT NULL");
         } catch (PDOException $e) {}
 
         // Migration to many-packs per product

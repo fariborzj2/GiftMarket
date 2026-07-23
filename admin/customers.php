@@ -32,10 +32,10 @@ $sql = "SELECT c.*,
             (SELECT COUNT(*) FROM customer_watchlist w WHERE w.customer_id = c.id) AS watch_count,
             (SELECT COUNT(*) FROM customer_requests r WHERE r.customer_id = c.id) AS req_count
         FROM customers c
-        WHERE (? = '' OR c.name LIKE ? OR c.email LIKE ? OR c.mobile LIKE ?)
+        WHERE (? = '' OR c.name LIKE ? OR c.email LIKE ? OR c.mobile LIKE ? OR c.company_name LIKE ?)
         ORDER BY c.created_at DESC";
 $stmt = db()->prepare($sql);
-$stmt->execute([$search, $like, $like, $like]);
+$stmt->execute([$search, $like, $like, $like, $like]);
 $customers = $stmt->fetchAll();
 
 $totalCustomers = (int) db()->query("SELECT COUNT(*) FROM customers")->fetchColumn();
@@ -90,7 +90,19 @@ $displayMsg = $msg ?: ($_GET['msg'] ?? '');
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold uppercase shrink-0"><?php echo e(mb_substr($c['name'], 0, 1)); ?></div>
                             <div class="min-w-0">
-                                <div class="font-bold text-slate-900 dark:text-white truncate"><?php echo e($c['name']); ?></div>
+                                <div class="font-bold text-slate-900 dark:text-white truncate flex items-center gap-1.5">
+                                    <span class="truncate"><?php echo e($c['name']); ?></span>
+                                    <?php if (($c['account_type'] ?? '') === 'company'): ?>
+                                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-primary/10 text-primary shrink-0">حقوقی</span>
+                                    <?php endif; ?>
+                                </div>
+                                <?php if (($c['account_type'] ?? '') === 'company' && !empty($c['company_name'])): ?>
+                                    <div class="text-xs text-slate-500 dark:text-slate-300 truncate flex items-center gap-1">
+                                        <iconify-icon icon="lucide:building-2" class="text-sm shrink-0"></iconify-icon>
+                                        <span class="truncate"><?php echo e($c['company_name']); ?></span>
+                                        <?php if (!empty($c['tax_number'])): ?><span class="text-slate-400" dir="ltr">· TRN: <?php echo e($c['tax_number']); ?></span><?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
                                 <div class="text-xs text-slate-400 truncate" dir="ltr"><?php echo e($c['email']); ?></div>
                             </div>
                         </div>

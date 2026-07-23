@@ -152,6 +152,18 @@ return [
     'acc_status_answered' => 'Answered',
     'acc_status_closed' => 'Closed',
     'acc_optional' => 'optional',
+    // Business accounts
+    'acc_account_type' => 'Account type',
+    'acc_type_personal' => 'Personal',
+    'acc_type_personal_sub' => 'For individual buyers',
+    'acc_type_company' => 'Business',
+    'acc_type_company_sub' => 'For companies & resellers',
+    'acc_contact_name' => 'Contact person name',
+    'acc_company_details' => 'Company details',
+    'acc_company_name' => 'Company name',
+    'acc_trade_license' => 'Trade license No.',
+    'acc_tax_number' => 'Tax number (TRN)',
+    'acc_err_company' => 'Please enter the company name.',
     // Messages
     'acc_err_fill' => 'Please fill all required fields.',
     'acc_err_email' => 'Please enter a valid email address.',
